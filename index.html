@@ -374,7 +374,13 @@ $("backFromDefis").onclick = () => show("screenMenu");
 $("backFromEscape").onclick = () => show("screenMenu");
 
 document.querySelectorAll(".typeBtn").forEach(btn => {
-  btn.onclick = () => setTypeUI(btn.dataset.type);
+  btn.onclick = () => {
+    setTypeUI(btn.dataset.type);
+
+    // Ouvre directement l'appareil photo / galerie
+    const input = document.getElementById("photoInput");
+    if (input) input.click();
+  };
 });
 setTypeUI(getPhotoType());
 

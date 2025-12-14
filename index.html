@@ -19,6 +19,7 @@
       font-size: 16px; cursor: pointer;
     }
     button:active { transform: scale(.99); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
     .muted { opacity: .75; font-size: 13px; }
     .row { display:flex; gap: 10px; align-items:center; }
     .row > * { flex: 1; }
@@ -34,6 +35,10 @@
     .small { font-size: 14px; }
     .hr { height:1px; background:#24263a; margin: 14px 0; }
     .note { font-size: 12px; opacity: .75; }
+    img.preview {
+      width:100%; border-radius:14px; border:1px solid #2b2f4a;
+      background:#0f1120;
+    }
   </style>
 </head>
 <body>
@@ -78,14 +83,18 @@
             <button class="typeBtn" data-type="defi">🎯 Défi</button>
             <button class="typeBtn" data-type="escape">🧩 Escape</button>
           </div>
+
           <div class="muted">Type sélectionné : <span id="typeLabel" class="pill">libre</span></div>
 
           <label class="muted">Photo (caméra) :</label>
           <input id="photoInput" type="file" accept="image/*" capture="environment" />
 
-          <button id="sendPhotoBtn">⬆️ Envoyer sur Drive</button>
+          <img id="previewImg" class="preview hidden" alt="Aperçu de la photo" />
+          <div id="photoReady" class="muted hidden"><span class="ok">✅ Photo prête à envoyer</span></div>
+
+          <button id="sendPhotoBtn" disabled>⬆️ Envoyer sur Drive</button>
           <div id="sendStatus" class="muted"></div>
-          <div class="note">Si l’envoi échoue, c’est souvent une photo trop lourde (on compresse automatiquement ici).</div>
+          <div class="note">Envoi optimisé : la photo est compressée automatiquement avant upload.</div>
 
           <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
         </div>
@@ -121,7 +130,6 @@
 /** =========================
  *  CONFIG
  *  ========================= */
-// ⚠️ Remplace par ton URL Apps Script (doit finir par /exec)
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
 /** Tables */
@@ -129,13 +137,6 @@ const TABLES = [
   { id: 1, name: "Table 1" },
   { id: 2, name: "Table 2" },
   { id: 3, name: "Table 3" },
-  { id: 3, name: "Table 4" },
-  { id: 3, name: "Table 5" },
-  { id: 3, name: "Table 6" },
-  { id: 3, name: "Table 7" },
-  { id: 3, name: "Table 8" },
-  { id: 3, name: "Table 9" },
-  { id: 3, name: "Table " },
 ];
 
 /** Défis */
@@ -163,6 +164,7 @@ const LS = {
   photoType: "bday_photoType",
   defis: "bday_defis_done",
   escape: "bday_escape_ok",
+  screen: "bday_screen",
 };
 function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
 function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
@@ -177,10 +179,13 @@ function setEscapeOk(obj){ localStorage.setItem(LS.escape, JSON.stringify(obj));
  *  UI Helpers
  *  ========================= */
 const $ = (id) => document.getElementById(id);
+
 function show(screenId){
+  localStorage.setItem(LS.screen, screenId);
   ["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"].forEach(s => $(s).classList.add("hidden"));
   $(screenId).classList.remove("hidden");
 }
+
 function updateBadge(){
   const id = getTableId();
   const badge = $("tableBadge");
@@ -195,8 +200,9 @@ function updateBadge(){
   badge.classList.remove("hidden");
   reset.classList.remove("hidden");
 }
+
 function openCameraPicker(){
-  const input = document.getElementById("photoInput");
+  const input = $("photoInput");
   if (input) input.click();
 }
 
@@ -254,6 +260,7 @@ function renderDefis(){
  *  Render: Escape
  *  ========================= */
 function normalize(s){ return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,""); }
+
 function renderEscape(){
   const ok = getEscapeOk();
   const wrap = $("enigmes");
@@ -303,7 +310,7 @@ function renderEscape(){
 }
 
 /** =========================
- *  Photo: compression + base64 (évite limite Apps Script)
+ *  Photo: compression + base64
  *  ========================= */
 async function fileToBase64Compressed(file){
   const img = await new Promise((resolve, reject) => {
@@ -314,7 +321,6 @@ async function fileToBase64Compressed(file){
     i.src = url;
   });
 
-  // Max 1600px (bon compromis qualité/poids)
   const max = 1600;
   let w = img.width, h = img.height;
   if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
@@ -325,12 +331,11 @@ async function fileToBase64Compressed(file){
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, w, h);
 
-  // Qualité JPEG 0.8 (très correct)
   return canvas.toDataURL("image/jpeg", 0.8);
 }
 
 /** =========================
- *  Photo upload
+ *  Photo upload + preview UX
  *  ========================= */
 function setTypeUI(t){
   setPhotoType(t);
@@ -344,29 +349,30 @@ async function sendPhoto(){
     show("screenTable");
     return;
   }
-  const file = $("photoInput").files[0];
+  const input = $("photoInput");
+  const file = input.files && input.files[0];
   if(!file){
     $("sendStatus").innerHTML = `<span class="err">Ajoute une photo.</span>`;
     return;
   }
-  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("COLLE_ICI")){
-    $("sendStatus").innerHTML = `<span class="warn">URL Apps Script manquante (celle qui finit par /exec).</span>`;
+  if(!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes("/exec")){
+    $("sendStatus").innerHTML = `<span class="warn">URL Apps Script invalide (doit finir par /exec).</span>`;
     return;
   }
 
+  $("sendPhotoBtn").disabled = true;
   $("sendStatus").textContent = "Compression + envoi en cours…";
 
-  // Compression / base64
-  const dataUrl = await fileToBase64Compressed(file);
-
-  const payload = {
-    tableId,
-    type: getPhotoType(),
-    filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-    dataUrl,
-  };
-
   try{
+    const dataUrl = await fileToBase64Compressed(file);
+
+    const payload = {
+      tableId,
+      type: getPhotoType(),
+      filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
+      dataUrl,
+    };
+
     // no-cors : compatible GitHub Pages -> Apps Script
     await fetch(APPS_SCRIPT_URL, {
       method: "POST",
@@ -375,32 +381,79 @@ async function sendPhoto(){
       body: JSON.stringify(payload),
     });
 
-    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée sur Drive !</span>`;
-    $("photoInput").value = "";
+    $("sendStatus").innerHTML = `<span class="ok">✅ Envoi déclenché ! Vérifie Drive dans quelques secondes.</span>`;
+    input.value = "";
+
+    // Reset preview
+    $("previewImg").classList.add("hidden");
+    $("photoReady").classList.add("hidden");
   }catch(err){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau (connexion / URL / permissions). ${String(err.message || err)}</span>`;
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau (connexion / permissions). ${String(err.message || err)}</span>`;
+  } finally {
+    $("sendPhotoBtn").disabled = true; // restera désactivé tant qu'il n'y a pas de photo
   }
 }
 
+function initPhotoUX(){
+  const photoInput = $("photoInput");
+  const previewImg = $("previewImg");
+  const photoReady = $("photoReady");
+
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files && photoInput.files[0];
+    $("sendStatus").textContent = "";
+
+    if(!file){
+      previewImg.classList.add("hidden");
+      photoReady.classList.add("hidden");
+      $("sendPhotoBtn").disabled = true;
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    previewImg.src = url;
+    previewImg.classList.remove("hidden");
+    photoReady.classList.remove("hidden");
+
+    $("sendPhotoBtn").disabled = false;
+
+    // Scroll vers le bouton "Envoyer"
+    setTimeout(() => {
+      $("sendPhotoBtn").scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 150);
+  });
+}
+
 /** =========================
- *  Init + Navigation
+ *  Init + Navigation + restore screen
  *  ========================= */
 renderTables();
 updateBadge();
-if(getTableId()) show("screenMenu");
+initPhotoUX();
+
+// Restore last screen (utile si Android recharge la page après la caméra)
+const savedScreen = localStorage.getItem(LS.screen);
+if (!getTableId()) {
+  show("screenTable");
+} else if (savedScreen && ["screenMenu","screenPhoto","screenDefis","screenEscape","screenTable"].includes(savedScreen)) {
+  show(savedScreen);
+} else {
+  show("screenMenu");
+}
 
 $("resetBtn").onclick = () => {
   localStorage.removeItem(LS.tableId);
+  localStorage.setItem(LS.screen, "screenTable");
   updateBadge();
   show("screenTable");
 };
 
+// Menu navigation
 $("goPhoto").onclick = () => {
   $("sendStatus").textContent = "";
   show("screenPhoto");
   openCameraPicker(); // ouvre direct
 };
-
 $("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
 $("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
 
@@ -408,7 +461,7 @@ $("backFromPhoto").onclick = () => show("screenMenu");
 $("backFromDefis").onclick = () => show("screenMenu");
 $("backFromEscape").onclick = () => show("screenMenu");
 
-// Boutons type : change type + ouvre caméra
+// Type buttons: set type + open camera
 document.querySelectorAll(".typeBtn").forEach(btn => {
   btn.onclick = () => {
     setTypeUI(btn.dataset.type);

@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anniversaire 📸</title>
+  <style>
+    :root { --pad: 16px; --r: 18px; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0c10; color:#fff; }
+    .app { max-width: 520px; margin: 0 auto; padding: var(--pad); }
+    .card { background: #141622; border: 1px solid #24263a; border-radius: var(--r); padding: var(--pad); box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    h1 { font-size: 26px; margin: 0 0 8px; }
+    p { opacity: .9; margin: 8px 0; line-height: 1.35; }
+    .grid { display: grid; gap: 12px; }
+    .grid2 { grid-template-columns: 1fr 1fr; }
+    button, .btn {
+      width: 100%; padding: 14px 14px; border-radius: 14px;
+      border: 1px solid #2b2f4a; background: #1b1f36; color: #fff;
+      font-size: 16px; cursor: pointer;
+    }
+    button:active { transform: scale(.99); }
+    .muted { opacity: .75; font-size: 13px; }
+    .row { display:flex; gap: 10px; align-items:center; }
+    .row > * { flex: 1; }
+    .pill { display:inline-block; padding: 6px 10px; border:1px solid #2b2f4a; border-radius: 999px; background:#121427; }
+    .hidden { display:none !important; }
+    input[type="text"], input[type="number"]{
+      width:100%; padding: 12px 12px; border-radius: 12px; border:1px solid #2b2f4a; background:#0f1120; color:#fff;
+      font-size:16px;
+    }
+    .ok { color:#65ffb7; }
+    .warn { color:#ffcf66; }
+    .err { color:#ff6b6b; }
+    .small { font-size: 14px; }
+    .hr { height:1px; background:#24263a; margin: 14px 0; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="row" style="justify-content:space-between; align-items:flex-start;">
+        <div>
+          <h1>Anniversaire 🎉📸</h1>
+          <p class="muted">Choisis ta table, prends des photos, fais les défis, et gagne le code final 🔐</p>
+        </div>
+        <div style="text-align:right;">
+          <div id="tableBadge" class="pill hidden"></div>
+          <button id="resetBtn" class="hidden" style="margin-top:10px; padding:10px; font-size:13px;">Changer de table</button>
+        </div>
+      </div>
+
+      <!-- ECRAN: TABLE -->
+      <section id="screenTable" class="grid">
+        <p><b>1) Choisis ta table</b></p>
+        <div class="grid grid2" id="tableButtons"></div>
+        <p class="muted">Astuce : pose le QR code sur chaque table pour aller plus vite.</p>
+      </section>
+
+      <!-- ECRAN: MENU -->
+      <section id="screenMenu" class="grid hidden">
+        <p><b>2) Menu</b></p>
+        <button id="goPhoto">📸 Prendre une photo</button>
+        <button id="goDefis">🎯 Défis photos</button>
+        <button id="goEscape">🧩 Escape game</button>
+        <div class="hr"></div>
+        <p class="muted small">Les photos seront envoyées sur TON Google Drive.</p>
+      </section>
+
+      <!-- ECRAN: PHOTO -->
+      <section id="screenPhoto" class="grid hidden">
+        <p><b>📸 Prendre une photo</b></p>
+
+        <div class="grid">
+          <label class="muted">Type :</label>
+          <div class="grid grid2">
+            <button class="typeBtn" data-type="libre">📸 Libre</button>
+            <button class="typeBtn" data-type="defi">🎯 Défi</button>
+            <button class="typeBtn" data-type="escape">🧩 Escape</button>
+          </div>
+          <div class="muted">Type sélectionné : <span id="typeLabel" class="pill">libre</span></div>
+
+          <label class="muted">Photo (caméra) :</label>
+          <input id="photoInput" type="file" accept="image/*" capture="environment" />
+
+          <button id="sendPhotoBtn">⬆️ Envoyer sur Drive</button>
+          <div id="sendStatus" class="muted"></div>
+
+          <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
+        </div>
+      </section>
+
+      <!-- ECRAN: DEFIS -->
+      <section id="screenDefis" class="grid hidden">
+        <p><b>🎯 Défis photos</b></p>
+        <div id="defisList" class="grid"></div>
+        <p class="muted small">Valide un défi → puis prends la photo en “🎯 Défi”.</p>
+        <button class="btn" id="backFromDefis">⬅️ Retour menu</button>
+      </section>
+
+      <!-- ECRAN: ESCAPE -->
+      <section id="screenEscape" class="grid hidden">
+        <p><b>🧩 Escape game</b></p>
+        <p class="muted">Réponds aux énigmes. Chaque bonne réponse donne un chiffre.</p>
+
+        <div class="grid" id="enigmes"></div>
+
+        <div class="hr"></div>
+        <p><b>Code final</b> <span class="muted">(débloqué quand tout est OK)</span></p>
+        <div id="finalBox" class="pill warn">🔒 Pas encore…</div>
+
+        <button class="btn" id="backFromEscape">⬅️ Retour menu</button>
+      </section>
+    </div>
+
+    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App offline-friendly (sauf envoi Drive) • v1</p>
+  </div>
+
+<script>
+/** =========================
+ *  CONFIG A MODIFIER (1 SEULE CHOSE AU DEBUT)
+ *  ========================= */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec"; // <-- on le mettra à l'étape 2
+
+/** Tables */
+const TABLES = [
+  { id: 1, name: "Table 1" },
+  { id: 2, name: "Table 2" },
+  { id: 3, name: "Table 3" },
+  { id: 3, name: "Table 4" },
+  { id: 3, name: "Table 5" },
+  { id: 3, name: "Table 6" },
+  { id: 3, name: "Table 7" },
+  // Ajoute / enlève des tables ici
+];
+
+/** Défis (simple + fun) */
+const DEFIS = [
+  { id: 1, title: "Tout le monde saute", desc: "Une photo où tout le monde saute." },
+  { id: 2, title: "Photo la plus drôle", desc: "Faites votre meilleure photo drôle." },
+  { id: 3, title: "Objet rouge", desc: "Une photo avec un objet rouge bien visible." },
+  { id: 4, title: "Sans sourire", desc: "Tout le monde sérieux, zéro sourire 😐" },
+  { id: 5, title: "Amitié", desc: "Une photo qui représente l’amitié." },
+];
+
+/** Escape game : réponses + chiffres */
+const ENIGMES = [
+  { id: "e1", question: "Énigme 1 : Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", answer: "eponge", digit: "4" },
+  { id: "e2", question: "Énigme 2 : Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", answer: "secret", digit: "7" },
+  { id: "e3", question: "Énigme 3 : Je monte et je descends sans bouger. Qui suis-je ?", answer: "escalier", digit: "2" },
+];
+const FINAL_CODE = () => ENIGMES.map(e => e.digit).join(""); // 472 ici
+
+/** =========================
+ *  STATE (localStorage)
+ *  ========================= */
+const LS = {
+  tableId: "bday_tableId",
+  photoType: "bday_photoType",
+  defis: "bday_defis_done",
+  escape: "bday_escape_ok",
+};
+function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
+function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
+function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
+function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
+function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defis) || "[]"); } catch { return []; } }
+function setDefisDone(arr){ localStorage.setItem(LS.defis, JSON.stringify(arr)); }
+function getEscapeOk(){ try { return JSON.parse(localStorage.getItem(LS.escape) || "{}"); } catch { return {}; } }
+function setEscapeOk(obj){ localStorage.setItem(LS.escape, JSON.stringify(obj)); }
+
+/** =========================
+ *  UI Helpers
+ *  ========================= */
+const $ = (id) => document.getElementById(id);
+function show(screenId){
+  ["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"].forEach(s => $(s).classList.add("hidden"));
+  $(screenId).classList.remove("hidden");
+}
+function updateBadge(){
+  const id = getTableId();
+  const badge = $("tableBadge");
+  const reset = $("resetBtn");
+  if(!id){
+    badge.classList.add("hidden");
+    reset.classList.add("hidden");
+    return;
+  }
+  const t = TABLES.find(x => x.id === id);
+  badge.textContent = t ? `🪑 ${t.name}` : `🪑 Table ${id}`;
+  badge.classList.remove("hidden");
+  reset.classList.remove("hidden");
+}
+
+/** =========================
+ *  Render: Tables
+ *  ========================= */
+function renderTables(){
+  const wrap = $("tableButtons");
+  wrap.innerHTML = "";
+  TABLES.forEach(t => {
+    const btn = document.createElement("button");
+    btn.textContent = t.name;
+    btn.onclick = () => {
+      setTableId(t.id);
+      updateBadge();
+      show("screenMenu");
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+/** =========================
+ *  Render: Defis
+ *  ========================= */
+function renderDefis(){
+  const done = new Set(getDefisDone());
+  const wrap = $("defisList");
+  wrap.innerHTML = "";
+  DEFIS.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.padding = "12px";
+    card.innerHTML = `
+      <div class="row" style="align-items:flex-start;">
+        <div>
+          <div><b>${done.has(d.id) ? "✅" : "⏳"} ${d.title}</b></div>
+          <div class="muted small">${d.desc}</div>
+        </div>
+        <div style="max-width:140px;">
+          <button>${done.has(d.id) ? "Annuler" : "Valider"}</button>
+        </div>
+      </div>
+    `;
+    card.querySelector("button").onclick = () => {
+      const cur = new Set(getDefisDone());
+      if(cur.has(d.id)) cur.delete(d.id); else cur.add(d.id);
+      setDefisDone(Array.from(cur));
+      renderDefis();
+    };
+    wrap.appendChild(card);
+  });
+}
+
+/** =========================
+ *  Render: Escape
+ *  ========================= */
+function normalize(s){ return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,""); }
+function renderEscape(){
+  const ok = getEscapeOk();
+  const wrap = $("enigmes");
+  wrap.innerHTML = "";
+  ENIGMES.forEach(e => {
+    const box = document.createElement("div");
+    box.className = "card";
+    box.style.padding = "12px";
+    box.innerHTML = `
+      <div><b>${ok[e.id] ? "✅" : "🧩"} ${e.question}</b></div>
+      <div class="row" style="margin-top:10px;">
+        <input type="text" placeholder="Ta réponse…" id="in_${e.id}" />
+        <button id="bt_${e.id}">Valider</button>
+      </div>
+      <div class="muted small" id="st_${e.id}"></div>
+    `;
+    wrap.appendChild(box);
+
+    const input = box.querySelector(`#in_${e.id}`);
+    const btn = box.querySelector(`#bt_${e.id}`);
+    const st = box.querySelector(`#st_${e.id}`);
+
+    if(ok[e.id]){
+      input.value = "OK";
+      input.disabled = true;
+      btn.textContent = "Validé";
+      btn.disabled = true;
+      st.innerHTML = `<span class="ok">Chiffre obtenu : ${e.digit}</span>`;
+    } else {
+      btn.onclick = () => {
+        const val = normalize(input.value);
+        if(val === normalize(e.answer)){
+          const next = getEscapeOk();
+          next[e.id] = true;
+          setEscapeOk(next);
+          renderEscape();
+        } else {
+          st.innerHTML = `<span class="err">Mauvaise réponse 😅</span>`;
+        }
+      };
+    }
+  });
+
+  const allOk = ENIGMES.every(e => getEscapeOk()[e.id]);
+  $("finalBox").textContent = allOk ? `🔓 CODE : ${FINAL_CODE()}` : "🔒 Pas encore…";
+  $("finalBox").className = allOk ? "pill ok" : "pill warn";
+}
+
+/** =========================
+ *  Photo upload
+ *  ========================= */
+function setTypeUI(t){
+  setPhotoType(t);
+  $("typeLabel").textContent = t;
+}
+async function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result));
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+async function sendPhoto(){
+  const tableId = getTableId();
+  if(!tableId){
+    $("sendStatus").innerHTML = `<span class="err">Choisis d’abord une table.</span>`;
+    show("screenTable");
+    return;
+  }
+  const file = $("photoInput").files[0];
+  if(!file){
+    $("sendStatus").innerHTML = `<span class="err">Ajoute une photo.</span>`;
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("COLLE_ICI")){
+    $("sendStatus").innerHTML = `<span class="warn">Étape 2 pas faite : URL Apps Script manquante.</span>`;
+    return;
+  }
+
+  $("sendStatus").textContent = "Envoi en cours…";
+  const dataUrl = await fileToBase64(file);
+
+  const payload = {
+    tableId,
+    type: getPhotoType(),
+    filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
+    dataUrl, // "data:image/...;base64,...."
+  };
+
+  try{
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
+    const txt = await res.text();
+    if(!res.ok) throw new Error(txt);
+    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée sur Drive !</span>`;
+    $("photoInput").value = "";
+  }catch(err){
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur d’envoi. ${String(err.message || err)}</span>`;
+  }
+}
+
+/** =========================
+ *  Init + Navigation
+ *  ========================= */
+renderTables();
+updateBadge();
+
+if(getTableId()) show("screenMenu");
+
+$("resetBtn").onclick = () => {
+  localStorage.removeItem(LS.tableId);
+  updateBadge();
+  show("screenTable");
+};
+
+$("goPhoto").onclick = () => { $("sendStatus").textContent=""; show("screenPhoto"); };
+$("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
+$("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
+
+$("backFromPhoto").onclick = () => show("screenMenu");
+$("backFromDefis").onclick = () => show("screenMenu");
+$("backFromEscape").onclick = () => show("screenMenu");
+
+document.querySelectorAll(".typeBtn").forEach(btn => {
+  btn.onclick = () => setTypeUI(btn.dataset.type);
+});
+setTypeUI(getPhotoType());
+
+$("sendPhotoBtn").onclick = sendPhoto;
+</script>
+</body>
+</html>

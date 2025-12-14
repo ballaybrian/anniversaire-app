@@ -299,14 +299,28 @@ function renderEscape(){
 function setTypeUI(t){
   setPhotoType(t);
   $("typeLabel").textContent = t;
-}
 async function fileToBase64(file){
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result));
-    r.onerror = reject;
-    r.readAsDataURL(file);
+  const img = await new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const i = new Image();
+    i.onload = () => { URL.revokeObjectURL(url); resolve(i); };
+    i.onerror = reject;
+    i.src = url;
   });
+
+  // Redimensionnement (max 1600px)
+  const max = 1600;
+  let { width:w, height:h } = img;
+  if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
+  else if (h >= w && h > max) { w = Math.round(w * (max / h)); h = max; }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, w, h);
+
+  // Compression JPEG (0.8 = bon compromis)
+  return canvas.toDataURL("image/jpeg", 0.8);
 }
 async function sendPhoto(){
   const tableId = getTableId();
@@ -342,7 +356,7 @@ async function sendPhoto(){
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
     });
-    const txt = await res.text();
+    
     if(!res.ok) throw new Error(txt);
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée sur Drive !</span>`;
     $("photoInput").value = "";

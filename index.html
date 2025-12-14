@@ -33,6 +33,7 @@
     .err { color:#ff6b6b; }
     .small { font-size: 14px; }
     .hr { height:1px; background:#24263a; margin: 14px 0; }
+    .note { font-size: 12px; opacity: .75; }
   </style>
 </head>
 <body>
@@ -84,6 +85,7 @@
 
           <button id="sendPhotoBtn">⬆️ Envoyer sur Drive</button>
           <div id="sendStatus" class="muted"></div>
+          <div class="note">Si l’envoi échoue, c’est souvent une photo trop lourde (on compresse automatiquement ici).</div>
 
           <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
         </div>
@@ -112,14 +114,15 @@
       </section>
     </div>
 
-    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App offline-friendly (sauf envoi Drive) • v1</p>
+    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App • v1</p>
   </div>
 
 <script>
 /** =========================
- *  CONFIG A MODIFIER (1 SEULE CHOSE AU DEBUT)
+ *  CONFIG
  *  ========================= */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec"; // <-- on le mettra à l'étape 2
+// ⚠️ Remplace par ton URL Apps Script (doit finir par /exec)
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
 /** Tables */
 const TABLES = [
@@ -130,10 +133,12 @@ const TABLES = [
   { id: 3, name: "Table 5" },
   { id: 3, name: "Table 6" },
   { id: 3, name: "Table 7" },
-  // Ajoute / enlève des tables ici
+  { id: 3, name: "Table 8" },
+  { id: 3, name: "Table 9" },
+  { id: 3, name: "Table " },
 ];
 
-/** Défis (simple + fun) */
+/** Défis */
 const DEFIS = [
   { id: 1, title: "Tout le monde saute", desc: "Une photo où tout le monde saute." },
   { id: 2, title: "Photo la plus drôle", desc: "Faites votre meilleure photo drôle." },
@@ -142,13 +147,13 @@ const DEFIS = [
   { id: 5, title: "Amitié", desc: "Une photo qui représente l’amitié." },
 ];
 
-/** Escape game : réponses + chiffres */
+/** Escape game */
 const ENIGMES = [
   { id: "e1", question: "Énigme 1 : Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", answer: "eponge", digit: "4" },
   { id: "e2", question: "Énigme 2 : Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", answer: "secret", digit: "7" },
   { id: "e3", question: "Énigme 3 : Je monte et je descends sans bouger. Qui suis-je ?", answer: "escalier", digit: "2" },
 ];
-const FINAL_CODE = () => ENIGMES.map(e => e.digit).join(""); // 472 ici
+const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
 
 /** =========================
  *  STATE (localStorage)
@@ -189,6 +194,10 @@ function updateBadge(){
   badge.textContent = t ? `🪑 ${t.name}` : `🪑 Table ${id}`;
   badge.classList.remove("hidden");
   reset.classList.remove("hidden");
+}
+function openCameraPicker(){
+  const input = document.getElementById("photoInput");
+  if (input) input.click();
 }
 
 /** =========================
@@ -294,12 +303,9 @@ function renderEscape(){
 }
 
 /** =========================
- *  Photo upload
+ *  Photo: compression + base64 (évite limite Apps Script)
  *  ========================= */
-function setTypeUI(t){
-  setPhotoType(t);
-  $("typeLabel").textContent = t;
-async function fileToBase64(file){
+async function fileToBase64Compressed(file){
   const img = await new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const i = new Image();
@@ -308,9 +314,9 @@ async function fileToBase64(file){
     i.src = url;
   });
 
-  // Redimensionnement (max 1600px)
+  // Max 1600px (bon compromis qualité/poids)
   const max = 1600;
-  let { width:w, height:h } = img;
+  let w = img.width, h = img.height;
   if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
   else if (h >= w && h > max) { w = Math.round(w * (max / h)); h = max; }
 
@@ -319,9 +325,18 @@ async function fileToBase64(file){
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, w, h);
 
-  // Compression JPEG (0.8 = bon compromis)
+  // Qualité JPEG 0.8 (très correct)
   return canvas.toDataURL("image/jpeg", 0.8);
 }
+
+/** =========================
+ *  Photo upload
+ *  ========================= */
+function setTypeUI(t){
+  setPhotoType(t);
+  $("typeLabel").textContent = t;
+}
+
 async function sendPhoto(){
   const tableId = getTableId();
   if(!tableId){
@@ -335,33 +350,35 @@ async function sendPhoto(){
     return;
   }
   if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("COLLE_ICI")){
-    $("sendStatus").innerHTML = `<span class="warn">Étape 2 pas faite : URL Apps Script manquante.</span>`;
+    $("sendStatus").innerHTML = `<span class="warn">URL Apps Script manquante (celle qui finit par /exec).</span>`;
     return;
   }
 
-  $("sendStatus").textContent = "Envoi en cours…";
-  const dataUrl = await fileToBase64(file);
+  $("sendStatus").textContent = "Compression + envoi en cours…";
+
+  // Compression / base64
+  const dataUrl = await fileToBase64Compressed(file);
 
   const payload = {
     tableId,
     type: getPhotoType(),
     filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-    dataUrl, // "data:image/...;base64,...."
+    dataUrl,
   };
 
   try{
-    const res = await fetch(APPS_SCRIPT_URL, {
+    // no-cors : compatible GitHub Pages -> Apps Script
+    await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
     });
-    
-    if(!res.ok) throw new Error(txt);
+
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée sur Drive !</span>`;
     $("photoInput").value = "";
   }catch(err){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur d’envoi. ${String(err.message || err)}</span>`;
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau (connexion / URL / permissions). ${String(err.message || err)}</span>`;
   }
 }
 
@@ -370,7 +387,6 @@ async function sendPhoto(){
  *  ========================= */
 renderTables();
 updateBadge();
-
 if(getTableId()) show("screenMenu");
 
 $("resetBtn").onclick = () => {
@@ -379,7 +395,12 @@ $("resetBtn").onclick = () => {
   show("screenTable");
 };
 
-$("goPhoto").onclick = () => { $("sendStatus").textContent=""; show("screenPhoto"); };
+$("goPhoto").onclick = () => {
+  $("sendStatus").textContent = "";
+  show("screenPhoto");
+  openCameraPicker(); // ouvre direct
+};
+
 $("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
 $("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
 
@@ -387,13 +408,11 @@ $("backFromPhoto").onclick = () => show("screenMenu");
 $("backFromDefis").onclick = () => show("screenMenu");
 $("backFromEscape").onclick = () => show("screenMenu");
 
+// Boutons type : change type + ouvre caméra
 document.querySelectorAll(".typeBtn").forEach(btn => {
   btn.onclick = () => {
     setTypeUI(btn.dataset.type);
-
-    // Ouvre directement l'appareil photo / galerie
-    const input = document.getElementById("photoInput");
-    if (input) input.click();
+    openCameraPicker();
   };
 });
 setTypeUI(getPhotoType());

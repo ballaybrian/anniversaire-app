@@ -387,11 +387,12 @@ const DEFIS = [
 
 /* Escape : chaque énigme donne un chiffre */
 const ENIGMES = [
-  { id: "e1", digit: "4", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
-  { id: "e2", digit: "7", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
-  { id: "e3", digit: "2", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier" },
+  { id: "e1", digit: "1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
+  { id: "e2", digit: "6", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
+  { id: "e3", digit: "1", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier" },
+  { id: "e4", digit: "2", q: "J'ai eu 5 de moyenne en français. Qui suis-je ?", a: "nolan" }
 ];
-const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
+const FINAL_CODE = (1612) => ENIGMES.map(e => e.digit).join("");
 
 /** ========= STATE ========= */
 const LS = {

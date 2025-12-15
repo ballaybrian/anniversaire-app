@@ -12,15 +12,14 @@
 
   <style>
     :root{
-      /* Thème : Beige + Sauge + Marron clair */
-      --bg: #F3EBDD;             /* beige */
+      --bg: #F3EBDD;
       --card: rgba(255,255,255,0.62);
       --border: #D9CDBA;
 
-      --text: #5F7A68;           /* vert sauge */
+      --text: #5F7A68;
       --muted: rgba(95,122,104,0.70);
 
-      --btn: #CBB79A;            /* marron clair */
+      --btn: #CBB79A;
       --btnText: #2F2A22;
       --btnBorder: #B39E7E;
 
@@ -53,7 +52,6 @@
     .grid2{ grid-template-columns: 1fr 1fr; }
 
     .muted{ color: var(--muted); font-size: 13px; }
-    .small{ font-size: 13px; }
     .pill{
       display:inline-block;
       padding: 7px 12px;
@@ -91,7 +89,6 @@
       color: var(--muted);
     }
 
-    /* Monogramme simple */
     .mono{
       font-family: "Playfair Display", serif;
       font-size: 16px;
@@ -133,7 +130,6 @@
       width: auto;
     }
 
-    /* Bouton discret (selfie) */
     .btn-subtle{
       background: rgba(255,255,255,0.55);
       border: 1px solid var(--border);
@@ -161,7 +157,6 @@
       #camVideo, #camCanvas{ aspect-ratio: 16/9; }
     }
 
-    /* Flash overlay */
     .flash{
       position:absolute; inset:0;
       background:#fff;
@@ -171,7 +166,6 @@
     }
     .flash.on{ opacity: 0.85; }
 
-    /* Inputs (plus tard) */
     input[type="text"]{
       width:100%;
       padding: 12px 12px;
@@ -183,15 +177,14 @@
       outline: none;
     }
 
-    /* ====== Écran TABLE : centrage + cartes marron ====== */
+    /* Écran TABLE */
     #screenTable .section-title{
       text-align:center;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: .3px;
       margin: 0 0 4px;
     }
-
     #tableButtons{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -199,8 +192,6 @@
       justify-items: center;
       margin-top: 6px;
     }
-
-    /* Boutons de tables en marron clair */
     #tableButtons button{
       width: 100%;
       max-width: 170px;
@@ -213,7 +204,6 @@
       font-weight: 800;
     }
 
-    /* Animation au clic (choix table) */
     @keyframes pop {
       0% { transform: scale(1); }
       50% { transform: scale(1.06); }
@@ -225,10 +215,7 @@
       border-color: var(--btnBorder);
     }
 
-    /* petite transition écran (fade) */
-    .fade-in{
-      animation: fadeIn 220ms ease-out;
-    }
+    .fade-in{ animation: fadeIn 220ms ease-out; }
     @keyframes fadeIn{
       from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -236,16 +223,43 @@
 
     .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
 
-    /* Icône flip (rotation) */
+    /* Icône flip */
     .flipIcon{
       display:inline-block;
       margin-right: 8px;
       transition: transform 260ms ease;
       transform-origin: 50% 50%;
     }
-    .flipIcon.spin{
-      transform: rotate(180deg);
+    .flipIcon.spin{ transform: rotate(180deg); }
+
+    /* Cards list (défis/escape) */
+    .item{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.45);
+      display: grid;
+      gap: 8px;
     }
+    .itemTitle{
+      font-weight: 800;
+      text-align: left;
+      color: var(--text);
+    }
+    .itemDesc{
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      line-height: 1.35;
+    }
+    .itemRow{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .tiny{ font-size: 12px; }
+
   </style>
 </head>
 
@@ -267,7 +281,7 @@
         </div>
       </header>
 
-      <!-- ECRANS (affichage via JS: style.display) -->
+      <!-- ECRANS -->
       <section id="screenTable" class="grid">
         <p class="section-title">Choisis ta table</p>
         <div id="tableButtons"></div>
@@ -290,6 +304,7 @@
         <div class="grid">
           <div class="muted" style="text-align:center;">
             Type : <span id="typeLabel" class="pill">libre</span>
+            <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
           </div>
 
           <div class="grid grid2">
@@ -304,7 +319,6 @@
             <div id="flash" class="flash"></div>
           </div>
 
-          <!-- Controls caméra: activer + selfie discret -->
           <div class="grid grid2">
             <button id="startCamBtn">🎥 Activer la caméra</button>
             <button id="switchCamBtn" class="btn-subtle">
@@ -320,19 +334,32 @@
           <div id="sendStatus" class="muted" style="text-align:center;"></div>
           <p class="muted" style="text-align:center;margin:0;">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</p>
 
-          <button id="backFromPhoto">⬅️ Retour menu</button>
+          <button id="backFromPhoto">⬅️ Retour</button>
         </div>
       </section>
 
       <section id="screenDefis" class="grid">
-        <p style="text-align:center;margin:0;font-weight:800;">Défis photos</p>
-        <p class="muted" style="text-align:center;margin:0;">(On fera cette partie plus tard)</p>
+        <p style="text-align:center;margin:0;font-weight:800;">🎯 Défis photos</p>
+        <p class="muted" style="text-align:center;margin:0;">Validez un défi en prenant une photo.</p>
+
+        <div class="pill" id="defisProgress" style="text-align:center;"></div>
+        <div id="defisList" class="grid"></div>
+
+        <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
         <button id="backFromDefis">⬅️ Retour menu</button>
       </section>
 
       <section id="screenEscape" class="grid">
-        <p style="text-align:center;margin:0;font-weight:800;">Escape game</p>
-        <p class="muted" style="text-align:center;margin:0;">(On fera cette partie plus tard)</p>
+        <p style="text-align:center;margin:0;font-weight:800;">🧩 Escape game</p>
+        <p class="muted" style="text-align:center;margin:0;">Réponds aux énigmes. Chaque bonne réponse donne un chiffre.</p>
+
+        <div class="pill" id="escapeProgress" style="text-align:center;"></div>
+        <div id="enigmesList" class="grid"></div>
+
+        <div class="hr"></div>
+        <div id="finalBox" class="pill warn" style="text-align:center;">🔒 Code final : pas encore…</div>
+
+        <button id="resetEscapeBtn" class="btn-subtle">Réinitialiser l’escape</button>
         <button id="backFromEscape">⬅️ Retour menu</button>
       </section>
 
@@ -340,7 +367,7 @@
   </div>
 
 <script>
-/** ============ CONFIG ============ */
+/** ========= CONFIG ========= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
 const TABLES = [
@@ -349,13 +376,33 @@ const TABLES = [
   { id: 3, name: "Table 3" },
 ];
 
-/** ============ STATE ============ */
+/* Défis : tu peux changer title/desc comme tu veux */
+const DEFIS = [
+  { id: "d1", title: "Tout le monde saute", desc: "Photo où tout le monde saute en même temps." },
+  { id: "d2", title: "La plus drôle", desc: "Faites la photo la plus drôle possible." },
+  { id: "d3", title: "Couple (ou duo)", desc: "Photo en duo, pose stylée." },
+  { id: "d4", title: "Objet rouge", desc: "Un objet rouge bien visible dans l’image." },
+  { id: "d5", title: "Sans sourire", desc: "Tout le monde sérieux 😐" },
+];
+
+/* Escape : chaque énigme donne un chiffre */
+const ENIGMES = [
+  { id: "e1", digit: "4", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
+  { id: "e2", digit: "7", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
+  { id: "e3", digit: "2", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier" },
+];
+const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
+
+/** ========= STATE ========= */
 const LS = {
   tableId: "bday_tableId",
   photoType: "bday_photoType",
   uploading: "bday_uploading",
   count: "bday_photo_count",
-  camMode: "bday_cam_mode", // "environment" | "user"
+  camMode: "bday_cam_mode",
+  mission: "bday_mission",          // { kind:"defi"|"escape"|"", id:"d1", title:"..." }
+  defisDone: "bday_defis_done",     // { d1:true, ... }
+  escapeOk: "bday_escape_ok",       // { e1:true, ... }
 };
 
 const $ = (id) => document.getElementById(id);
@@ -375,8 +422,7 @@ function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
 
 function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
 function incCount(){
-  const next = getCount() + 1;
-  localStorage.setItem(LS.count, String(next));
+  localStorage.setItem(LS.count, String(getCount() + 1));
   updateCountUI();
 }
 function updateCountUI(){
@@ -399,7 +445,66 @@ function updateBadge(){
   reset.style.display = "inline-block";
 }
 
-/** ============ TABLES UI + ANIMATION ============ */
+/** ========= Mission (défi/escape) ========= */
+function setMission(obj){
+  localStorage.setItem(LS.mission, JSON.stringify(obj || null));
+  updateMissionPill();
+}
+function getMission(){
+  try { return JSON.parse(localStorage.getItem(LS.mission) || "null"); }
+  catch { return null; }
+}
+function clearMission(){
+  localStorage.removeItem(LS.mission);
+  updateMissionPill();
+}
+function updateMissionPill(){
+  const m = getMission();
+  const pill = $("missionPill");
+  if(!pill) return;
+
+  if(m && m.title){
+    pill.style.display = "inline-block";
+    pill.textContent = `🎯 ${m.title}`;
+  } else {
+    pill.style.display = "none";
+    pill.textContent = "";
+  }
+}
+
+/** ========= Défis ========= */
+function getDefisDone(){
+  try { return JSON.parse(localStorage.getItem(LS.defisDone) || "{}"); }
+  catch { return {}; }
+}
+function setDefisDone(obj){
+  localStorage.setItem(LS.defisDone, JSON.stringify(obj));
+}
+function markDefiDone(defiId){
+  const done = getDefisDone();
+  done[defiId] = true;
+  setDefisDone(done);
+}
+function resetDefis(){
+  localStorage.removeItem(LS.defisDone);
+}
+
+/** ========= Escape ========= */
+function normalize(s){
+  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+}
+function getEscapeOk(){
+  try { return JSON.parse(localStorage.getItem(LS.escapeOk) || "{}"); }
+  catch { return {}; }
+}
+function setEscapeOk(obj){
+  localStorage.setItem(LS.escapeOk, JSON.stringify(obj));
+}
+function resetEscape(){
+  localStorage.removeItem(LS.escapeOk);
+}
+
+/** ========= UI Tables ========= */
 function renderTables(){
   const wrap = $("tableButtons");
   wrap.innerHTML = "";
@@ -419,16 +524,127 @@ function renderTables(){
   });
 }
 
-/** ============ FEEDBACK (flash/vibration/son) ============ */
+/** ========= UI Défis ========= */
+function renderDefis(){
+  const done = getDefisDone();
+  const wrap = $("defisList");
+  wrap.innerHTML = "";
+
+  const nbDone = DEFIS.filter(d => done[d.id]).length;
+  $("defisProgress").textContent = `Progression : ${nbDone} / ${DEFIS.length} défis`;
+
+  DEFIS.forEach(d => {
+    const isDone = !!done[d.id];
+
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="itemRow">
+        <div>
+          <div class="itemTitle">${isDone ? "✅" : "⏳"} ${d.title}</div>
+          <div class="itemDesc">${d.desc}</div>
+        </div>
+        <div style="min-width:160px;">
+          <button class="${isDone ? "btn-subtle" : ""}" data-action="do">
+            ${isDone ? "Reprendre" : "📸 Faire ce défi"}
+          </button>
+        </div>
+      </div>
+      <div class="muted tiny">${isDone ? "Défi validé" : "Appuie pour ouvrir l’appareil photo"}</div>
+    `;
+
+    div.querySelector("button").onclick = () => {
+      // on lance une mission "défi"
+      setTypeUI("defi");
+      setMission({ kind: "defi", id: d.id, title: d.title });
+      setScreen("screenPhoto");
+    };
+
+    wrap.appendChild(div);
+  });
+}
+
+/** ========= UI Escape ========= */
+function renderEscape(){
+  const ok = getEscapeOk();
+  const wrap = $("enigmesList");
+  wrap.innerHTML = "";
+
+  const nbOk = ENIGMES.filter(e => ok[e.id]).length;
+  $("escapeProgress").textContent = `Progression : ${nbOk} / ${ENIGMES.length} énigmes`;
+
+  ENIGMES.forEach(e => {
+    const isOk = !!ok[e.id];
+
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="itemTitle">${isOk ? "✅" : "🧩"} Énigme</div>
+      <div class="itemDesc">${e.q}</div>
+      <div class="grid grid2">
+        <input type="text" id="ans_${e.id}" placeholder="Ta réponse…" ${isOk ? "disabled" : ""}>
+        <button id="btn_${e.id}" class="${isOk ? "btn-subtle" : ""}" ${isOk ? "disabled" : ""}>Valider</button>
+      </div>
+      <div class="muted tiny" id="st_${e.id}">${isOk ? `Chiffre obtenu : ${e.digit}` : ""}</div>
+    `;
+
+    wrap.appendChild(div);
+
+    if(!isOk){
+      div.querySelector(`#btn_${e.id}`).onclick = () => {
+        const input = div.querySelector(`#ans_${e.id}`);
+        const st = div.querySelector(`#st_${e.id}`);
+
+        if(normalize(input.value) === normalize(e.a)){
+          const next = getEscapeOk();
+          next[e.id] = true;
+          setEscapeOk(next);
+
+          st.innerHTML = `<span class="ok">✅ Correct ! Chiffre : ${e.digit}</span>`;
+          renderEscape();
+        } else {
+          st.innerHTML = `<span class="err">❌ Mauvaise réponse</span>`;
+        }
+      };
+    }
+  });
+
+  const allOk = ENIGMES.every(e => getEscapeOk()[e.id]);
+  const box = $("finalBox");
+  if(allOk){
+    box.className = "pill ok";
+    box.textContent = `🔓 Code final : ${FINAL_CODE()}`;
+  } else {
+    box.className = "pill warn";
+    box.textContent = "🔒 Code final : pas encore…";
+  }
+}
+
+/** ========= Photo module ========= */
+let camStream = null;
+let capturedDataUrl = null;
+
+let cameraMode = localStorage.getItem(LS.camMode) || "environment"; // "environment" | "user"
+
+function updateSwitchCamUI(){
+  const txt = $("switchCamText");
+  if (!txt) return;
+  txt.textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
+}
+function spinFlipIcon(){
+  const icon = $("flipIcon");
+  if(!icon) return;
+  icon.classList.toggle("spin");
+  setTimeout(() => icon.classList.toggle("spin"), 280);
+}
+
 function flash(){
   const f = $("flash");
   if(!f) return;
   f.classList.add("on");
   setTimeout(() => f.classList.remove("on"), 140);
 }
-function haptic(){
-  if (navigator.vibrate) navigator.vibrate(30);
-}
+function haptic(){ if (navigator.vibrate) navigator.vibrate(30); }
 function clickSound(){
   try{
     const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -445,27 +661,6 @@ function clickSound(){
   } catch {}
 }
 
-/** ============ CAMERA + UPLOAD ============ */
-let camStream = null;
-let capturedDataUrl = null;
-
-// Mode caméra : on mémorise (pratique si quelqu’un préfère selfie)
-let cameraMode = localStorage.getItem(LS.camMode) || "environment"; // "environment" | "user"
-
-function updateSwitchCamUI(){
-  const txt = $("switchCamText");
-  if (!txt) return;
-  txt.textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
-}
-
-function spinFlipIcon(){
-  const icon = $("flipIcon");
-  if(!icon) return;
-  icon.classList.toggle("spin");
-  // on enlève/reverse l'état après l'animation pour permettre un nouvel effet à chaque clic
-  setTimeout(() => icon.classList.toggle("spin"), 280);
-}
-
 function setTypeUI(t){
   setPhotoType(t);
   $("typeLabel").textContent = t;
@@ -475,22 +670,20 @@ async function startCamera(){
   try{
     $("sendStatus").textContent = "🎥 Activation caméra…";
 
-    // stop si déjà actif
     if (camStream) {
       camStream.getTracks().forEach(tr => tr.stop());
       camStream = null;
     }
 
-    const constraints = {
+    camStream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: cameraMode,  // "environment" ou "user"
+        facingMode: cameraMode,
         width: { ideal: 1280 },
         height: { ideal: 720 }
       },
       audio: false
-    };
+    });
 
-    camStream = await navigator.mediaDevices.getUserMedia(constraints);
     $("camVideo").srcObject = camStream;
     $("takePhotoBtn").disabled = false;
     $("sendStatus").textContent = "";
@@ -546,12 +739,17 @@ async function sendPhotoAuto(){
   if (localStorage.getItem(LS.uploading) === "1") return;
   localStorage.setItem(LS.uploading, "1");
 
+  const mission = getMission(); // pour marquer un défi après upload
+
   try{
     const payload = {
       tableId,
       type: getPhotoType(),
       filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
       dataUrl: capturedDataUrl,
+
+      // métadonnées (optionnelles, Apps Script peut ignorer)
+      mission: mission || null,
     };
 
     await fetch(APPS_SCRIPT_URL, {
@@ -562,11 +760,25 @@ async function sendPhotoAuto(){
     });
 
     incCount();
-    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
+
+    // ✅ Si c'était un défi, on le marque “fait”
+    if(mission && mission.kind === "defi" && mission.id){
+      markDefiDone(mission.id);
+    }
+
+    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉</span>`;
     capturedDataUrl = null;
     $("retakeBtn").style.display = "none";
 
-    setTimeout(() => setScreen("screenMenu"), 1200);
+    // retour intelligent : si mission défi → retour défis, sinon menu
+    const target = (mission && mission.kind === "defi") ? "screenDefis" : "screenMenu";
+    clearMission();
+
+    setTimeout(() => {
+      if(target === "screenDefis") renderDefis();
+      setScreen(target);
+    }, 900);
+
   } catch(e){
     $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau. Vérifie la connexion.</span>`;
   } finally {
@@ -578,11 +790,11 @@ function resetPhotoSession(){
   capturedDataUrl = null;
   $("sendStatus").textContent = "";
   $("retakeBtn").style.display = "none";
+  updateMissionPill();
 }
 
-/** ============ INIT + NAV ============ */
+/** ========= INIT + NAV ========= */
 document.addEventListener("DOMContentLoaded", () => {
-  // Hide all screens first
   screens.forEach(s => $(s).style.display = "none");
 
   renderTables();
@@ -590,44 +802,69 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCountUI();
   setTypeUI(getPhotoType());
   updateSwitchCamUI();
+  updateMissionPill();
 
-  // initial screen
   if(!getTableId()) setScreen("screenTable");
   else setScreen("screenMenu");
 
-  // nav
+  // Menu
+  $("goPhoto").onclick = () => {
+    clearMission();
+    resetPhotoSession();
+    setScreen("screenPhoto");
+  };
+
+  $("goDefis").onclick = () => {
+    renderDefis();
+    setScreen("screenDefis");
+  };
+
+  $("goEscape").onclick = () => {
+    renderEscape();
+    setScreen("screenEscape");
+  };
+
+  // Back
+  $("backFromDefis").onclick = () => setScreen("screenMenu");
+  $("backFromEscape").onclick = () => setScreen("screenMenu");
+
+  $("backFromPhoto").onclick = () => {
+    stopCamera();
+    // si photo lancée depuis un défi, on retourne aux défis
+    const m = getMission();
+    if(m && m.kind === "defi"){ renderDefis(); setScreen("screenDefis"); }
+    else setScreen("screenMenu");
+  };
+
+  // Reset table
   $("resetBtn").onclick = () => {
     setTableId(0);
     updateBadge();
     setScreen("screenTable");
   };
 
-  $("goPhoto").onclick = () => { resetPhotoSession(); setScreen("screenPhoto"); };
-  $("goDefis").onclick = () => setScreen("screenDefis");
-  $("goEscape").onclick = () => setScreen("screenEscape");
+  // Reset defis/escape
+  $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
+  $("resetEscapeBtn").onclick = () => { resetEscape(); renderEscape(); };
 
-  $("backFromPhoto").onclick = () => { stopCamera(); setScreen("screenMenu"); };
-  $("backFromDefis").onclick = () => setScreen("screenMenu");
-  $("backFromEscape").onclick = () => setScreen("screenMenu");
-
-  // type buttons
+  // Type buttons (manuel)
   document.querySelectorAll(".typeBtn").forEach(btn => {
-    btn.onclick = () => setTypeUI(btn.dataset.type);
+    btn.onclick = () => {
+      clearMission();
+      setTypeUI(btn.dataset.type);
+      updateMissionPill();
+    };
   });
 
   // camera controls
   $("startCamBtn").onclick = startCamera;
   $("takePhotoBtn").onclick = takePhoto;
 
-  // switch cam (selfie)
   $("switchCamBtn").onclick = () => {
     cameraMode = (cameraMode === "environment") ? "user" : "environment";
     localStorage.setItem(LS.camMode, cameraMode);
-
     spinFlipIcon();
     updateSwitchCamUI();
-
-    // si la caméra est déjà active : on redémarre
     if (camStream) startCamera();
   };
 

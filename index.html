@@ -388,12 +388,17 @@ async function sendPhoto(){
       body: JSON.stringify(payload),
     });
 
-    $("sendStatus").innerHTML = `<span class="ok">✅ Envoi déclenché ! Vérifie Drive dans quelques secondes.</span>`;
-    input.value = "";
+   $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
+input.value = "";
 
-    // Reset preview
-    $("previewImg").classList.add("hidden");
-    $("photoReady").classList.add("hidden");
+// Reset preview
+$("previewImg").classList.add("hidden");
+$("photoReady").classList.add("hidden");
+
+// Retour auto au menu après 1,2s
+setTimeout(() => {
+  show("screenMenu");
+}, 1200));
   }catch(err){
     $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau (connexion / permissions). ${String(err.message || err)}</span>`;
   } finally {

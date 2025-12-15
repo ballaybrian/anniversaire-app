@@ -91,10 +91,10 @@
       color: var(--muted);
     }
 
-    /* Monogramme simple (plus petit) */
+    /* Monogramme simple */
     .mono{
       font-family: "Playfair Display", serif;
-      font-size: 16px;         /* plus petit */
+      font-size: 16px;
       letter-spacing: 1px;
       opacity: .85;
       user-select: none;
@@ -133,6 +133,14 @@
       width: auto;
     }
 
+    /* Bouton discret (selfie) */
+    .btn-subtle{
+      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 650;
+    }
+
     /* Camera */
     .camBox{
       position: relative;
@@ -163,7 +171,7 @@
     }
     .flash.on{ opacity: 0.85; }
 
-    /* Inputs (escape/defis plus tard) */
+    /* Inputs (plus tard) */
     input[type="text"]{
       width:100%;
       padding: 12px 12px;
@@ -175,7 +183,7 @@
       outline: none;
     }
 
-    /* ====== Écran TABLE : centrage + cartes ====== */
+    /* ====== Écran TABLE : centrage + cartes marron ====== */
     #screenTable .section-title{
       text-align:center;
       font-size: 18px;
@@ -192,22 +200,18 @@
       margin-top: 6px;
     }
 
-    /* Boutons de tables = cartes */
-#tableButtons button{
-  width: 100%;
-  max-width: 170px;
-  padding: 16px 0;
-  font-size: 16px;
-  border-radius: 18px;
-
-  /* Marron clair */
-  background: var(--btn);
-  border: 1px solid var(--btnBorder);
-  color: var(--btnText);
-
-  font-weight: 700;
-}
-
+    /* Boutons de tables en marron clair */
+    #tableButtons button{
+      width: 100%;
+      max-width: 170px;
+      padding: 16px 0;
+      font-size: 16px;
+      border-radius: 18px;
+      background: var(--btn);
+      border: 1px solid var(--btnBorder);
+      color: var(--btnText);
+      font-weight: 800;
+    }
 
     /* Animation au clic (choix table) */
     @keyframes pop {
@@ -217,7 +221,7 @@
     }
     #tableButtons button.picked{
       animation: pop 220ms ease-out;
-      background: rgba(255,255,255,0.80);
+      background: #D6C4A6;
       border-color: var(--btnBorder);
     }
 
@@ -231,6 +235,17 @@
     }
 
     .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
+
+    /* Icône flip (rotation) */
+    .flipIcon{
+      display:inline-block;
+      margin-right: 8px;
+      transition: transform 260ms ease;
+      transform-origin: 50% 50%;
+    }
+    .flipIcon.spin{
+      transform: rotate(180deg);
+    }
   </style>
 </head>
 
@@ -270,7 +285,7 @@
       </section>
 
       <section id="screenPhoto" class="grid">
-        <p style="margin:0;text-align:center;font-weight:700;">Photobooth</p>
+        <p style="margin:0;text-align:center;font-weight:800;">Photobooth</p>
 
         <div class="grid">
           <div class="muted" style="text-align:center;">
@@ -289,12 +304,18 @@
             <div id="flash" class="flash"></div>
           </div>
 
+          <!-- Controls caméra: activer + selfie discret -->
           <div class="grid grid2">
             <button id="startCamBtn">🎥 Activer la caméra</button>
-            <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+            <button id="switchCamBtn" class="btn-subtle">
+              <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
+            </button>
           </div>
 
-          <button id="retakeBtn" style="display:none;">🔁 Reprendre</button>
+          <div class="grid grid2">
+            <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+            <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
+          </div>
 
           <div id="sendStatus" class="muted" style="text-align:center;"></div>
           <p class="muted" style="text-align:center;margin:0;">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</p>
@@ -304,13 +325,13 @@
       </section>
 
       <section id="screenDefis" class="grid">
-        <p style="text-align:center;margin:0;font-weight:700;">Défis photos</p>
+        <p style="text-align:center;margin:0;font-weight:800;">Défis photos</p>
         <p class="muted" style="text-align:center;margin:0;">(On fera cette partie plus tard)</p>
         <button id="backFromDefis">⬅️ Retour menu</button>
       </section>
 
       <section id="screenEscape" class="grid">
-        <p style="text-align:center;margin:0;font-weight:700;">Escape game</p>
+        <p style="text-align:center;margin:0;font-weight:800;">Escape game</p>
         <p class="muted" style="text-align:center;margin:0;">(On fera cette partie plus tard)</p>
         <button id="backFromEscape">⬅️ Retour menu</button>
       </section>
@@ -322,7 +343,6 @@
 /** ============ CONFIG ============ */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
-/** Tables (tu changeras les noms plus tard) */
 const TABLES = [
   { id: 1, name: "Table 1" },
   { id: 2, name: "Table 2" },
@@ -335,6 +355,7 @@ const LS = {
   photoType: "bday_photoType",
   uploading: "bday_uploading",
   count: "bday_photo_count",
+  camMode: "bday_cam_mode", // "environment" | "user"
 };
 
 const $ = (id) => document.getElementById(id);
@@ -388,17 +409,10 @@ function renderTables(){
     btn.textContent = t.name;
 
     btn.onclick = () => {
-      // Animation sur le bouton choisi
       btn.classList.add("picked");
-
-      // on enregistre la table
       setTableId(t.id);
       updateBadge();
-
-      // Transition vers menu après mini délai (laisse l’anim se voir)
-      setTimeout(() => {
-        setScreen("screenMenu");
-      }, 220);
+      setTimeout(() => setScreen("screenMenu"), 220);
     };
 
     wrap.appendChild(btn);
@@ -435,6 +449,23 @@ function clickSound(){
 let camStream = null;
 let capturedDataUrl = null;
 
+// Mode caméra : on mémorise (pratique si quelqu’un préfère selfie)
+let cameraMode = localStorage.getItem(LS.camMode) || "environment"; // "environment" | "user"
+
+function updateSwitchCamUI(){
+  const txt = $("switchCamText");
+  if (!txt) return;
+  txt.textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
+}
+
+function spinFlipIcon(){
+  const icon = $("flipIcon");
+  if(!icon) return;
+  icon.classList.toggle("spin");
+  // on enlève/reverse l'état après l'animation pour permettre un nouvel effet à chaque clic
+  setTimeout(() => icon.classList.toggle("spin"), 280);
+}
+
 function setTypeUI(t){
   setPhotoType(t);
   $("typeLabel").textContent = t;
@@ -443,10 +474,22 @@ function setTypeUI(t){
 async function startCamera(){
   try{
     $("sendStatus").textContent = "🎥 Activation caméra…";
+
+    // stop si déjà actif
+    if (camStream) {
+      camStream.getTracks().forEach(tr => tr.stop());
+      camStream = null;
+    }
+
     const constraints = {
-      video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      video: {
+        facingMode: cameraMode,  // "environment" ou "user"
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      },
       audio: false
     };
+
     camStream = await navigator.mediaDevices.getUserMedia(constraints);
     $("camVideo").srcObject = camStream;
     $("takePhotoBtn").disabled = false;
@@ -473,8 +516,7 @@ function takePhoto(){
 
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(video, 0, 0, w, h);
+  canvas.getContext("2d").drawImage(video, 0, 0, w, h);
 
   capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
 
@@ -547,6 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateBadge();
   updateCountUI();
   setTypeUI(getPhotoType());
+  updateSwitchCamUI();
 
   // initial screen
   if(!getTableId()) setScreen("screenTable");
@@ -575,6 +618,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // camera controls
   $("startCamBtn").onclick = startCamera;
   $("takePhotoBtn").onclick = takePhoto;
+
+  // switch cam (selfie)
+  $("switchCamBtn").onclick = () => {
+    cameraMode = (cameraMode === "environment") ? "user" : "environment";
+    localStorage.setItem(LS.camMode, cameraMode);
+
+    spinFlipIcon();
+    updateSwitchCamUI();
+
+    // si la caméra est déjà active : on redémarre
+    if (camStream) startCamera();
+  };
+
   $("retakeBtn").onclick = () => {
     capturedDataUrl = null;
     $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;

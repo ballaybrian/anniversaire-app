@@ -185,14 +185,13 @@
       letter-spacing: .3px;
       margin: 0 0 4px;
     }
- #tableButtons{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);  /* ✅ 3 colonnes fixes */
-  gap: 14px;
-  justify-items: center;
-  margin-top: 6px;
-}
-
+    #tableButtons{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      justify-items: center;
+      margin-top: 6px;
+    }
     #tableButtons button{
       width: 100%;
       max-width: 170px;
@@ -261,6 +260,40 @@
     }
     .tiny{ font-size: 12px; }
 
+    /* ✅ Barres de progression (vert sauge) */
+    .progressWrap{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.45);
+      border-radius: 999px;
+      padding: 10px 10px 8px;
+    }
+    .progressBar{
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(95,122,104,0.20);
+      overflow: hidden;
+    }
+    .progressFill{
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: var(--text);
+      transition: width 260ms ease;
+    }
+    .progressLabel{
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: .3px;
+    }
+    .progressSub{
+      margin-top: 2px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
   </style>
 </head>
 
@@ -343,7 +376,13 @@
         <p style="text-align:center;margin:0;font-weight:800;">🎯 Défis photos</p>
         <p class="muted" style="text-align:center;margin:0;">Validez un défi en prenant une photo.</p>
 
-        <div class="pill" id="defisProgress" style="text-align:center;"></div>
+        <!-- ✅ Progress Défis -->
+        <div class="progressWrap">
+          <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
+          <div id="defisPercent" class="progressLabel">0%</div>
+          <div id="defisSub" class="progressSub">0 / 0 défis</div>
+        </div>
+
         <div id="defisList" class="grid"></div>
 
         <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
@@ -354,7 +393,13 @@
         <p style="text-align:center;margin:0;font-weight:800;">🧩 Escape game</p>
         <p class="muted" style="text-align:center;margin:0;">Réponds aux énigmes. Chaque bonne réponse donne un chiffre.</p>
 
-        <div class="pill" id="escapeProgress" style="text-align:center;"></div>
+        <!-- ✅ Progress Escape -->
+        <div class="progressWrap">
+          <div class="progressBar"><div id="escapeFill" class="progressFill"></div></div>
+          <div id="escapePercent" class="progressLabel">0%</div>
+          <div id="escapeSub" class="progressSub">0 / 0 énigmes</div>
+        </div>
+
         <div id="enigmesList" class="grid"></div>
 
         <div class="hr"></div>
@@ -408,9 +453,9 @@ const LS = {
   uploading: "bday_uploading",
   count: "bday_photo_count",
   camMode: "bday_cam_mode",
-  mission: "bday_mission",          // { kind:"defi"|"escape"|"", id:"d1", title:"..." }
-  defisDone: "bday_defis_done",     // { d1:true, ... }
-  escapeOk: "bday_escape_ok",       // { e1:true, ... }
+  mission: "bday_mission",
+  defisDone: "bday_defis_done",
+  escapeOk: "bday_escape_ok",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -532,6 +577,14 @@ function renderTables(){
   });
 }
 
+/** ✅ MAJ barre progression (helper) */
+function setProgress(fillEl, percentEl, subEl, done, total, label){
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  if (fillEl) fillEl.style.width = pct + "%";
+  if (percentEl) percentEl.textContent = pct + "%";
+  if (subEl) subEl.textContent = `${done} / ${total} ${label}`;
+}
+
 /** ========= UI Défis ========= */
 function renderDefis(){
   const done = getDefisDone();
@@ -539,7 +592,7 @@ function renderDefis(){
   wrap.innerHTML = "";
 
   const nbDone = DEFIS.filter(d => done[d.id]).length;
-  $("defisProgress").textContent = `Progression : ${nbDone} / ${DEFIS.length} défis`;
+  setProgress($("defisFill"), $("defisPercent"), $("defisSub"), nbDone, DEFIS.length, "défis");
 
   DEFIS.forEach(d => {
     const isDone = !!done[d.id];
@@ -553,7 +606,7 @@ function renderDefis(){
           <div class="itemDesc">${d.desc}</div>
         </div>
         <div style="min-width:160px;">
-          <button class="${isDone ? "btn-subtle" : ""}" data-action="do">
+          <button class="${isDone ? "btn-subtle" : ""}">
             ${isDone ? "Reprendre" : "📸 Faire ce défi"}
           </button>
         </div>
@@ -562,7 +615,6 @@ function renderDefis(){
     `;
 
     div.querySelector("button").onclick = () => {
-      // on lance une mission "défi"
       setTypeUI("defi");
       setMission({ kind: "defi", id: d.id, title: d.title });
       setScreen("screenPhoto");
@@ -579,7 +631,7 @@ function renderEscape(){
   wrap.innerHTML = "";
 
   const nbOk = ENIGMES.filter(e => ok[e.id]).length;
-  $("escapeProgress").textContent = `Progression : ${nbOk} / ${ENIGMES.length} énigmes`;
+  setProgress($("escapeFill"), $("escapePercent"), $("escapeSub"), nbOk, ENIGMES.length, "énigmes");
 
   ENIGMES.forEach(e => {
     const isOk = !!ok[e.id];
@@ -747,7 +799,7 @@ async function sendPhotoAuto(){
   if (localStorage.getItem(LS.uploading) === "1") return;
   localStorage.setItem(LS.uploading, "1");
 
-  const mission = getMission(); // pour marquer un défi après upload
+  const mission = getMission();
 
   try{
     const payload = {
@@ -755,8 +807,6 @@ async function sendPhotoAuto(){
       type: getPhotoType(),
       filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
       dataUrl: capturedDataUrl,
-
-      // métadonnées (optionnelles, Apps Script peut ignorer)
       mission: mission || null,
     };
 
@@ -769,7 +819,6 @@ async function sendPhotoAuto(){
 
     incCount();
 
-    // ✅ Si c'était un défi, on le marque “fait”
     if(mission && mission.kind === "defi" && mission.id){
       markDefiDone(mission.id);
     }
@@ -778,7 +827,6 @@ async function sendPhotoAuto(){
     capturedDataUrl = null;
     $("retakeBtn").style.display = "none";
 
-    // retour intelligent : si mission défi → retour défis, sinon menu
     const target = (mission && mission.kind === "defi") ? "screenDefis" : "screenMenu";
     clearMission();
 
@@ -815,7 +863,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if(!getTableId()) setScreen("screenTable");
   else setScreen("screenMenu");
 
-  // Menu
   $("goPhoto").onclick = () => {
     clearMission();
     resetPhotoSession();
@@ -832,30 +879,25 @@ document.addEventListener("DOMContentLoaded", () => {
     setScreen("screenEscape");
   };
 
-  // Back
   $("backFromDefis").onclick = () => setScreen("screenMenu");
   $("backFromEscape").onclick = () => setScreen("screenMenu");
 
   $("backFromPhoto").onclick = () => {
     stopCamera();
-    // si photo lancée depuis un défi, on retourne aux défis
     const m = getMission();
     if(m && m.kind === "defi"){ renderDefis(); setScreen("screenDefis"); }
     else setScreen("screenMenu");
   };
 
-  // Reset table
   $("resetBtn").onclick = () => {
     setTableId(0);
     updateBadge();
     setScreen("screenTable");
   };
 
-  // Reset defis/escape
   $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
   $("resetEscapeBtn").onclick = () => { resetEscape(); renderEscape(); };
 
-  // Type buttons (manuel)
   document.querySelectorAll(".typeBtn").forEach(btn => {
     btn.onclick = () => {
       clearMission();
@@ -864,7 +906,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
-  // camera controls
   $("startCamBtn").onclick = startCamera;
   $("takePhotoBtn").onclick = takePhoto;
 

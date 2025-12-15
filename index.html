@@ -193,17 +193,21 @@
     }
 
     /* Boutons de tables = cartes */
-    #tableButtons button{
-      width: 100%;
-      max-width: 170px;
-      padding: 16px 0;
-      font-size: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.55);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 700;
-    }
+#tableButtons button{
+  width: 100%;
+  max-width: 170px;
+  padding: 16px 0;
+  font-size: 16px;
+  border-radius: 18px;
+
+  /* Marron clair */
+  background: var(--btn);
+  border: 1px solid var(--btnBorder);
+  color: var(--btnText);
+
+  font-weight: 700;
+}
+
 
     /* Animation au clic (choix table) */
     @keyframes pop {

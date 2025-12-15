@@ -12,20 +12,19 @@
 
   <style>
     :root{
-      /* Thème : Beige + Sauge + Marron clair */
-      --bg: #F3EBDD;           /* beige (fond) */
+      --bg: #F3EBDD;           /* beige */
       --card: rgba(255,255,255,0.55);
       --border: #D9CDBA;
 
-      --text: #5F7A68;         /* vert sauge (texte) */
+      --text: #5F7A68;         /* vert sauge */
       --muted: rgba(95,122,104,0.75);
 
-      --btn: #CBB79A;          /* marron clair (boutons) */
-      --btnText: #2F2A22;      /* brun profond */
+      --btn: #CBB79A;          /* marron clair */
+      --btnText: #2F2A22;
       --btnBorder: #B39E7E;
 
-      --accent: #5F7A68;       /* sauge */
-      --accent2: #7F9A88;      /* sauge clair */
+      --accent: #5F7A68;
+      --accent2: #7F9A88;
       --success: #3F7C5A;
       --warning: #9B6A2C;
       --danger: #A34848;
@@ -42,11 +41,7 @@
       font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
 
-    .app{
-      max-width: 740px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+    .app{ max-width: 740px; margin: 0 auto; padding: 18px; }
 
     .card{
       background: var(--card);
@@ -66,7 +61,7 @@
     .small{ font-size: 14px; }
     .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
 
-    /* Topbar (titre centré + écussons B&A) */
+    /* Header */
     .topbar{ display:grid; gap:10px; padding-bottom: 8px; }
     .brand{
       display:grid;
@@ -116,7 +111,7 @@
       font-family: "Inter", sans-serif;
     }
 
-    /* Boutons */
+    /* Buttons */
     button, .btn{
       width:100%;
       padding: 14px 14px;
@@ -137,7 +132,6 @@
       border-radius: 14px;
     }
 
-    /* Pills */
     .pill{
       display:inline-block;
       padding: 7px 12px;
@@ -152,7 +146,7 @@
     .warn{ color: var(--warning); font-weight: 700; }
     .err{ color: var(--danger); font-weight: 700; }
 
-    /* Camera UI */
+    /* Camera */
     .camBox{
       position: relative;
       border: 1px solid var(--border);
@@ -172,7 +166,6 @@
       #camVideo, #camCanvas{ aspect-ratio: 16/9; }
     }
 
-    /* Flash overlay */
     .flash{
       position:absolute; inset:0;
       background:#fff;
@@ -182,7 +175,6 @@
     }
     .flash.on{ opacity: 0.85; }
 
-    /* Inputs */
     input[type="text"]{
       width:100%;
       padding: 12px 12px;
@@ -200,30 +192,26 @@
   <div class="app">
     <div class="card">
 
-      <!-- HEADER -->
       <header class="topbar">
         <div class="brand">
           <div class="crest">B&amp;A</div>
           <h1 class="title">Anniversaire</h1>
           <div class="crest">B&amp;A</div>
         </div>
-
-        <p class="subtitle">Photobooth • photos automatiques sur Drive • soirée élégante ✨</p>
-
+        <p class="subtitle">Photobooth • photos automatiques sur Drive ✨</p>
         <div class="topbar-actions">
-          <div id="tableBadge" class="pill hidden"></div>
-          <button id="resetBtn" class="hidden smallbtn">Changer de table</button>
+          <div id="tableBadge" class="pill"></div>
+          <button id="resetBtn" class="smallbtn">Changer de table</button>
         </div>
       </header>
 
-      <!-- ECRAN: TABLE -->
+      <!-- ECRANS (affichage géré par JS via style.display) -->
       <section id="screenTable" class="grid">
         <p><b>1) Choisis ta table</b></p>
         <div class="grid grid2" id="tableButtons"></div>
       </section>
 
-      <!-- ECRAN: MENU -->
-      <section id="screenMenu" class="grid hidden">
+      <section id="screenMenu" class="grid">
         <p><b>2) Menu</b></p>
         <button id="goPhoto">📸 Prendre une photo</button>
         <button id="goDefis">🎯 Défis photos</button>
@@ -233,8 +221,7 @@
         <p class="muted small">Les photos sont envoyées automatiquement sur ton Drive.</p>
       </section>
 
-      <!-- ECRAN: PHOTO -->
-      <section id="screenPhoto" class="grid hidden">
+      <section id="screenPhoto" class="grid">
         <p><b>📸 Prendre une photo</b></p>
 
         <div class="grid">
@@ -248,7 +235,7 @@
 
           <div class="camBox">
             <video id="camVideo" playsinline autoplay muted></video>
-            <canvas id="camCanvas" class="hidden"></canvas>
+            <canvas id="camCanvas" style="display:none;"></canvas>
             <div id="flash" class="flash"></div>
           </div>
 
@@ -257,7 +244,7 @@
             <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
           </div>
 
-          <button id="retakeBtn" class="hidden">🔁 Reprendre</button>
+          <button id="retakeBtn" style="display:none;">🔁 Reprendre</button>
 
           <div id="sendStatus" class="muted"></div>
           <div class="muted">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</div>
@@ -266,18 +253,15 @@
         </div>
       </section>
 
-      <!-- ECRAN: DEFIS -->
-      <section id="screenDefis" class="grid hidden">
+      <section id="screenDefis" class="grid">
         <p><b>🎯 Défis photos</b></p>
         <div id="defisList" class="grid"></div>
         <button class="btn" id="backFromDefis">⬅️ Retour menu</button>
       </section>
 
-      <!-- ECRAN: ESCAPE -->
-      <section id="screenEscape" class="grid hidden">
+      <section id="screenEscape" class="grid">
         <p><b>🧩 Escape game</b></p>
         <p class="muted">Réponds aux énigmes. Chaque bonne réponse donne un chiffre.</p>
-
         <div class="grid" id="enigmes"></div>
 
         <div class="hr"></div>
@@ -288,16 +272,9 @@
       </section>
 
     </div>
-
-    <p class="muted small" style="text-align:center; margin: 14px 0 0;">
-      Web App • Thème beige & sauge
-    </p>
   </div>
 
 <script>
-/** =========================
- * CONFIG
- * ========================= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
 const TABLES = [
@@ -310,30 +287,30 @@ const DEFIS = [
   { id: 1, title: "Tout le monde saute", desc: "Une photo où tout le monde saute." },
   { id: 2, title: "Photo la plus drôle", desc: "Faites votre meilleure photo drôle." },
   { id: 3, title: "Objet rouge", desc: "Une photo avec un objet rouge bien visible." },
-  { id: 4, title: "Sans sourire", desc: "Tout le monde sérieux, zéro sourire 😐" },
-  { id: 5, title: "Amitié", desc: "Une photo qui représente l’amitié." },
 ];
 
 const ENIGMES = [
-  { id: "e1", question: "Énigme 1 : Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", answer: "eponge", digit: "4" },
-  { id: "e2", question: "Énigme 2 : Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", answer: "secret", digit: "7" },
-  { id: "e3", question: "Énigme 3 : Je monte et je descends sans bouger. Qui suis-je ?", answer: "escalier", digit: "2" },
+  { id: "e1", question: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", answer: "eponge", digit: "4" },
+  { id: "e2", question: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", answer: "secret", digit: "7" },
+  { id: "e3", question: "Je monte et je descends sans bouger. Qui suis-je ?", answer: "escalier", digit: "2" },
 ];
 const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
 
-/** =========================
- * STATE
- * ========================= */
 const LS = {
   tableId: "bday_tableId",
   photoType: "bday_photoType",
   defis: "bday_defis_done",
   escape: "bday_escape_ok",
-  screen: "bday_screen",
   uploading: "bday_uploading",
   count: "bday_photo_count"
 };
+
 const $ = (id) => document.getElementById(id);
+const screens = ["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"];
+
+function setScreen(id){
+  screens.forEach(s => $(s).style.display = (s === id ? "grid" : "none"));
+}
 
 function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
 function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
@@ -341,52 +318,28 @@ function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
 function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
 function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
 
-function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defis) || "[]"); } catch { return []; } }
-function setDefisDone(arr){ localStorage.setItem(LS.defis, JSON.stringify(arr)); }
-
-function getEscapeOk(){ try { return JSON.parse(localStorage.getItem(LS.escape) || "{}"); } catch { return {}; } }
-function setEscapeOk(obj){ localStorage.setItem(LS.escape, JSON.stringify(obj)); }
-
 function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
 function incCount(){ localStorage.setItem(LS.count, String(getCount() + 1)); updateCountUI(); }
-function updateCountUI(){
-  const el = $("countPill");
-  if (el) el.textContent = `📷 Photos envoyées : ${getCount()}`;
-}
-
-function show(screenId){
-  localStorage.setItem(LS.screen, screenId);
-  ["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"].forEach(s => $(s).classList.add("hidden"));
-  $(screenId).classList.remove("hidden");
-}
+function updateCountUI(){ $("countPill").textContent = `📷 Photos envoyées : ${getCount()}`; }
 
 function updateBadge(){
   const id = getTableId();
-  const badge = $("tableBadge");
-  const reset = $("resetBtn");
   if(!id){
-    badge.classList.add("hidden");
-    reset.classList.add("hidden");
+    $("tableBadge").style.display = "none";
+    $("resetBtn").style.display = "none";
     return;
   }
-  const t = TABLES.find(x => x.id === id);
-  badge.textContent = t ? `🪑 ${t.name}` : `🪑 Table ${id}`;
-  badge.classList.remove("hidden");
-  reset.classList.remove("hidden");
+  $("tableBadge").style.display = "inline-block";
+  $("resetBtn").style.display = "inline-block";
+  $("tableBadge").textContent = `🪑 Table ${id}`;
 }
 
-/** =========================
- * Feedback (flash / haptic / sound)
- * ========================= */
 function flash(){
   const f = $("flash");
-  if(!f) return;
   f.classList.add("on");
   setTimeout(() => f.classList.remove("on"), 140);
 }
-function haptic(){
-  if (navigator.vibrate) navigator.vibrate(30);
-}
+function haptic(){ if (navigator.vibrate) navigator.vibrate(30); }
 function clickSound(){
   try{
     const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -394,8 +347,7 @@ function clickSound(){
     const ctx = new Ctx();
     const o = ctx.createOscillator();
     const g = ctx.createGain();
-    o.type = "square";
-    o.frequency.value = 1200;
+    o.type = "square"; o.frequency.value = 1200;
     g.gain.value = 0.02;
     o.connect(g); g.connect(ctx.destination);
     o.start();
@@ -403,71 +355,55 @@ function clickSound(){
   } catch {}
 }
 
-/** =========================
- * UI: Tables / Defis / Escape
- * ========================= */
+/* Tables */
 function renderTables(){
   const wrap = $("tableButtons");
   wrap.innerHTML = "";
   TABLES.forEach(t => {
-    const btn = document.createElement("button");
-    btn.textContent = t.name;
-    btn.onclick = () => {
+    const b = document.createElement("button");
+    b.textContent = t.name;
+    b.onclick = () => {
       setTableId(t.id);
       updateBadge();
-      show("screenMenu");
+      setScreen("screenMenu");
     };
-    wrap.appendChild(btn);
+    wrap.appendChild(b);
   });
 }
 
+/* Défis */
 function renderDefis(){
-  const done = new Set(getDefisDone());
   const wrap = $("defisList");
   wrap.innerHTML = "";
   DEFIS.forEach(d => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.padding = "12px";
-    card.innerHTML = `
-      <div class="row" style="align-items:flex-start;">
-        <div>
-          <div><b>${done.has(d.id) ? "✅" : "⏳"} ${d.title}</b></div>
-          <div class="muted small">${d.desc}</div>
-        </div>
-        <div style="max-width:140px;">
-          <button>${done.has(d.id) ? "Annuler" : "Valider"}</button>
-        </div>
-      </div>
-    `;
-    card.querySelector("button").onclick = () => {
-      const cur = new Set(getDefisDone());
-      if(cur.has(d.id)) cur.delete(d.id); else cur.add(d.id);
-      setDefisDone(Array.from(cur));
-      renderDefis();
-    };
-    wrap.appendChild(card);
+    const c = document.createElement("div");
+    c.className = "pill";
+    c.style.padding = "12px";
+    c.textContent = `🎯 ${d.title} — ${d.desc}`;
+    wrap.appendChild(c);
   });
 }
 
+/* Escape */
 function normalize(s){
   return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
 }
 function renderEscape(){
-  const ok = getEscapeOk();
+  const ok = JSON.parse(localStorage.getItem(LS.escape) || "{}");
   const wrap = $("enigmes");
   wrap.innerHTML = "";
+
   ENIGMES.forEach(e => {
     const box = document.createElement("div");
-    box.className = "card";
+    box.className = "pill";
     box.style.padding = "12px";
     box.innerHTML = `
       <div><b>${ok[e.id] ? "✅" : "🧩"} ${e.question}</b></div>
       <div class="row" style="margin-top:10px;">
-        <input type="text" placeholder="Ta réponse…" id="in_${e.id}" />
+        <input type="text" id="in_${e.id}" placeholder="Ta réponse…">
         <button id="bt_${e.id}">Valider</button>
       </div>
-      <div class="muted small" id="st_${e.id}"></div>
+      <div class="muted" id="st_${e.id}"></div>
     `;
     wrap.appendChild(box);
 
@@ -476,55 +412,42 @@ function renderEscape(){
     const st = box.querySelector(`#st_${e.id}`);
 
     if(ok[e.id]){
-      input.value = "OK";
-      input.disabled = true;
-      btn.textContent = "Validé";
-      btn.disabled = true;
-      st.innerHTML = `<span class="ok">Chiffre obtenu : ${e.digit}</span>`;
+      input.value = "OK"; input.disabled = true;
+      btn.disabled = true; btn.textContent = "Validé";
+      st.innerHTML = `<span class="ok">Chiffre : ${e.digit}</span>`;
     } else {
       btn.onclick = () => {
-        const val = normalize(input.value);
-        if(val === normalize(e.answer)){
-          const next = getEscapeOk();
-          next[e.id] = true;
-          setEscapeOk(next);
+        if(normalize(input.value) === normalize(e.answer)){
+          ok[e.id] = true;
+          localStorage.setItem(LS.escape, JSON.stringify(ok));
           renderEscape();
         } else {
-          st.innerHTML = `<span class="err">Mauvaise réponse 😅</span>`;
+          st.innerHTML = `<span class="err">Mauvaise réponse</span>`;
         }
       };
     }
   });
 
-  const allOk = ENIGMES.every(e => getEscapeOk()[e.id]);
+  const allOk = ENIGMES.every(e => ok[e.id]);
   $("finalBox").textContent = allOk ? `🔓 CODE : ${FINAL_CODE()}` : "🔒 Pas encore…";
-  $("finalBox").className = allOk ? "pill ok" : "pill warn";
 }
 
-/** =========================
- * CAMERA + UPLOAD
- * ========================= */
+/* Camera */
 let camStream = null;
 let capturedDataUrl = null;
-
-function setTypeUI(t){
-  setPhotoType(t);
-  $("typeLabel").textContent = t;
-}
 
 async function startCamera(){
   try{
     $("sendStatus").textContent = "🎥 Activation caméra…";
-    const constraints = {
+    camStream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
       audio: false
-    };
-    camStream = await navigator.mediaDevices.getUserMedia(constraints);
+    });
     $("camVideo").srcObject = camStream;
     $("takePhotoBtn").disabled = false;
     $("sendStatus").textContent = "";
   } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée. Autorise la caméra (cadenas 🔒 dans Chrome).</span>`;
+    $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée (autorise via cadenas 🔒).</span>`;
   }
 }
 
@@ -542,122 +465,82 @@ function takePhoto(){
   const canvas = $("camCanvas");
   const w = video.videoWidth || 1280;
   const h = video.videoHeight || 720;
-
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(video, 0, 0, w, h);
-
+  canvas.width = w; canvas.height = h;
+  canvas.getContext("2d").drawImage(video, 0, 0, w, h);
   capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
 
-  flash();
-  haptic();
-  clickSound();
-
+  flash(); haptic(); clickSound();
   $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
-  $("retakeBtn").classList.remove("hidden");
+  $("retakeBtn").style.display = "block";
 
-  setTimeout(() => sendPhotoAuto(), 200);
+  setTimeout(sendPhotoAuto, 200);
 }
 
 async function sendPhotoAuto(){
   const tableId = getTableId();
-  if(!tableId){
-    $("sendStatus").innerHTML = `<span class="err">Choisis d’abord une table.</span>`;
-    show("screenTable");
-    return;
-  }
-  if(!capturedDataUrl){
-    $("sendStatus").innerHTML = `<span class="warn">Aucune photo capturée.</span>`;
-    return;
-  }
-  if(!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes("/exec")){
-    $("sendStatus").innerHTML = `<span class="err">URL Apps Script invalide.</span>`;
-    return;
-  }
+  if(!tableId || !capturedDataUrl) return;
   if (localStorage.getItem(LS.uploading) === "1") return;
   localStorage.setItem(LS.uploading, "1");
 
   try{
-    const payload = {
-      tableId,
-      type: getPhotoType(),
-      filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-      dataUrl: capturedDataUrl,
-    };
-
     await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        tableId,
+        type: getPhotoType(),
+        filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
+        dataUrl: capturedDataUrl
+      }),
     });
 
     incCount();
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
     capturedDataUrl = null;
-    $("retakeBtn").classList.add("hidden");
-
-    setTimeout(() => show("screenMenu"), 1200);
+    $("retakeBtn").style.display = "none";
+    setTimeout(() => setScreen("screenMenu"), 1200);
   } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau. Vérifie la connexion.</span>`;
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau.</span>`;
   } finally {
     setTimeout(() => localStorage.removeItem(LS.uploading), 800);
   }
 }
 
-function resetPhotoSession(){
-  capturedDataUrl = null;
-  $("sendStatus").textContent = "";
-  $("retakeBtn").classList.add("hidden");
+function setTypeUI(t){
+  setPhotoType(t);
+  $("typeLabel").textContent = t;
 }
 
-/** =========================
- * INIT + NAV
- * ========================= */
-renderTables();
-updateBadge();
-updateCountUI();
+/* Init */
+document.addEventListener("DOMContentLoaded", () => {
+  // Cache tout sauf écran initial
+  screens.forEach(s => $(s).style.display = "none");
 
-const savedScreen = localStorage.getItem(LS.screen);
-if (!getTableId()) show("screenTable");
-else if (savedScreen && ["screenMenu","screenPhoto","screenDefis","screenEscape","screenTable"].includes(savedScreen)) show(savedScreen);
-else show("screenMenu");
-
-$("resetBtn").onclick = () => {
-  setTableId(0);
-  localStorage.setItem(LS.screen, "screenTable");
+  renderTables();
   updateBadge();
-  show("screenTable");
-};
+  updateCountUI();
 
-$("goPhoto").onclick = () => {
-  resetPhotoSession();
-  show("screenPhoto");
-};
-$("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
-$("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
+  if(!getTableId()) setScreen("screenTable");
+  else setScreen("screenMenu");
 
-$("backFromPhoto").onclick = () => {
-  stopCamera();
-  show("screenMenu");
-};
-$("backFromDefis").onclick = () => show("screenMenu");
-$("backFromEscape").onclick = () => show("screenMenu");
+  $("resetBtn").onclick = () => { setTableId(0); updateBadge(); setScreen("screenTable"); };
 
-// Type buttons
-document.querySelectorAll(".typeBtn").forEach(btn => {
-  btn.onclick = () => setTypeUI(btn.dataset.type);
+  $("goPhoto").onclick = () => { $("sendStatus").textContent = ""; $("retakeBtn").style.display="none"; setScreen("screenPhoto"); };
+  $("goDefis").onclick = () => { renderDefis(); setScreen("screenDefis"); };
+  $("goEscape").onclick = () => { renderEscape(); setScreen("screenEscape"); };
+
+  $("backFromPhoto").onclick = () => { stopCamera(); setScreen("screenMenu"); };
+  $("backFromDefis").onclick = () => setScreen("screenMenu");
+  $("backFromEscape").onclick = () => setScreen("screenMenu");
+
+  document.querySelectorAll(".typeBtn").forEach(btn => btn.onclick = () => setTypeUI(btn.dataset.type));
+  setTypeUI(getPhotoType());
+
+  $("startCamBtn").onclick = startCamera;
+  $("takePhotoBtn").onclick = takePhoto;
+  $("retakeBtn").onclick = () => { capturedDataUrl = null; $("sendStatus").textContent="📸 Reprends la photo"; };
 });
-setTypeUI(getPhotoType());
-
-// Camera controls
-$("startCamBtn").onclick = startCamera;
-$("takePhotoBtn").onclick = takePhoto;
-$("retakeBtn").onclick = () => {
-  resetPhotoSession();
-  $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;
-};
 </script>
 </body>
 </html>

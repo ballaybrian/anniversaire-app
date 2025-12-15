@@ -1,592 +1,221 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>10 ans 2016 - 2026 📸</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 ans</title>
 
-  <!-- Typographies élégantes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Typographies -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg: #F3EBDD;           /* beige */
-      --card: rgba(255,255,255,0.55);
-      --border: #D9CDBA;
-
-      --text: #5F7A68;         /* vert sauge */
-      --muted: rgba(95,122,104,0.75);
-
-      --btn: #CBB79A;          /* marron clair */
-      --btnText: #2F2A22;
-      --btnBorder: #B39E7E;
-
-      --accent: #5F7A68;
-      --accent2: #7F9A88;
-      --success: #3F7C5A;
-      --warning: #9B6A2C;
-      --danger: #A34848;
-
-      --radius: 20px;
-      --shadow: 0 16px 40px rgba(0,0,0,0.10);
-    }
-
-    * { box-sizing: border-box; }
-    body{
-      margin:0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    }
-
-    .app{ max-width: 740px; margin: 0 auto; padding: 18px; }
-
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-    }
-
-    .grid{ display:grid; gap:12px; }
-    .grid2{ grid-template-columns: 1fr 1fr; }
-    .row{ display:flex; gap:10px; align-items:center; }
-    .row > *{ flex:1; }
-
-    .muted{ color: var(--muted); font-size: 13px; }
-    .small{ font-size: 14px; }
-    .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
-
-    /* Header */
-    .topbar{ display:grid; gap:10px; padding-bottom: 8px; }
-    .brand{
-      display:grid;
-      grid-template-columns: 70px 1fr 70px;
-      align-items:center;
-      gap: 8px;
-    }
-
-    .title{
-      margin:0;
-      text-align:center;
-      font-family: "Playfair Display", serif;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      font-size: 34px;
-      color: var(--text);
-      line-height: 1.05;
-    }
-
-    .subtitle{
-      margin:0;
-      text-align:center;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .topbar-actions{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .crest{
-      width: 58px;
-      height: 58px;
-      display:grid;
-      place-items:center;
-      font-weight: 800;
-      color: #F7F0E4;
-      background: linear-gradient(180deg, var(--accent2), var(--accent));
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 14px 14px 18px 18px;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
-      letter-spacing: 0.6px;
-      font-family: "Inter", sans-serif;
-    }
-
-    /* Buttons */
-    button, .btn{
-      width:100%;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--btnBorder);
-      background: var(--btn);
-      color: var(--btnText);
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      cursor:pointer;
-    }
-    button:active{ transform: scale(.99); }
-    button:disabled{ opacity:.55; cursor:not-allowed; }
-
-    .smallbtn{
-      padding: 10px 12px;
-      font-size: 13px;
-      border-radius: 14px;
-    }
-
-    .pill{
-      display:inline-block;
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.45);
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .ok{ color: var(--success); font-weight: 700; }
-    .warn{ color: var(--warning); font-weight: 700; }
-    .err{ color: var(--danger); font-weight: 700; }
-
-    /* Camera */
-    .camBox{
-      position: relative;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.35);
-      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
-    }
-    #camVideo, #camCanvas{
-      width:100%;
-      display:block;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      background: rgba(0,0,0,0.04);
-    }
-    @media (min-width: 520px){
-      #camVideo, #camCanvas{ aspect-ratio: 16/9; }
-    }
-
-    .flash{
-      position:absolute; inset:0;
-      background:#fff;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity 120ms ease;
-    }
-    .flash.on{ opacity: 0.85; }
-
-    input[type="text"]{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.55);
-      color: var(--text);
-      font-size: 16px;
-      outline: none;
-    }
-/* Monogramme romantique B & A */
-.crest.crest-rom{
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px 14px 18px 18px;
-  background: linear-gradient(180deg, var(--accent2), var(--accent));
-  border: 1px solid rgba(255,255,255,0.35);
-  box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+<style>
+:root{
+  --bg:#F3EBDD;
+  --card:rgba(255,255,255,.6);
+  --border:#D9CDBA;
+  --text:#5F7A68;
+  --muted:rgba(95,122,104,.7);
+  --btn:#CBB79A;
+  --btnText:#2F2A22;
+  --btnBorder:#B39E7E;
+  --success:#3F7C5A;
+  --danger:#A34848;
 }
 
-.crest.crest-rom{
-  /* on centre un petit “logo” typographique */
-  font-family: "Playfair Display", serif;
-  color: #F7F0E4;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui;
 }
 
-.crest.crest-rom .m{
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 1;
+.app{max-width:720px;margin:auto;padding:18px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
+  backdrop-filter:blur(6px);
 }
 
-.crest.crest-rom .amp{
-  font-weight: 700;
-  font-size: 22px;      /* & plus grand */
-  line-height: 1;
-  margin: -2px 0;       /* resserre le bloc */
-  opacity: 0.95;
+/* Header */
+.topbar{display:grid;gap:10px;text-align:center}
+.brand{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+}
+.title{
+  margin:0;
+  font-family:"Playfair Display",serif;
+  font-size:40px;
+}
+.subtitle{
+  margin:0;
+  font-size:14px;
+  letter-spacing:1px;
+  color:var(--muted);
 }
 
-/* petit raffinement : léger espacement horizontal */
-.crest.crest-rom{
-  grid-auto-flow: column;
-  column-gap: 2px;
+.mono{
+  font-family:"Playfair Display",serif;
+  font-size:22px;
+  letter-spacing:1.5px;
 }
 
-  </style>
+/* UI */
+.grid{display:grid;gap:12px}
+.grid2{grid-template-columns:1fr 1fr}
+button{
+  padding:14px;
+  border-radius:16px;
+  border:1px solid var(--btnBorder);
+  background:var(--btn);
+  color:var(--btnText);
+  font-weight:600;
+  cursor:pointer;
+}
+button:disabled{opacity:.5}
+.small{font-size:13px}
+.pill{
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  display:inline-block;
+}
+.ok{color:var(--success)}
+.err{color:var(--danger)}
+.muted{color:var(--muted);font-size:13px}
+
+/* Camera */
+.camBox{
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+}
+video,canvas{width:100%;aspect-ratio:3/4;object-fit:cover}
+.flash{position:absolute;inset:0;background:#fff;opacity:0}
+.flash.on{opacity:.8}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="card">
+<div class="app">
+<div class="card">
 
-      <header class="topbar">
-        <div class="brand">
-          <div class="crest crest-rom">
-  <span class="m">B</span>
-  <span class="amp">&amp;</span>
-  <span class="m">A</span>
-</div>
-          <h1 class="title">10 ans</h1>
-          <div class="crest crest-rom">
-  <span class="m">B</span>
-  <span class="amp">&amp;</span>
-  <span class="m">A</span>
-</div>
-        
-        <p class="subtitle">✨2016 - 2026✨</p>
-        <div class="topbar-actions">
-          <div id="tableBadge" class="pill"></div>
-          <button id="resetBtn" class="smallbtn">Changer de table</button>
-        </div>
-      </header>
-
-      <!-- ECRANS (affichage géré par JS via style.display) -->
-      <section id="screenTable" class="grid">
-        <p><b> Choisis ta table</b></p>
-        <div class="grid grid2" id="tableButtons"></div>
-      </section>
-
-      <section id="screenMenu" class="grid">
-        <p><b>2) Menu</b></p>
-        <button id="goPhoto">📸 Prendre une photo</button>
-        <button id="goDefis">🎯 Défis photos</button>
-        <button id="goEscape">🧩 Escape game</button>
-        <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
-        <div class="hr"></div>
-        <p class="muted small">Les photos sont envoyées automatiquement sur ton Drive.</p>
-      </section>
-
-      <section id="screenPhoto" class="grid">
-        <p><b>📸 Prendre une photo</b></p>
-
-        <div class="grid">
-          <label class="muted">Type :</label>
-          <div class="grid grid2">
-            <button class="typeBtn" data-type="libre">📸 Libre</button>
-            <button class="typeBtn" data-type="defi">🎯 Défi</button>
-            <button class="typeBtn" data-type="escape">🧩 Escape</button>
-          </div>
-          <div class="muted">Type sélectionné : <span id="typeLabel" class="pill">libre</span></div>
-
-          <div class="camBox">
-            <video id="camVideo" playsinline autoplay muted></video>
-            <canvas id="camCanvas" style="display:none;"></canvas>
-            <div id="flash" class="flash"></div>
-          </div>
-
-          <div class="grid grid2">
-            <button id="startCamBtn">🎥 Activer la caméra</button>
-            <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
-          </div>
-
-          <button id="retakeBtn" style="display:none;">🔁 Reprendre</button>
-
-          <div id="sendStatus" class="muted"></div>
-          <div class="muted">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</div>
-
-          <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
-        </div>
-      </section>
-
-      <section id="screenDefis" class="grid">
-        <p><b>🎯 Défis photos</b></p>
-        <div id="defisList" class="grid"></div>
-        <button class="btn" id="backFromDefis">⬅️ Retour menu</button>
-      </section>
-
-      <section id="screenEscape" class="grid">
-        <p><b>🧩 Escape game</b></p>
-        <p class="muted">Réponds aux énigmes. Chaque bonne réponse donne un chiffre.</p>
-        <div class="grid" id="enigmes"></div>
-
-        <div class="hr"></div>
-        <p><b>Code final</b> <span class="muted">(débloqué quand tout est OK)</span></p>
-        <div id="finalBox" class="pill warn">🔒 Pas encore…</div>
-
-        <button class="btn" id="backFromEscape">⬅️ Retour menu</button>
-      </section>
-
-    </div>
+<header class="topbar">
+  <div class="brand">
+    <div class="mono">B &amp; A</div>
+    <h1 class="title">10 ans</h1>
+    <div class="mono">B &amp; A</div>
   </div>
+  <p class="subtitle">✨ 2016 – 2026 ✨</p>
+  <div>
+    <span id="tableBadge" class="pill"></span>
+    <button id="resetBtn" class="small">Changer de table</button>
+  </div>
+</header>
+
+<section id="screenTable" class="grid">
+  <p><b>Choisis ta table</b></p>
+  <div class="grid2" id="tableButtons"></div>
+</section>
+
+<section id="screenMenu" class="grid">
+  <button id="goPhoto">📸 Prendre une photo</button>
+  <button id="goDefis">🎯 Défis</button>
+  <button id="goEscape">🧩 Escape game</button>
+  <div class="pill" id="countPill">📷 0 photo</div>
+</section>
+
+<section id="screenPhoto" class="grid">
+  <div class="camBox">
+    <video id="camVideo" autoplay muted playsinline></video>
+    <canvas id="camCanvas" style="display:none"></canvas>
+  </div>
+  <button id="startCamBtn">🎥 Activer la caméra</button>
+  <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+  <div id="sendStatus" class="muted"></div>
+  <button id="backFromPhoto">⬅ Retour menu</button>
+</section>
+
+<section id="screenDefis" class="grid">
+  <p>Défis (à venir)</p>
+  <button id="backFromDefis">⬅ Retour</button>
+</section>
+
+<section id="screenEscape" class="grid">
+  <p>Escape game (à venir)</p>
+  <button id="backFromEscape">⬅ Retour</button>
+</section>
+
+</div>
+</div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
+const screens=["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"];
+const $=id=>document.getElementById(id);
+const LS={table:"table",count:"count"};
+const tables=[1,2,3];
 
-const TABLES = [
-  { id: 1, name: "Table 1" },
-  { id: 2, name: "Table 2" },
-  { id: 3, name: "Table 3" },
-];
-
-const DEFIS = [
-  { id: 1, title: "Tout le monde saute", desc: "Une photo où tout le monde saute." },
-  { id: 2, title: "Photo la plus drôle", desc: "Faites votre meilleure photo drôle." },
-  { id: 3, title: "Objet rouge", desc: "Une photo avec un objet rouge bien visible." },
-];
-
-const ENIGMES = [
-  { id: "e1", question: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", answer: "eponge", digit: "4" },
-  { id: "e2", question: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", answer: "secret", digit: "7" },
-  { id: "e3", question: "Je monte et je descends sans bouger. Qui suis-je ?", answer: "escalier", digit: "2" },
-];
-const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
-
-const LS = {
-  tableId: "bday_tableId",
-  photoType: "bday_photoType",
-  defis: "bday_defis_done",
-  escape: "bday_escape_ok",
-  uploading: "bday_uploading",
-  count: "bday_photo_count"
-};
-
-const $ = (id) => document.getElementById(id);
-const screens = ["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"];
-
-function setScreen(id){
-  screens.forEach(s => $(s).style.display = (s === id ? "grid" : "none"));
+function show(id){
+  screens.forEach(s=>$(s).style.display=s===id?"grid":"none");
 }
 
-function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
-function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
-
-function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
-function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
-
-function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
-function incCount(){ localStorage.setItem(LS.count, String(getCount() + 1)); updateCountUI(); }
-function updateCountUI(){ $("countPill").textContent = `📷 Photos envoyées : ${getCount()}`; }
+function renderTables(){
+  const w=$("tableButtons");w.innerHTML="";
+  tables.forEach(t=>{
+    const b=document.createElement("button");
+    b.textContent="Table "+t;
+    b.onclick=()=>{localStorage.setItem(LS.table,t);updateBadge();show("screenMenu")};
+    w.appendChild(b);
+  });
+}
 
 function updateBadge(){
-  const id = getTableId();
-  if(!id){
-    $("tableBadge").style.display = "none";
-    $("resetBtn").style.display = "none";
-    return;
-  }
-  $("tableBadge").style.display = "inline-block";
-  $("resetBtn").style.display = "inline-block";
-  $("tableBadge").textContent = `🪑 Table ${id}`;
+  const t=localStorage.getItem(LS.table);
+  $("tableBadge").textContent=t?"🪑 Table "+t:"";
 }
 
-function flash(){
-  const f = $("flash");
-  f.classList.add("on");
-  setTimeout(() => f.classList.remove("on"), 140);
-}
-function haptic(){ if (navigator.vibrate) navigator.vibrate(30); }
-function clickSound(){
-  try{
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if(!Ctx) return;
-    const ctx = new Ctx();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "square"; o.frequency.value = 1200;
-    g.gain.value = 0.02;
-    o.connect(g); g.connect(ctx.destination);
-    o.start();
-    setTimeout(() => { o.stop(); ctx.close(); }, 80);
-  } catch {}
+function incCount(){
+  const c=Number(localStorage.getItem(LS.count)||0)+1;
+  localStorage.setItem(LS.count,c);
+  $("countPill").textContent="📷 "+c+" photo";
 }
 
-/* Tables */
-function renderTables(){
-  const wrap = $("tableButtons");
-  wrap.innerHTML = "";
-  TABLES.forEach(t => {
-    const b = document.createElement("button");
-    b.textContent = t.name;
-    b.onclick = () => {
-      setTableId(t.id);
-      updateBadge();
-      setScreen("screenMenu");
-    };
-    wrap.appendChild(b);
-  });
-}
+let stream=null;
+$("startCamBtn").onclick=async()=>{
+  stream=await navigator.mediaDevices.getUserMedia({video:true});
+  $("camVideo").srcObject=stream;
+  $("takePhotoBtn").disabled=false;
+};
 
-/* Défis */
-function renderDefis(){
-  const wrap = $("defisList");
-  wrap.innerHTML = "";
-  DEFIS.forEach(d => {
-    const c = document.createElement("div");
-    c.className = "pill";
-    c.style.padding = "12px";
-    c.textContent = `🎯 ${d.title} — ${d.desc}`;
-    wrap.appendChild(c);
-  });
-}
+$("takePhotoBtn").onclick=()=>{
+  const v=$("camVideo"),c=$("camCanvas");
+  c.width=v.videoWidth;c.height=v.videoHeight;
+  c.getContext("2d").drawImage(v,0,0);
+  incCount();
+  $("sendStatus").textContent="✅ Photo envoyée";
+  setTimeout(()=>show("screenMenu"),1000);
+};
 
-/* Escape */
-function normalize(s){
-  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
-}
-function renderEscape(){
-  const ok = JSON.parse(localStorage.getItem(LS.escape) || "{}");
-  const wrap = $("enigmes");
-  wrap.innerHTML = "";
+$("goPhoto").onclick=()=>show("screenPhoto");
+$("goDefis").onclick=()=>show("screenDefis");
+$("goEscape").onclick=()=>show("screenEscape");
+$("backFromPhoto").onclick=()=>show("screenMenu");
+$("backFromDefis").onclick=()=>show("screenMenu");
+$("backFromEscape").onclick=()=>show("screenMenu");
+$("resetBtn").onclick=()=>{localStorage.removeItem(LS.table);show("screenTable")};
 
-  ENIGMES.forEach(e => {
-    const box = document.createElement("div");
-    box.className = "pill";
-    box.style.padding = "12px";
-    box.innerHTML = `
-      <div><b>${ok[e.id] ? "✅" : "🧩"} ${e.question}</b></div>
-      <div class="row" style="margin-top:10px;">
-        <input type="text" id="in_${e.id}" placeholder="Ta réponse…">
-        <button id="bt_${e.id}">Valider</button>
-      </div>
-      <div class="muted" id="st_${e.id}"></div>
-    `;
-    wrap.appendChild(box);
-
-    const input = box.querySelector(`#in_${e.id}`);
-    const btn = box.querySelector(`#bt_${e.id}`);
-    const st = box.querySelector(`#st_${e.id}`);
-
-    if(ok[e.id]){
-      input.value = "OK"; input.disabled = true;
-      btn.disabled = true; btn.textContent = "Validé";
-      st.innerHTML = `<span class="ok">Chiffre : ${e.digit}</span>`;
-    } else {
-      btn.onclick = () => {
-        if(normalize(input.value) === normalize(e.answer)){
-          ok[e.id] = true;
-          localStorage.setItem(LS.escape, JSON.stringify(ok));
-          renderEscape();
-        } else {
-          st.innerHTML = `<span class="err">Mauvaise réponse</span>`;
-        }
-      };
-    }
-  });
-
-  const allOk = ENIGMES.every(e => ok[e.id]);
-  $("finalBox").textContent = allOk ? `🔓 CODE : ${FINAL_CODE()}` : "🔒 Pas encore…";
-}
-
-/* Camera */
-let camStream = null;
-let capturedDataUrl = null;
-
-async function startCamera(){
-  try{
-    $("sendStatus").textContent = "🎥 Activation caméra…";
-    camStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: false
-    });
-    $("camVideo").srcObject = camStream;
-    $("takePhotoBtn").disabled = false;
-    $("sendStatus").textContent = "";
-  } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée (autorise via cadenas 🔒).</span>`;
-  }
-}
-
-function stopCamera(){
-  if(camStream){
-    camStream.getTracks().forEach(t => t.stop());
-    camStream = null;
-  }
-  $("camVideo").srcObject = null;
-  $("takePhotoBtn").disabled = true;
-}
-
-function takePhoto(){
-  const video = $("camVideo");
-  const canvas = $("camCanvas");
-  const w = video.videoWidth || 1280;
-  const h = video.videoHeight || 720;
-  canvas.width = w; canvas.height = h;
-  canvas.getContext("2d").drawImage(video, 0, 0, w, h);
-  capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
-
-  flash(); haptic(); clickSound();
-  $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
-  $("retakeBtn").style.display = "block";
-
-  setTimeout(sendPhotoAuto, 200);
-}
-
-async function sendPhotoAuto(){
-  const tableId = getTableId();
-  if(!tableId || !capturedDataUrl) return;
-  if (localStorage.getItem(LS.uploading) === "1") return;
-  localStorage.setItem(LS.uploading, "1");
-
-  try{
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        tableId,
-        type: getPhotoType(),
-        filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-        dataUrl: capturedDataUrl
-      }),
-    });
-
-    incCount();
-    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
-    capturedDataUrl = null;
-    $("retakeBtn").style.display = "none";
-    setTimeout(() => setScreen("screenMenu"), 1200);
-  } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau.</span>`;
-  } finally {
-    setTimeout(() => localStorage.removeItem(LS.uploading), 800);
-  }
-}
-
-function setTypeUI(t){
-  setPhotoType(t);
-  $("typeLabel").textContent = t;
-}
-
-/* Init */
-document.addEventListener("DOMContentLoaded", () => {
-  // Cache tout sauf écran initial
-  screens.forEach(s => $(s).style.display = "none");
-
-  renderTables();
-  updateBadge();
-  updateCountUI();
-
-  if(!getTableId()) setScreen("screenTable");
-  else setScreen("screenMenu");
-
-  $("resetBtn").onclick = () => { setTableId(0); updateBadge(); setScreen("screenTable"); };
-
-  $("goPhoto").onclick = () => { $("sendStatus").textContent = ""; $("retakeBtn").style.display="none"; setScreen("screenPhoto"); };
-  $("goDefis").onclick = () => { renderDefis(); setScreen("screenDefis"); };
-  $("goEscape").onclick = () => { renderEscape(); setScreen("screenEscape"); };
-
-  $("backFromPhoto").onclick = () => { stopCamera(); setScreen("screenMenu"); };
-  $("backFromDefis").onclick = () => setScreen("screenMenu");
-  $("backFromEscape").onclick = () => setScreen("screenMenu");
-
-  document.querySelectorAll(".typeBtn").forEach(btn => btn.onclick = () => setTypeUI(btn.dataset.type));
-  setTypeUI(getPhotoType());
-
-  $("startCamBtn").onclick = startCamera;
-  $("takePhotoBtn").onclick = takePhoto;
-  $("retakeBtn").onclick = () => { capturedDataUrl = null; $("sendStatus").textContent="📸 Reprends la photo"; };
-});
+renderTables();
+updateBadge();
+show(localStorage.getItem(LS.table)?"screenMenu":"screenTable");
 </script>
 </body>
 </html>

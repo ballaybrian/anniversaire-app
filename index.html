@@ -185,6 +185,44 @@
       font-size: 16px;
       outline: none;
     }
+/* Monogramme romantique B & A */
+.crest.crest-rom{
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px 14px 18px 18px;
+  background: linear-gradient(180deg, var(--accent2), var(--accent));
+  border: 1px solid rgba(255,255,255,0.35);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+}
+
+.crest.crest-rom{
+  /* on centre un petit “logo” typographique */
+  font-family: "Playfair Display", serif;
+  color: #F7F0E4;
+}
+
+.crest.crest-rom .m{
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.crest.crest-rom .amp{
+  font-weight: 700;
+  font-size: 22px;      /* & plus grand */
+  line-height: 1;
+  margin: -2px 0;       /* resserre le bloc */
+  opacity: 0.95;
+}
+
+/* petit raffinement : léger espacement horizontal */
+.crest.crest-rom{
+  grid-auto-flow: column;
+  column-gap: 2px;
+}
+
   </style>
 </head>
 
@@ -194,10 +232,18 @@
 
       <header class="topbar">
         <div class="brand">
-          <div class="crest">B&amp;A</div>
+          <div class="crest crest-rom">
+  <span class="m">B</span>
+  <span class="amp">&amp;</span>
+  <span class="m">A</span>
+</div>
           <h1 class="title">10 ans</h1>
-          <div class="crest">B&amp;A</div>
-        </div>
+          <div class="crest crest-rom">
+  <span class="m">B</span>
+  <span class="amp">&amp;</span>
+  <span class="m">A</span>
+</div>
+        
         <p class="subtitle">✨2016 - 2026✨</p>
         <div class="topbar-actions">
           <div id="tableBadge" class="pill"></div>

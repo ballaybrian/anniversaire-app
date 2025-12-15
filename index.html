@@ -4,68 +4,217 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Anniversaire 📸</title>
+
+  <!-- Typographies élégantes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root { --pad: 16px; --r: 18px; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#000; color:#fff; }
-    .app { max-width: 680px; margin: 0 auto; padding: var(--pad); }
-    .card { background: #141622; border: 1px solid #24263a; border-radius: var(--r); padding: var(--pad); box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-    h1 { font-size: 26px; margin: 0 0 8px; }
-    p { opacity: .9; margin: 8px 0; line-height: 1.35; }
-    .grid { display: grid; gap: 12px; }
-    .grid2 { grid-template-columns: 1fr 1fr; }
-    button, .btn {
-      width: 100%; padding: 14px 14px; border-radius: 14px;
-      border: 1px solid #2b2f4a; background: #1b1f36; color: #fff;
-      font-size: 16px; cursor: pointer;
+    :root{
+      /* Thème : Beige + Sauge + Marron clair */
+      --bg: #F3EBDD;           /* beige (fond) */
+      --card: rgba(255,255,255,0.55);
+      --border: #D9CDBA;
+
+      --text: #5F7A68;         /* vert sauge (texte) */
+      --muted: rgba(95,122,104,0.75);
+
+      --btn: #CBB79A;          /* marron clair (boutons) */
+      --btnText: #2F2A22;      /* brun profond */
+      --btnBorder: #B39E7E;
+
+      --accent: #5F7A68;       /* sauge */
+      --accent2: #7F9A88;      /* sauge clair */
+      --success: #3F7C5A;
+      --warning: #9B6A2C;
+      --danger: #A34848;
+
+      --radius: 20px;
+      --shadow: 0 16px 40px rgba(0,0,0,0.10);
     }
-    button:active { transform: scale(.99); }
-    button:disabled { opacity: .55; cursor: not-allowed; }
-    .muted { opacity: .75; font-size: 13px; }
-    .row { display:flex; gap: 10px; align-items:center; }
-    .row > * { flex: 1; }
-    .pill { display:inline-block; padding: 6px 10px; border:1px solid #2b2f4a; border-radius: 999px; background:#121427; }
-    .hidden { display:none !important; }
-    input[type="text"]{
-      width:100%; padding: 12px 12px; border-radius: 12px; border:1px solid #2b2f4a; background:#0f1120; color:#fff;
-      font-size:16px;
+
+    * { box-sizing: border-box; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
-    .ok { color:#65ffb7; }
-    .warn { color:#ffcf66; }
-    .err { color:#ff6b6b; }
-    .small { font-size: 14px; }
-    .hr { height:1px; background:#24263a; margin: 14px 0; }
-    .note { font-size: 12px; opacity: .75; }
+
+    .app{
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
+    .grid{ display:grid; gap:12px; }
+    .grid2{ grid-template-columns: 1fr 1fr; }
+    .row{ display:flex; gap:10px; align-items:center; }
+    .row > *{ flex:1; }
+
+    .muted{ color: var(--muted); font-size: 13px; }
+    .small{ font-size: 14px; }
+    .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
+
+    /* Topbar (titre centré + écussons B&A) */
+    .topbar{ display:grid; gap:10px; padding-bottom: 8px; }
+    .brand{
+      display:grid;
+      grid-template-columns: 70px 1fr 70px;
+      align-items:center;
+      gap: 8px;
+    }
+
+    .title{
+      margin:0;
+      text-align:center;
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      font-size: 34px;
+      color: var(--text);
+      line-height: 1.05;
+    }
+
+    .subtitle{
+      margin:0;
+      text-align:center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .topbar-actions{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .crest{
+      width: 58px;
+      height: 58px;
+      display:grid;
+      place-items:center;
+      font-weight: 800;
+      color: #F7F0E4;
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 14px 14px 18px 18px;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+      letter-spacing: 0.6px;
+      font-family: "Inter", sans-serif;
+    }
+
+    /* Boutons */
+    button, .btn{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--btnBorder);
+      background: var(--btn);
+      color: var(--btnText);
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      cursor:pointer;
+    }
+    button:active{ transform: scale(.99); }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .smallbtn{
+      padding: 10px 12px;
+      font-size: 13px;
+      border-radius: 14px;
+    }
+
+    /* Pills */
+    .pill{
+      display:inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.45);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .ok{ color: var(--success); font-weight: 700; }
+    .warn{ color: var(--warning); font-weight: 700; }
+    .err{ color: var(--danger); font-weight: 700; }
 
     /* Camera UI */
-    .camBox { position: relative; border:1px solid #2b2f4a; border-radius: 16px; overflow:hidden; background:#0f1120; }
-    #camVideo, #camCanvas { width:100%; display:block; aspect-ratio: 3/4; object-fit: cover; }
+    .camBox{
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.35);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
+    }
+    #camVideo, #camCanvas{
+      width:100%;
+      display:block;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      background: rgba(0,0,0,0.04);
+    }
     @media (min-width: 520px){
-      #camVideo, #camCanvas { aspect-ratio: 16/9; }
+      #camVideo, #camCanvas{ aspect-ratio: 16/9; }
     }
 
     /* Flash overlay */
-    .flash {
+    .flash{
       position:absolute; inset:0;
-      background:#fff; opacity:0;
+      background:#fff;
+      opacity:0;
       pointer-events:none;
       transition: opacity 120ms ease;
     }
-    .flash.on { opacity: 0.9; }
+    .flash.on{ opacity: 0.85; }
+
+    /* Inputs */
+    input[type="text"]{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.55);
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+    }
   </style>
 </head>
+
 <body>
   <div class="app">
     <div class="card">
-      <div class="row" style="justify-content:space-between; align-items:flex-start;">
-        <div>
-          <h1>Anniversaire 🎉📸</h1>
-          <p class="muted">Choisis ta table, prends des photos, fais les défis, et gagne le code final 🔐</p>
+
+      <!-- HEADER -->
+      <header class="topbar">
+        <div class="brand">
+          <div class="crest">B&amp;A</div>
+          <h1 class="title">Anniversaire</h1>
+          <div class="crest">B&amp;A</div>
         </div>
-        <div style="text-align:right;">
+
+        <p class="subtitle">Photobooth • photos automatiques sur Drive • soirée élégante ✨</p>
+
+        <div class="topbar-actions">
           <div id="tableBadge" class="pill hidden"></div>
-          <button id="resetBtn" class="hidden" style="margin-top:10px; padding:10px; font-size:13px;">Changer de table</button>
+          <button id="resetBtn" class="hidden smallbtn">Changer de table</button>
         </div>
-      </div>
+      </header>
 
       <!-- ECRAN: TABLE -->
       <section id="screenTable" class="grid">
@@ -111,7 +260,7 @@
           <button id="retakeBtn" class="hidden">🔁 Reprendre</button>
 
           <div id="sendStatus" class="muted"></div>
-          <div class="note">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</div>
+          <div class="muted">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</div>
 
           <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
         </div>
@@ -137,9 +286,12 @@
 
         <button class="btn" id="backFromEscape">⬅️ Retour menu</button>
       </section>
+
     </div>
 
-    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App • Photobooth</p>
+    <p class="muted small" style="text-align:center; margin: 14px 0 0;">
+      Web App • Thème beige & sauge
+    </p>
   </div>
 
 <script>

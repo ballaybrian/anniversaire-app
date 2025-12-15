@@ -6,8 +6,8 @@
   <title>Anniversaire 📸</title>
   <style>
     :root { --pad: 16px; --r: 18px; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0c10; color:#fff; }
-    .app { max-width: 520px; margin: 0 auto; padding: var(--pad); }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#000; color:#fff; }
+    .app { max-width: 680px; margin: 0 auto; padding: var(--pad); }
     .card { background: #141622; border: 1px solid #24263a; border-radius: var(--r); padding: var(--pad); box-shadow: 0 10px 30px rgba(0,0,0,.25); }
     h1 { font-size: 26px; margin: 0 0 8px; }
     p { opacity: .9; margin: 8px 0; line-height: 1.35; }
@@ -37,13 +37,20 @@
     .note { font-size: 12px; opacity: .75; }
 
     /* Camera UI */
-    .camBox {
-      border:1px solid #2b2f4a; border-radius: 16px; overflow:hidden; background:#0f1120;
+    .camBox { position: relative; border:1px solid #2b2f4a; border-radius: 16px; overflow:hidden; background:#0f1120; }
+    #camVideo, #camCanvas { width:100%; display:block; aspect-ratio: 3/4; object-fit: cover; }
+    @media (min-width: 520px){
+      #camVideo, #camCanvas { aspect-ratio: 16/9; }
     }
-    video, canvas, img {
-      width:100%;
-      display:block;
+
+    /* Flash overlay */
+    .flash {
+      position:absolute; inset:0;
+      background:#fff; opacity:0;
+      pointer-events:none;
+      transition: opacity 120ms ease;
     }
+    .flash.on { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -72,6 +79,7 @@
         <button id="goPhoto">📸 Prendre une photo</button>
         <button id="goDefis">🎯 Défis photos</button>
         <button id="goEscape">🧩 Escape game</button>
+        <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
         <div class="hr"></div>
         <p class="muted small">Les photos sont envoyées automatiquement sur ton Drive.</p>
       </section>
@@ -92,6 +100,7 @@
           <div class="camBox">
             <video id="camVideo" playsinline autoplay muted></video>
             <canvas id="camCanvas" class="hidden"></canvas>
+            <div id="flash" class="flash"></div>
           </div>
 
           <div class="grid grid2">
@@ -130,7 +139,7 @@
       </section>
     </div>
 
-    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App • Caméra intégrée</p>
+    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App • Photobooth</p>
   </div>
 
 <script>
@@ -170,6 +179,7 @@ const LS = {
   escape: "bday_escape_ok",
   screen: "bday_screen",
   uploading: "bday_uploading",
+  count: "bday_photo_count"
 };
 const $ = (id) => document.getElementById(id);
 
@@ -184,6 +194,13 @@ function setDefisDone(arr){ localStorage.setItem(LS.defis, JSON.stringify(arr));
 
 function getEscapeOk(){ try { return JSON.parse(localStorage.getItem(LS.escape) || "{}"); } catch { return {}; } }
 function setEscapeOk(obj){ localStorage.setItem(LS.escape, JSON.stringify(obj)); }
+
+function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
+function incCount(){ localStorage.setItem(LS.count, String(getCount() + 1)); updateCountUI(); }
+function updateCountUI(){
+  const el = $("countPill");
+  if (el) el.textContent = `📷 Photos envoyées : ${getCount()}`;
+}
 
 function show(screenId){
   localStorage.setItem(LS.screen, screenId);
@@ -204,6 +221,34 @@ function updateBadge(){
   badge.textContent = t ? `🪑 ${t.name}` : `🪑 Table ${id}`;
   badge.classList.remove("hidden");
   reset.classList.remove("hidden");
+}
+
+/** =========================
+ * Feedback (flash / haptic / sound)
+ * ========================= */
+function flash(){
+  const f = $("flash");
+  if(!f) return;
+  f.classList.add("on");
+  setTimeout(() => f.classList.remove("on"), 140);
+}
+function haptic(){
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+function clickSound(){
+  try{
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return;
+    const ctx = new Ctx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "square";
+    o.frequency.value = 1200;
+    g.gain.value = 0.02;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    setTimeout(() => { o.stop(); ctx.close(); }, 80);
+  } catch {}
 }
 
 /** =========================
@@ -351,13 +396,15 @@ function takePhoto(){
   const ctx = canvas.getContext("2d");
   ctx.drawImage(video, 0, 0, w, h);
 
-  // Compression ici (JPEG 0.8)
   capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+
+  flash();
+  haptic();
+  clickSound();
 
   $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
   $("retakeBtn").classList.remove("hidden");
 
-  // Envoi auto
   setTimeout(() => sendPhotoAuto(), 200);
 }
 
@@ -394,6 +441,7 @@ async function sendPhotoAuto(){
       body: JSON.stringify(payload),
     });
 
+    incCount();
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
     capturedDataUrl = null;
     $("retakeBtn").classList.add("hidden");
@@ -417,8 +465,8 @@ function resetPhotoSession(){
  * ========================= */
 renderTables();
 updateBadge();
+updateCountUI();
 
-// restore screen
 const savedScreen = localStorage.getItem(LS.screen);
 if (!getTableId()) show("screenTable");
 else if (savedScreen && ["screenMenu","screenPhoto","screenDefis","screenEscape","screenTable"].includes(savedScreen)) show(savedScreen);
@@ -434,7 +482,6 @@ $("resetBtn").onclick = () => {
 $("goPhoto").onclick = () => {
   resetPhotoSession();
   show("screenPhoto");
-  // on ne démarre pas forcément tout de suite, bouton "Activer caméra"
 };
 $("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
 $("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
@@ -459,7 +506,6 @@ $("retakeBtn").onclick = () => {
   resetPhotoSession();
   $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;
 };
-
 </script>
 </body>
 </html>

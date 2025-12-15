@@ -25,7 +25,7 @@
     .row > * { flex: 1; }
     .pill { display:inline-block; padding: 6px 10px; border:1px solid #2b2f4a; border-radius: 999px; background:#121427; }
     .hidden { display:none !important; }
-    input[type="text"], input[type="number"]{
+    input[type="text"]{
       width:100%; padding: 12px 12px; border-radius: 12px; border:1px solid #2b2f4a; background:#0f1120; color:#fff;
       font-size:16px;
     }
@@ -34,11 +34,8 @@
     .err { color:#ff6b6b; }
     .small { font-size: 14px; }
     .hr { height:1px; background:#24263a; margin: 14px 0; }
+    img.preview { width:100%; border-radius:14px; border:1px solid #2b2f4a; background:#0f1120; }
     .note { font-size: 12px; opacity: .75; }
-    img.preview {
-      width:100%; border-radius:14px; border:1px solid #2b2f4a;
-      background:#0f1120;
-    }
   </style>
 </head>
 <body>
@@ -69,7 +66,7 @@
         <button id="goDefis">🎯 Défis photos</button>
         <button id="goEscape">🧩 Escape game</button>
         <div class="hr"></div>
-        <p class="muted small">Les photos seront envoyées sur TON Google Drive.</p>
+        <p class="muted small">Les photos sont envoyées automatiquement sur ton Drive.</p>
       </section>
 
       <!-- ECRAN: PHOTO -->
@@ -90,12 +87,10 @@
           <input id="photoInput" type="file" accept="image/*" capture="environment" />
 
           <img id="previewImg" class="preview hidden" alt="Aperçu de la photo" />
-          <div id="photoReady" class="muted hidden"><span class="ok">✅ Photo prête à envoyer</span></div>
-
-          <button id="sendPhotoBtn" disabled style="display:none">⬆️ Envoyer sur Drive</button>
+          <div id="photoReady" class="muted hidden"><span class="ok">✅ Photo prête</span></div>
 
           <div id="sendStatus" class="muted"></div>
-          <div class="note">Envoi optimisé : la photo est compressée automatiquement avant upload.</div>
+          <div class="note">Envoi auto (photo compressée) + retour au menu.</div>
 
           <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
         </div>
@@ -133,20 +128,12 @@
  *  ========================= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
-/** Tables */
 const TABLES = [
   { id: 1, name: "Table 1" },
   { id: 2, name: "Table 2" },
   { id: 3, name: "Table 3" },
-  { id: 3, name: "Table 4" },
-  { id: 3, name: "Table 5" },
-  { id: 3, name: "Table 6" },
-  { id: 3, name: "Table 7" },
-  { id: 3, name: "Table 8" },
-  { id: 3, name: "Table 9" },
 ];
 
-/** Défis */
 const DEFIS = [
   { id: 1, title: "Tout le monde saute", desc: "Une photo où tout le monde saute." },
   { id: 2, title: "Photo la plus drôle", desc: "Faites votre meilleure photo drôle." },
@@ -155,7 +142,6 @@ const DEFIS = [
   { id: 5, title: "Amitié", desc: "Une photo qui représente l’amitié." },
 ];
 
-/** Escape game */
 const ENIGMES = [
   { id: "e1", question: "Énigme 1 : Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", answer: "eponge", digit: "4" },
   { id: "e2", question: "Énigme 2 : Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", answer: "secret", digit: "7" },
@@ -164,7 +150,7 @@ const ENIGMES = [
 const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
 
 /** =========================
- *  STATE (localStorage)
+ *  STATE
  *  ========================= */
 const LS = {
   tableId: "bday_tableId",
@@ -172,20 +158,22 @@ const LS = {
   defis: "bday_defis_done",
   escape: "bday_escape_ok",
   screen: "bday_screen",
+  uploading: "bday_uploading"
 };
+
+const $ = (id) => document.getElementById(id);
+
 function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
 function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
+
 function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
 function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
+
 function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defis) || "[]"); } catch { return []; } }
 function setDefisDone(arr){ localStorage.setItem(LS.defis, JSON.stringify(arr)); }
+
 function getEscapeOk(){ try { return JSON.parse(localStorage.getItem(LS.escape) || "{}"); } catch { return {}; } }
 function setEscapeOk(obj){ localStorage.setItem(LS.escape, JSON.stringify(obj)); }
-
-/** =========================
- *  UI Helpers
- *  ========================= */
-const $ = (id) => document.getElementById(id);
 
 function show(screenId){
   localStorage.setItem(LS.screen, screenId);
@@ -266,7 +254,14 @@ function renderDefis(){
 /** =========================
  *  Render: Escape
  *  ========================= */
-function normalize(s){ return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,""); }
+function normalize(s){
+  return (s || "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu,"");
+}
 
 function renderEscape(){
   const ok = getEscapeOk();
@@ -317,7 +312,7 @@ function renderEscape(){
 }
 
 /** =========================
- *  Photo: compression + base64
+ *  Photo: compression + upload
  *  ========================= */
 async function fileToBase64Compressed(file){
   const img = await new Promise((resolve, reject) => {
@@ -341,36 +336,45 @@ async function fileToBase64Compressed(file){
   return canvas.toDataURL("image/jpeg", 0.8);
 }
 
-/** =========================
- *  Photo upload + preview UX
- *  ========================= */
 function setTypeUI(t){
   setPhotoType(t);
   $("typeLabel").textContent = t;
 }
 
-async function sendPhoto(){
+function resetPhotoUI(){
+  const input = $("photoInput");
+  input.value = "";
+  $("previewImg").classList.add("hidden");
+  $("photoReady").classList.add("hidden");
+}
+
+async function sendPhotoAuto(){
   const tableId = getTableId();
   if(!tableId){
     $("sendStatus").innerHTML = `<span class="err">Choisis d’abord une table.</span>`;
     show("screenTable");
     return;
   }
+
   const input = $("photoInput");
   const file = input.files && input.files[0];
   if(!file){
-    $("sendStatus").innerHTML = `<span class="err">Ajoute une photo.</span>`;
+    $("sendStatus").innerHTML = `<span class="warn">Aucune photo sélectionnée.</span>`;
     return;
   }
+
   if(!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes("/exec")){
-    $("sendStatus").innerHTML = `<span class="warn">URL Apps Script invalide (doit finir par /exec).</span>`;
+    $("sendStatus").innerHTML = `<span class="err">URL Apps Script invalide.</span>`;
     return;
   }
 
-  $("sendPhotoBtn").disabled = true;
-  $("sendStatus").textContent = "Compression + envoi en cours…";
+  // anti double-envoi si Android relance des events
+  if (localStorage.getItem(LS.uploading) === "1") return;
+  localStorage.setItem(LS.uploading, "1");
 
-  try{
+  $("sendStatus").innerHTML = `<span class="muted">📤 Compression + envoi…</span>`;
+
+  try {
     const dataUrl = await fileToBase64Compressed(file);
 
     const payload = {
@@ -380,7 +384,6 @@ async function sendPhoto(){
       dataUrl,
     };
 
-    // no-cors : compatible GitHub Pages -> Apps Script
     await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
@@ -388,63 +391,58 @@ async function sendPhoto(){
       body: JSON.stringify(payload),
     });
 
-   $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
-input.value = "";
+    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
+    resetPhotoUI();
 
-// Reset preview
-$("previewImg").classList.add("hidden");
-$("photoReady").classList.add("hidden");
-
-// Retour auto au menu après 1,2s
-setTimeout(() => {
-  show("screenMenu");
-}, 1200));
-  }catch(err){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau (connexion / permissions). ${String(err.message || err)}</span>`;
+    setTimeout(() => show("screenMenu"), 1200);
+  } catch (err) {
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau. Vérifie connexion/permissions.</span>`;
   } finally {
-    $("sendPhotoBtn").disabled = true; // restera désactivé tant qu'il n'y a pas de photo
+    // libère le verrou après un petit délai
+    setTimeout(() => localStorage.removeItem(LS.uploading), 800);
   }
 }
 
+/** =========================
+ *  Photo UX: preview + auto send
+ *  ========================= */
 function initPhotoUX(){
   const photoInput = $("photoInput");
   const previewImg = $("previewImg");
   const photoReady = $("photoReady");
 
- photoInput.addEventListener("change", async () => {
-  const file = photoInput.files && photoInput.files[0];
-  $("sendStatus").textContent = "";
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files && photoInput.files[0];
+    $("sendStatus").textContent = "";
 
-  if(!file){
-    previewImg.classList.add("hidden");
-    photoReady.classList.add("hidden");
-    return;
-  }
+    if(!file){
+      previewImg.classList.add("hidden");
+      photoReady.classList.add("hidden");
+      return;
+    }
 
-  // Aperçu rapide
-  const url = URL.createObjectURL(file);
-  previewImg.src = url;
-  previewImg.classList.remove("hidden");
-  photoReady.classList.remove("hidden");
+    const url = URL.createObjectURL(file);
+    previewImg.src = url;
+    previewImg.classList.remove("hidden");
+    photoReady.classList.remove("hidden");
 
-  // Message utilisateur
-  $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique en cours…</span>`;
+    $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
 
-  // Petit délai UX (laisser voir l’aperçu)
-  setTimeout(() => {
-    sendPhoto(); // 🚀 ENVOI AUTO
-  }, 400);
-});
+    // petit délai UX, puis envoi auto
+    setTimeout(() => {
+      sendPhotoAuto();
+    }, 350);
+  });
 }
 
 /** =========================
- *  Init + Navigation + restore screen
+ *  Init + Navigation
  *  ========================= */
 renderTables();
 updateBadge();
 initPhotoUX();
 
-// Restore last screen (utile si Android recharge la page après la caméra)
+// Restore last screen (utile si Android recharge après la caméra)
 const savedScreen = localStorage.getItem(LS.screen);
 if (!getTableId()) {
   show("screenTable");
@@ -461,11 +459,11 @@ $("resetBtn").onclick = () => {
   show("screenTable");
 };
 
-// Menu navigation
+// Navigation menu
 $("goPhoto").onclick = () => {
   $("sendStatus").textContent = "";
   show("screenPhoto");
-  openCameraPicker(); // ouvre direct
+  openCameraPicker();
 };
 $("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
 $("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
@@ -478,12 +476,12 @@ $("backFromEscape").onclick = () => show("screenMenu");
 document.querySelectorAll(".typeBtn").forEach(btn => {
   btn.onclick = () => {
     setTypeUI(btn.dataset.type);
+    // reset un éventuel verrou de précédent envoi
+    localStorage.removeItem(LS.uploading);
     openCameraPicker();
   };
 });
 setTypeUI(getPhotoType());
-
-$("sendPhotoBtn").onclick = sendPhoto;
 </script>
 </body>
 </html>

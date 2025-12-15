@@ -185,13 +185,14 @@
       letter-spacing: .3px;
       margin: 0 0 4px;
     }
-    #tableButtons{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 14px;
-      justify-items: center;
-      margin-top: 6px;
-    }
+ #tableButtons{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* ✅ 3 colonnes fixes */
+  gap: 14px;
+  justify-items: center;
+  margin-top: 6px;
+}
+
     #tableButtons button{
       width: 100%;
       max-width: 170px;

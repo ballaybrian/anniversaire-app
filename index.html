@@ -34,8 +34,16 @@
     .err { color:#ff6b6b; }
     .small { font-size: 14px; }
     .hr { height:1px; background:#24263a; margin: 14px 0; }
-    img.preview { width:100%; border-radius:14px; border:1px solid #2b2f4a; background:#0f1120; }
     .note { font-size: 12px; opacity: .75; }
+
+    /* Camera UI */
+    .camBox {
+      border:1px solid #2b2f4a; border-radius: 16px; overflow:hidden; background:#0f1120;
+    }
+    video, canvas, img {
+      width:100%;
+      display:block;
+    }
   </style>
 </head>
 <body>
@@ -56,7 +64,6 @@
       <section id="screenTable" class="grid">
         <p><b>1) Choisis ta table</b></p>
         <div class="grid grid2" id="tableButtons"></div>
-        <p class="muted">Astuce : pose le QR code sur chaque table pour aller plus vite.</p>
       </section>
 
       <!-- ECRAN: MENU -->
@@ -80,17 +87,22 @@
             <button class="typeBtn" data-type="defi">🎯 Défi</button>
             <button class="typeBtn" data-type="escape">🧩 Escape</button>
           </div>
-
           <div class="muted">Type sélectionné : <span id="typeLabel" class="pill">libre</span></div>
 
-          <label class="muted">Photo (caméra) :</label>
-          <input id="photoInput" type="file" accept="image/*" capture="environment" />
+          <div class="camBox">
+            <video id="camVideo" playsinline autoplay muted></video>
+            <canvas id="camCanvas" class="hidden"></canvas>
+          </div>
 
-          <img id="previewImg" class="preview hidden" alt="Aperçu de la photo" />
-          <div id="photoReady" class="muted hidden"><span class="ok">✅ Photo prête</span></div>
+          <div class="grid grid2">
+            <button id="startCamBtn">🎥 Activer la caméra</button>
+            <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+          </div>
+
+          <button id="retakeBtn" class="hidden">🔁 Reprendre</button>
 
           <div id="sendStatus" class="muted"></div>
-          <div class="note">Envoi auto (photo compressée) + retour au menu.</div>
+          <div class="note">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</div>
 
           <button class="btn" id="backFromPhoto">⬅️ Retour menu</button>
         </div>
@@ -100,7 +112,6 @@
       <section id="screenDefis" class="grid hidden">
         <p><b>🎯 Défis photos</b></p>
         <div id="defisList" class="grid"></div>
-        <p class="muted small">Valide un défi → puis prends la photo en “🎯 Défi”.</p>
         <button class="btn" id="backFromDefis">⬅️ Retour menu</button>
       </section>
 
@@ -119,25 +130,19 @@
       </section>
     </div>
 
-    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App • v1</p>
+    <p class="muted small" style="text-align:center; margin: 14px 0 0;">Web App • Caméra intégrée</p>
   </div>
 
 <script>
 /** =========================
- *  CONFIG
- *  ========================= */
+ * CONFIG
+ * ========================= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
 const TABLES = [
   { id: 1, name: "Table 1" },
   { id: 2, name: "Table 2" },
   { id: 3, name: "Table 3" },
-  { id: 3, name: "Table 4" },
-  { id: 3, name: "Table 5" },
-  { id: 3, name: "Table 6" },
-  { id: 3, name: "Table 7" },
-  { id: 3, name: "Table 8" },
-  { id: 3, name: "Table 9" },
 ];
 
 const DEFIS = [
@@ -156,17 +161,16 @@ const ENIGMES = [
 const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
 
 /** =========================
- *  STATE
- *  ========================= */
+ * STATE
+ * ========================= */
 const LS = {
   tableId: "bday_tableId",
   photoType: "bday_photoType",
   defis: "bday_defis_done",
   escape: "bday_escape_ok",
   screen: "bday_screen",
-  uploading: "bday_uploading"
+  uploading: "bday_uploading",
 };
-
 const $ = (id) => document.getElementById(id);
 
 function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
@@ -202,14 +206,9 @@ function updateBadge(){
   reset.classList.remove("hidden");
 }
 
-function openCameraPicker(){
-  const input = $("photoInput");
-  if (input) input.click();
-}
-
 /** =========================
- *  Render: Tables
- *  ========================= */
+ * UI: Tables / Defis / Escape
+ * ========================= */
 function renderTables(){
   const wrap = $("tableButtons");
   wrap.innerHTML = "";
@@ -225,9 +224,6 @@ function renderTables(){
   });
 }
 
-/** =========================
- *  Render: Defis
- *  ========================= */
 function renderDefis(){
   const done = new Set(getDefisDone());
   const wrap = $("defisList");
@@ -257,18 +253,9 @@ function renderDefis(){
   });
 }
 
-/** =========================
- *  Render: Escape
- *  ========================= */
 function normalize(s){
-  return (s || "")
-    .toString()
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu,"");
+  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
 }
-
 function renderEscape(){
   const ok = getEscapeOk();
   const wrap = $("enigmes");
@@ -318,40 +305,60 @@ function renderEscape(){
 }
 
 /** =========================
- *  Photo: compression + upload
- *  ========================= */
-async function fileToBase64Compressed(file){
-  const img = await new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const i = new Image();
-    i.onload = () => { URL.revokeObjectURL(url); resolve(i); };
-    i.onerror = reject;
-    i.src = url;
-  });
-
-  const max = 1600;
-  let w = img.width, h = img.height;
-  if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
-  else if (h >= w && h > max) { w = Math.round(w * (max / h)); h = max; }
-
-  const canvas = document.createElement("canvas");
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, w, h);
-
-  return canvas.toDataURL("image/jpeg", 0.8);
-}
+ * CAMERA + UPLOAD
+ * ========================= */
+let camStream = null;
+let capturedDataUrl = null;
 
 function setTypeUI(t){
   setPhotoType(t);
   $("typeLabel").textContent = t;
 }
 
-function resetPhotoUI(){
-  const input = $("photoInput");
-  input.value = "";
-  $("previewImg").classList.add("hidden");
-  $("photoReady").classList.add("hidden");
+async function startCamera(){
+  try{
+    $("sendStatus").textContent = "🎥 Activation caméra…";
+    const constraints = {
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    };
+    camStream = await navigator.mediaDevices.getUserMedia(constraints);
+    $("camVideo").srcObject = camStream;
+    $("takePhotoBtn").disabled = false;
+    $("sendStatus").textContent = "";
+  } catch(e){
+    $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée. Autorise la caméra (cadenas 🔒 dans Chrome).</span>`;
+  }
+}
+
+function stopCamera(){
+  if(camStream){
+    camStream.getTracks().forEach(t => t.stop());
+    camStream = null;
+  }
+  $("camVideo").srcObject = null;
+  $("takePhotoBtn").disabled = true;
+}
+
+function takePhoto(){
+  const video = $("camVideo");
+  const canvas = $("camCanvas");
+  const w = video.videoWidth || 1280;
+  const h = video.videoHeight || 720;
+
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(video, 0, 0, w, h);
+
+  // Compression ici (JPEG 0.8)
+  capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+
+  $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
+  $("retakeBtn").classList.remove("hidden");
+
+  // Envoi auto
+  setTimeout(() => sendPhotoAuto(), 200);
 }
 
 async function sendPhotoAuto(){
@@ -361,33 +368,23 @@ async function sendPhotoAuto(){
     show("screenTable");
     return;
   }
-
-  const input = $("photoInput");
-  const file = input.files && input.files[0];
-  if(!file){
-    $("sendStatus").innerHTML = `<span class="warn">Aucune photo sélectionnée.</span>`;
+  if(!capturedDataUrl){
+    $("sendStatus").innerHTML = `<span class="warn">Aucune photo capturée.</span>`;
     return;
   }
-
   if(!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes("/exec")){
     $("sendStatus").innerHTML = `<span class="err">URL Apps Script invalide.</span>`;
     return;
   }
-
-  // anti double-envoi si Android relance des events
   if (localStorage.getItem(LS.uploading) === "1") return;
   localStorage.setItem(LS.uploading, "1");
 
-  $("sendStatus").innerHTML = `<span class="muted">📤 Compression + envoi…</span>`;
-
-  try {
-    const dataUrl = await fileToBase64Compressed(file);
-
+  try{
     const payload = {
       tableId,
       type: getPhotoType(),
       filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-      dataUrl,
+      dataUrl: capturedDataUrl,
     };
 
     await fetch(APPS_SCRIPT_URL, {
@@ -398,96 +395,71 @@ async function sendPhotoAuto(){
     });
 
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉 Retour au menu…</span>`;
-    resetPhotoUI();
+    capturedDataUrl = null;
+    $("retakeBtn").classList.add("hidden");
 
     setTimeout(() => show("screenMenu"), 1200);
-  } catch (err) {
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau. Vérifie connexion/permissions.</span>`;
+  } catch(e){
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau. Vérifie la connexion.</span>`;
   } finally {
-    // libère le verrou après un petit délai
     setTimeout(() => localStorage.removeItem(LS.uploading), 800);
   }
 }
 
-/** =========================
- *  Photo UX: preview + auto send
- *  ========================= */
-function initPhotoUX(){
-  const photoInput = $("photoInput");
-  const previewImg = $("previewImg");
-  const photoReady = $("photoReady");
-
-  photoInput.addEventListener("change", () => {
-    const file = photoInput.files && photoInput.files[0];
-    $("sendStatus").textContent = "";
-
-    if(!file){
-      previewImg.classList.add("hidden");
-      photoReady.classList.add("hidden");
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    previewImg.src = url;
-    previewImg.classList.remove("hidden");
-    photoReady.classList.remove("hidden");
-
-    $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
-
-    // petit délai UX, puis envoi auto
-    setTimeout(() => {
-      sendPhotoAuto();
-    }, 350);
-  });
+function resetPhotoSession(){
+  capturedDataUrl = null;
+  $("sendStatus").textContent = "";
+  $("retakeBtn").classList.add("hidden");
 }
 
 /** =========================
- *  Init + Navigation
- *  ========================= */
+ * INIT + NAV
+ * ========================= */
 renderTables();
 updateBadge();
-initPhotoUX();
 
-// Restore last screen (utile si Android recharge après la caméra)
+// restore screen
 const savedScreen = localStorage.getItem(LS.screen);
-if (!getTableId()) {
-  show("screenTable");
-} else if (savedScreen && ["screenMenu","screenPhoto","screenDefis","screenEscape","screenTable"].includes(savedScreen)) {
-  show(savedScreen);
-} else {
-  show("screenMenu");
-}
+if (!getTableId()) show("screenTable");
+else if (savedScreen && ["screenMenu","screenPhoto","screenDefis","screenEscape","screenTable"].includes(savedScreen)) show(savedScreen);
+else show("screenMenu");
 
 $("resetBtn").onclick = () => {
-  localStorage.removeItem(LS.tableId);
+  setTableId(0);
   localStorage.setItem(LS.screen, "screenTable");
   updateBadge();
   show("screenTable");
 };
 
-// Navigation menu
 $("goPhoto").onclick = () => {
-  $("sendStatus").textContent = "";
+  resetPhotoSession();
   show("screenPhoto");
-  openCameraPicker();
+  // on ne démarre pas forcément tout de suite, bouton "Activer caméra"
 };
 $("goDefis").onclick = () => { renderDefis(); show("screenDefis"); };
 $("goEscape").onclick = () => { renderEscape(); show("screenEscape"); };
 
-$("backFromPhoto").onclick = () => show("screenMenu");
+$("backFromPhoto").onclick = () => {
+  stopCamera();
+  show("screenMenu");
+};
 $("backFromDefis").onclick = () => show("screenMenu");
 $("backFromEscape").onclick = () => show("screenMenu");
 
-// Type buttons: set type + open camera
+// Type buttons
 document.querySelectorAll(".typeBtn").forEach(btn => {
-  btn.onclick = () => {
-    setTypeUI(btn.dataset.type);
-    // reset un éventuel verrou de précédent envoi
-    localStorage.removeItem(LS.uploading);
-    openCameraPicker();
-  };
+  btn.onclick = () => setTypeUI(btn.dataset.type);
 });
 setTypeUI(getPhotoType());
+
+// Camera controls
+$("startCamBtn").onclick = startCamera;
+$("takePhotoBtn").onclick = takePhoto;
+$("retakeBtn").onclick = () => {
+  resetPhotoSession();
+  $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;
+};
+
 </script>
 </body>
 </html>

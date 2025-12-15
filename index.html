@@ -92,7 +92,8 @@
           <img id="previewImg" class="preview hidden" alt="Aperçu de la photo" />
           <div id="photoReady" class="muted hidden"><span class="ok">✅ Photo prête à envoyer</span></div>
 
-          <button id="sendPhotoBtn" disabled>⬆️ Envoyer sur Drive</button>
+          <button id="sendPhotoBtn" disabled style="display:none">⬆️ Envoyer sur Drive</button>
+
           <div id="sendStatus" class="muted"></div>
           <div class="note">Envoi optimisé : la photo est compressée automatiquement avant upload.</div>
 
@@ -137,6 +138,12 @@ const TABLES = [
   { id: 1, name: "Table 1" },
   { id: 2, name: "Table 2" },
   { id: 3, name: "Table 3" },
+  { id: 3, name: "Table 4" },
+  { id: 3, name: "Table 5" },
+  { id: 3, name: "Table 6" },
+  { id: 3, name: "Table 7" },
+  { id: 3, name: "Table 8" },
+  { id: 3, name: "Table 9" },
 ];
 
 /** Défis */
@@ -399,29 +406,30 @@ function initPhotoUX(){
   const previewImg = $("previewImg");
   const photoReady = $("photoReady");
 
-  photoInput.addEventListener("change", () => {
-    const file = photoInput.files && photoInput.files[0];
-    $("sendStatus").textContent = "";
+ photoInput.addEventListener("change", async () => {
+  const file = photoInput.files && photoInput.files[0];
+  $("sendStatus").textContent = "";
 
-    if(!file){
-      previewImg.classList.add("hidden");
-      photoReady.classList.add("hidden");
-      $("sendPhotoBtn").disabled = true;
-      return;
-    }
+  if(!file){
+    previewImg.classList.add("hidden");
+    photoReady.classList.add("hidden");
+    return;
+  }
 
-    const url = URL.createObjectURL(file);
-    previewImg.src = url;
-    previewImg.classList.remove("hidden");
-    photoReady.classList.remove("hidden");
+  // Aperçu rapide
+  const url = URL.createObjectURL(file);
+  previewImg.src = url;
+  previewImg.classList.remove("hidden");
+  photoReady.classList.remove("hidden");
 
-    $("sendPhotoBtn").disabled = false;
+  // Message utilisateur
+  $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique en cours…</span>`;
 
-    // Scroll vers le bouton "Envoyer"
-    setTimeout(() => {
-      $("sendPhotoBtn").scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 150);
-  });
+  // Petit délai UX (laisser voir l’aperçu)
+  setTimeout(() => {
+    sendPhoto(); // 🚀 ENVOI AUTO
+  }, 400);
+});
 }
 
 /** =========================

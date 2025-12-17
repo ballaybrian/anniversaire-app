@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>10 ans</title>
+  <title>10 ans – B & A</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,15 +12,14 @@
   <style>
     :root{
       --bg:#F3EBDD;
-      --card:rgba(255,255,255,0.62);
+      --card: rgba(255,255,255,0.62);
       --border:#D9CDBA;
 
       --text:#5F7A68;
       --muted:rgba(95,122,104,0.70);
 
-      /* ✅ Boutons vert sauge */
-      --btn:#8aa685;
-      --btnText:#ffffff;
+      --btn:#8aa685;        /* vert sauge */
+      --btnText:#fff;
       --btnBorder:#6f8f6a;
 
       --success:#3F7C5A;
@@ -34,66 +33,66 @@
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
-    .app{ max-width:760px; margin:0 auto; padding:18px; }
+    .app{ max-width: 760px; margin: 0 auto; padding: 18px; }
     .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(6px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
     }
 
     .grid{ display:grid; gap:12px; }
-    .grid2{ grid-template-columns:1fr 1fr; }
+    .grid2{ grid-template-columns: 1fr 1fr; }
 
-    .muted{ color:var(--muted); font-size:13px; }
+    .muted{ color: var(--muted); font-size: 13px; }
     .pill{
       display:inline-block;
-      padding:7px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.45);
-      color:var(--text);
-      font-weight:800;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.45);
+      color: var(--text);
+      font-weight: 800;
     }
-    .ok{ color:var(--success); font-weight:800; }
-    .warn{ color:var(--warning); font-weight:800; }
-    .err{ color:var(--danger); font-weight:800; }
+    .ok{ color: var(--success); font-weight: 800; }
+    .warn{ color: var(--warning); font-weight: 800; }
+    .err{ color: var(--danger); font-weight: 800; }
 
-    .topbar{ display:grid; gap:10px; padding-bottom:8px; text-align:center; }
+    /* Header */
+    .topbar{ display:grid; gap:10px; padding-bottom: 8px; text-align:center; }
     .brand{
       display:grid;
-      grid-template-columns:1fr auto 1fr;
+      grid-template-columns: 1fr auto 1fr;
       align-items:center;
-      gap:8px;
+      gap: 8px;
     }
     .title{
       margin:0;
-      font-family:"Playfair Display",serif;
-      font-weight:700;
-      font-size:clamp(32px,6vw,46px);
-      letter-spacing:.3px;
-      line-height:1.05;
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      font-size: clamp(32px, 6vw, 46px);
+      letter-spacing: .3px;
+      line-height: 1.05;
     }
     .subtitle{
       margin:0;
-      font-size:14px;
-      letter-spacing:1.1px;
-      color:var(--muted);
+      font-size: 14px;
+      letter-spacing: 1.1px;
+      color: var(--muted);
     }
     .mono{
-      font-family:"Playfair Display",serif;
-      font-size:16px;
-      letter-spacing:1px;
-      opacity:.85;
-      user-select:none;
+      font-family: "Playfair Display", serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      opacity: .85;
+      user-select: none;
     }
-
     .topbar-actions{
       display:flex;
       justify-content:center;
@@ -102,35 +101,44 @@
       flex-wrap:wrap;
     }
 
+    /* Buttons */
     button{
       width:100%;
-      padding:14px 14px;
-      border-radius:16px;
-      border:1px solid var(--btnBorder);
-      background:var(--btn);
-      color:var(--btnText);
-      font-weight:900;
-      letter-spacing:.2px;
-      cursor:pointer;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--btnBorder);
+      background: var(--btn);
+      color: var(--btnText);
+      font-weight: 900;
+      letter-spacing: .2px;
+      cursor: pointer;
     }
-    button:active{ transform:scale(.99); }
+    button:active{ transform: scale(.99); }
     button:disabled{ opacity:.55; cursor:not-allowed; }
 
     .smallbtn{
-      padding:10px 12px;
-      font-size:13px;
-      border-radius:14px;
-      width:auto;
-      font-weight:900;
+      padding: 10px 12px;
+      font-size: 13px;
+      border-radius: 14px;
+      width: auto;
+      font-weight: 900;
     }
     .btn-subtle{
-      background:rgba(255,255,255,0.55);
-      border:1px solid var(--border);
-      color:var(--text);
-      font-weight:800;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 800;
     }
 
-    .hr{ height:1px; background:var(--border); margin:14px 0; opacity:.9; }
+    .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
+
+    /* Screens */
+    section[data-screen]{ display:none; }
+    .fade-in{ animation: fadeIn 220ms ease-out; }
+    @keyframes fadeIn{
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* Table 3x3 */
     #tableButtons{
@@ -138,333 +146,371 @@
       grid-template-columns:repeat(3,1fr);
       gap:14px;
       justify-items:center;
-      margin-top:6px;
+      margin-top: 6px;
     }
     #tableButtons button{
       width:100%;
       max-width:170px;
-      padding:16px 0;
-      font-size:16px;
-      border-radius:18px;
-      font-weight:900;
+      padding: 16px 0;
+      font-size: 16px;
+      border-radius: 18px;
+      font-weight: 900;
     }
     @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1.02)} }
-    #tableButtons button.picked{ animation:pop 220ms ease-out; filter:brightness(1.03); }
+    #tableButtons button.picked{ animation: pop 220ms ease-out; filter: brightness(1.03); }
 
-    /* Menu non éditable */
+    /* Menu blocks */
     .menuBlock{
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      background:rgba(255,255,255,0.45);
-      text-align:left;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.45);
+      text-align: left;
     }
-    .menuTitle{ font-weight:900; margin:0 0 8px; }
+    .menuTitle{ font-weight: 900; margin: 0 0 8px; }
     .menuText{
-      border:1px dashed rgba(95,122,104,0.35);
-      border-radius:14px;
-      padding:12px;
-      background:rgba(255,255,255,0.35);
-      color:rgba(95,122,104,0.92);
-      line-height:1.35;
-      white-space:pre-wrap;
-      min-height:54px;
+      border: 1px dashed rgba(95,122,104,0.35);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,0.35);
+      color: rgba(95,122,104,0.92);
+      line-height: 1.35;
+      white-space: pre-wrap;
+      min-height: 54px;
     }
 
-    /* Album */
+    /* Album iframe */
     .iframeWrap{
-      border:1px solid var(--border);
-      border-radius:18px;
-      overflow:hidden;
-      background:rgba(255,255,255,0.45);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.45);
     }
-    iframe{ width:100%; height:70vh; border:0; display:block; }
+    iframe{ width: 100%; height: 70vh; border: 0; display:block; }
 
-    /* Photo */
+    /* Camera */
     .camBox{
-      position:relative;
-      border:1px solid var(--border);
-      border-radius:18px;
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 18px;
       overflow:hidden;
-      background:rgba(255,255,255,0.35);
-      box-shadow:0 12px 26px rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.35);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
     }
-    #camVideo,#camCanvas{
+    #camVideo, #camCanvas{
       width:100%;
       display:block;
-      aspect-ratio:3/4;
-      object-fit:cover;
-      background:rgba(0,0,0,0.04);
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      background: rgba(0,0,0,0.04);
     }
-    @media (min-width:520px){
-      #camVideo,#camCanvas{ aspect-ratio:16/9; }
+    @media (min-width: 520px){
+      #camVideo, #camCanvas{ aspect-ratio: 16/9; }
     }
-    .flash{ position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; transition:opacity 120ms ease; }
-    .flash.on{ opacity:.85; }
+    .flash{
+      position:absolute; inset:0;
+      background:#fff;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity 120ms ease;
+    }
+    .flash.on{ opacity: 0.85; }
 
     .flipIcon{
       display:inline-block;
-      margin-right:8px;
-      transition:transform 260ms ease;
-      transform-origin:50% 50%;
+      margin-right: 8px;
+      transition: transform 260ms ease;
+      transform-origin: 50% 50%;
     }
-    .flipIcon.spin{ transform:rotate(180deg); }
+    .flipIcon.spin{ transform: rotate(180deg); }
 
+    /* Lists */
     .item{
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      background:rgba(255,255,255,0.45);
-      display:grid;
-      gap:8px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.45);
+      display: grid;
+      gap: 8px;
     }
-    .itemTitle{ font-weight:900; text-align:left; }
-    .itemDesc{ font-size:13px; color:var(--muted); text-align:left; line-height:1.35; }
-    .itemRow{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
-    .tiny{ font-size:12px; }
+    .itemTitle{ font-weight: 900; }
+    .itemDesc{ font-size: 13px; color: var(--muted); line-height: 1.35; }
+    .itemRow{ display:grid; grid-template-columns: 1fr auto; gap: 10px; align-items:center; }
+    .tiny{ font-size: 12px; }
+
+    input[type="text"], input[type="number"]{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.55);
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+    }
 
     /* Progress */
     .progressWrap{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.45);
-      border-radius:999px;
-      padding:10px 10px 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.45);
+      border-radius: 999px;
+      padding: 10px 10px 8px;
     }
     .progressBar{
-      height:12px;
-      border-radius:999px;
-      background:rgba(95,122,104,0.20);
-      overflow:hidden;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(95,122,104,0.20);
+      overflow: hidden;
     }
     .progressFill{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background:var(--text);
-      transition:width 260ms ease;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: var(--text); /* vert sauge */
+      transition: width 260ms ease;
     }
     .progressLabel{
-      margin-top:8px;
-      text-align:center;
-      font-weight:900;
-      letter-spacing:.3px;
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: .3px;
     }
     .progressSub{
-      margin-top:2px;
-      text-align:center;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
+      margin-top: 2px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
     }
 
-    /* Animation écran */
-    .fade-in{ animation:fadeIn 220ms ease-out; }
-    @keyframes fadeIn{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+    /* Admin hidden button */
+    #bAdminReset { display:none; }
+    #bAdminReset.show { display:block; }
   </style>
 </head>
 
 <body>
-<div class="app">
-  <div class="card">
+  <div class="app">
+    <div class="card">
 
-    <header class="topbar">
-      <div class="brand">
-        <div class="mono">B &amp; A</div>
-        <h1 class="title">10 ans</h1>
-        <div class="mono">B &amp; A</div>
-      </div>
-      <p class="subtitle">✨ 2016 – 2026 ✨</p>
-
-      <div class="topbar-actions">
-        <div id="tableBadge" class="pill" style="display:none;"></div>
-        <button id="resetBtn" class="smallbtn" style="display:none;">Changer de table</button>
-      </div>
-    </header>
-
-    <!-- ✅ ACCUEIL -->
-    <section id="screenHome" data-screen class="grid">
-      <button id="homeTable">🪑 Table</button>
-      <button id="homeMenu">🍽️ Menu</button>
-      <button id="homeAlbum">🖼️ Voir photo</button>
-      <button id="homeGames">🎉 Jeux & Photos</button>
-
-      <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
-      <div class="hr"></div>
-      <p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p>
-    </section>
-
-    <!-- TABLE -->
-    <section id="screenTable" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">Choisis ta table</p>
-      <div id="tableButtons"></div>
-      <p class="muted" style="text-align:center;margin:0;">Après sélection, tu reviens à l’accueil.</p>
-      <button id="backFromTable" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- MENU (uniquement entrée/plat/fromage) -->
-    <section id="screenMenu" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">🍽️ Menu</p>
-      <p class="muted" style="text-align:center;margin:0;">(Texte défini dans le code — non modifiable)</p>
-
-      <div class="menuBlock">
-        <p class="menuTitle">Entrée</p>
-        <div id="menuEntree" class="menuText"></div>
-      </div>
-
-      <div class="menuBlock">
-        <p class="menuTitle">Plat</p>
-        <div id="menuPlat" class="menuText"></div>
-      </div>
-
-      <div class="menuBlock">
-        <p class="menuTitle">Fromage</p>
-        <div id="menuFromage" class="menuText"></div>
-      </div>
-
-      <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- ALBUM -->
-    <section id="screenAlbum" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">🖼️ Album photo</p>
-      <p class="muted" style="text-align:center;margin:0;">Lecture seule depuis Drive.</p>
-
-      <div class="iframeWrap">
-        <iframe id="albumFrame" title="Album Drive"></iframe>
-      </div>
-
-      <p class="muted" style="text-align:center;margin:0;">
-        Si ça n’affiche rien : dossier Drive → partage “Toute personne avec le lien peut voir”.
-      </p>
-
-      <button id="backFromAlbum" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- JEUX & PHOTOS -->
-    <section id="screenGames" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">🎉 Jeux & Photos</p>
-      <button id="goPhoto">📸 Prendre une photo</button>
-      <button id="goDefis">🎯 Défis photos</button>
-      <button id="goCodeGame">🔐 Code Game</button>
-      <button id="goBouchons">🍾 Combien de bouchons ?</button>
-      <button id="backFromGames" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- PHOTO -->
-    <section id="screenPhoto" data-screen class="grid">
-      <p style="margin:0;text-align:center;font-weight:900;">Photobooth</p>
-
-      <div class="muted" style="text-align:center;">
-        Type : <span id="typeLabel" class="pill">libre</span>
-        <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
-      </div>
-
-      <div class="grid grid2">
-        <button class="typeBtn" data-type="libre">📸 Libre</button>
-        <button class="typeBtn" data-type="defi">🎯 Défi</button>
-      </div>
-
-      <div class="camBox">
-        <video id="camVideo" playsinline autoplay muted></video>
-        <canvas id="camCanvas" style="display:none;"></canvas>
-        <div id="flash" class="flash"></div>
-      </div>
-
-      <div class="grid grid2">
-        <button id="startCamBtn">🎥 Activer la caméra</button>
-        <button id="switchCamBtn" class="btn-subtle">
-          <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
-        </button>
-      </div>
-
-      <div class="grid grid2">
-        <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
-        <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
-      </div>
-
-      <div id="sendStatus" class="muted" style="text-align:center;"></div>
-
-      <button id="backFromPhoto" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- DEFIS -->
-    <section id="screenDefis" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">🎯 Défis photos</p>
-
-      <div class="progressWrap">
-        <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
-        <div id="defisPercent" class="progressLabel">0%</div>
-        <div id="defisSub" class="progressSub">0 / 0 défis</div>
-      </div>
-
-      <div id="defisList" class="grid"></div>
-
-      <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
-      <button id="backFromDefis" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- CODE GAME (sans révélation du code final) -->
-    <section id="screenCodeGame" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">🔐 Code Game</p>
-
-      <div class="progressWrap">
-        <div class="progressBar"><div id="codeFill" class="progressFill"></div></div>
-        <div id="codePercent" class="progressLabel">0%</div>
-        <div id="codeSub" class="progressSub">0 / 0 énigmes</div>
-      </div>
-
-      <div id="enigmesList" class="grid"></div>
-
-      <div class="hr"></div>
-      <div id="finalBox" class="pill warn" style="text-align:center;">🔒 Code final : à trouver…</div>
-
-      <button id="resetCodeBtn" class="btn-subtle">Réinitialiser le Code Game</button>
-      <button id="backFromCode" class="btn-subtle">⬅️ Retour</button>
-    </section>
-
-    <!-- BOUCHONS -->
-    <section id="screenBouchons" data-screen class="grid">
-      <p style="text-align:center;margin:0;font-weight:900;">🍾 Combien de bouchons ?</p>
-
-      <div class="item">
-        <div class="itemTitle">Ta proposition</div>
-        <div class="grid grid2">
-          <input id="bGuess" type="number" min="0" step="1" placeholder="Ex: 237">
-          <button id="bSubmit">Valider</button>
+      <header class="topbar" id="brandHold">
+        <div class="brand">
+          <div class="mono">B &amp; A</div>
+          <h1 class="title">10 ans</h1>
+          <div class="mono">B &amp; A</div>
         </div>
-        <div id="bStatus" class="muted tiny"></div>
-      </div>
+        <p class="subtitle">✨ 2016 – 2026 ✨</p>
 
-      <div class="item">
-        <div class="itemTitle">État du jeu</div>
-        <div id="bLockInfo" class="muted">Chargement…</div>
-      </div>
+        <div class="topbar-actions">
+          <div id="tableBadge" class="pill" style="display:none;"></div>
+          <button id="resetBtn" class="smallbtn" style="display:none;">Changer de table</button>
+        </div>
+      </header>
 
-      <button id="backFromBouchons" class="btn-subtle">⬅️ Retour</button>
-    </section>
+      <!-- ACCUEIL -->
+      <section id="screenHome" data-screen class="grid">
+        <button id="homeTable">🪑 Table</button>
+        <button id="homeMenu">🍽️ Menu</button>
+        <button id="homeAlbum">🖼️ Voir photo</button>
+        <button id="homeGames">🎉 Jeux &amp; Photos</button>
 
+        <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
+        <div class="hr"></div>
+        <p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p>
+      </section>
+
+      <!-- TABLE -->
+      <section id="screenTable" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">Choisis ta table</p>
+        <div id="tableButtons"></div>
+        <p class="muted" style="text-align:center;margin:0;">Après sélection, tu reviens à l’accueil.</p>
+        <button id="backFromTable" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- MENU -->
+      <section id="screenMenu" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">🍽️ Menu</p>
+        <p class="muted" style="text-align:center;margin:0;">(Texte défini dans le code — non modifiable)</p>
+
+        <div class="menuBlock">
+          <p class="menuTitle">Entrée</p>
+          <div id="menuEntree" class="menuText"></div>
+        </div>
+        <div class="menuBlock">
+          <p class="menuTitle">Plat</p>
+          <div id="menuPlat" class="menuText"></div>
+        </div>
+        <div class="menuBlock">
+          <p class="menuTitle">Fromage</p>
+          <div id="menuFromage" class="menuText"></div>
+        </div>
+
+        <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- ALBUM -->
+      <section id="screenAlbum" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">🖼️ Album photo</p>
+        <p class="muted" style="text-align:center;margin:0;">Lecture seule depuis Drive.</p>
+
+        <div class="iframeWrap">
+          <iframe id="albumFrame" title="Album Drive"></iframe>
+        </div>
+
+        <p class="muted" style="text-align:center;margin:0;">
+          Si rien ne s’affiche : dossier Drive → partage “Toute personne avec le lien peut voir”.
+        </p>
+
+        <button id="backFromAlbum" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- JEUX -->
+      <section id="screenGames" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">🎉 Jeux &amp; Photos</p>
+        <button id="goPhoto">📸 Prendre une photo</button>
+        <button id="goDefis">🎯 Défis photos</button>
+        <button id="goCodeGame">🔐 Code Game</button>
+        <button id="goBouchons">🍾 Combien de bouchons ?</button>
+        <button id="backFromGames" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- PHOTO -->
+      <section id="screenPhoto" data-screen class="grid">
+        <p style="margin:0;text-align:center;font-weight:900;">Photobooth</p>
+
+        <div class="muted" style="text-align:center;">
+          Type : <span id="typeLabel" class="pill">libre</span>
+          <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
+        </div>
+
+        <div class="grid grid2">
+          <button class="typeBtn" data-type="libre">📸 Libre</button>
+          <button class="typeBtn" data-type="defi">🎯 Défi</button>
+        </div>
+        <button class="typeBtn" data-type="codegame">🔐 Code Game</button>
+
+        <div class="camBox">
+          <video id="camVideo" playsinline autoplay muted></video>
+          <canvas id="camCanvas" style="display:none;"></canvas>
+          <div id="flash" class="flash"></div>
+        </div>
+
+        <div class="grid grid2">
+          <button id="startCamBtn">🎥 Activer la caméra</button>
+          <button id="switchCamBtn" class="btn-subtle">
+            <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
+          </button>
+        </div>
+
+        <div class="grid grid2">
+          <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+          <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
+        </div>
+
+        <div id="sendStatus" class="muted" style="text-align:center;"></div>
+
+        <button id="backFromPhoto" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- DEFIS -->
+      <section id="screenDefis" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">🎯 Défis photos</p>
+        <p class="muted" style="text-align:center;margin:0;">Validez un défi en prenant une photo.</p>
+
+        <div class="progressWrap">
+          <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
+          <div id="defisPercent" class="progressLabel">0%</div>
+          <div id="defisSub" class="progressSub">0 / 0 défis</div>
+        </div>
+
+        <div id="defisList" class="grid"></div>
+
+        <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
+        <button id="backFromDefis" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- CODE GAME -->
+      <section id="screenCodeGame" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">🔐 Code Game</p>
+        <p class="muted" style="text-align:center;margin:0;">Chaque bonne réponse valide une étape. (Le code final n’est pas affiché.)</p>
+
+        <div class="progressWrap">
+          <div class="progressBar"><div id="codeFill" class="progressFill"></div></div>
+          <div id="codePercent" class="progressLabel">0%</div>
+          <div id="codeSub" class="progressSub">0 / 0 énigmes</div>
+        </div>
+
+        <div id="enigmesList" class="grid"></div>
+
+        <div class="hr"></div>
+        <div id="finalBox" class="pill warn" style="text-align:center;">🔒 Code final : à trouver…</div>
+
+        <button id="resetCodeBtn" class="btn-subtle">Réinitialiser le Code Game</button>
+        <button id="backFromCode" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+      <!-- BOUCHONS -->
+      <section id="screenBouchons" data-screen class="grid">
+        <p style="text-align:center;margin:0;font-weight:900;">🍾 Combien de bouchons ?</p>
+        <p class="muted" style="text-align:center;margin:0;">Combien de bouteille a-t'on ouvert cette année.</p>
+
+        <div class="item">
+          <div class="itemTitle">Ta proposition</div>
+          <div class="grid grid2">
+            <input id="bGuess" type="number" min="0" step="1">
+            <button id="bSubmit">Valider</button>
+          </div>
+
+          <div id="bHint" class="pill" style="text-align:center; display:none;"></div>
+
+          <!-- Jauge bleu -> rouge -->
+          <div style="margin-top:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; color:rgba(95,122,104,0.75);">
+              <span>🧊 Loin</span>
+              <span>🔥 Proche</span>
+            </div>
+            <div style="margin-top:6px; height:14px; border-radius:999px; overflow:hidden; border:1px solid var(--border); background:rgba(255,255,255,0.45);">
+              <div id="bThermoFill" style="height:100%; width:0%; border-radius:999px; transition: width 260ms ease, background-color 260ms ease;"></div>
+            </div>
+            <div id="bThermoText" class="muted tiny" style="text-align:center; margin-top:6px;"></div>
+          </div>
+
+          <div id="bStatus" class="muted tiny" style="margin-top:8px;"></div>
+
+          <!-- Admin reset caché -->
+          <button id="bAdminReset" class="btn-subtle">🔁 Réinitialiser le jeu (ADMIN)</button>
+        </div>
+
+        <div class="item">
+          <div class="itemTitle">État du jeu</div>
+          <div id="bLockInfo" class="muted">Chargement…</div>
+        </div>
+
+        <button id="backFromBouchons" class="btn-subtle">⬅️ Retour</button>
+      </section>
+
+    </div>
   </div>
-</div>
 
 <script>
-/* ========= À CONFIGURER ========= */
+/* ================= CONFIG ================= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
-
-/* ✅ Ton dossier album Drive (depuis ton lien) */
 const DRIVE_ALBUM_FOLDER_ID = "1tABmop6f2NpJzeTJH4Xs8zesvax_h-eI";
 
-/* ✅ Ton menu (les invités ne peuvent PAS modifier) */
+/* ✅ Menu (tu modifies toi-même ici) */
 const MENU_ENTREE  = `À compléter…`;
 const MENU_PLAT    = `À compléter…`;
 const MENU_FROMAGE = `À compléter…`;
 
-/* ========= DATA ========= */
+/* Tables */
 const TABLES = [
   { id: 1, name: "Table 1" }, { id: 2, name: "Table 2" }, { id: 3, name: "Table 3" },
   { id: 4, name: "Table 4" }, { id: 5, name: "Table 5" }, { id: 6, name: "Table 6" },
   { id: 7, name: "Table 7" }, { id: 8, name: "Table 8" }, { id: 9, name: "Table 9" },
 ];
 
+/* Défis */
 const DEFIS = [
   { id: "d1", title: "Tout le monde saute", desc: "Photo où tout le monde saute en même temps." },
   { id: "d2", title: "La plus drôle", desc: "Faites la photo la plus drôle possible." },
@@ -473,6 +519,7 @@ const DEFIS = [
   { id: "d5", title: "Sans sourire", desc: "Tout le monde sérieux 😐" },
 ];
 
+/* Code Game (ne révèle pas le code final) */
 const ENIGMES = [
   { id: "e1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
   { id: "e2", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
@@ -480,6 +527,7 @@ const ENIGMES = [
   { id: "e4", q: "j'ai eu que 5 de moyen en Français. Qui suis-je ?", a: "nolan" }
 ];
 
+/* LocalStorage keys */
 const LS = {
   tableId: "bday_tableId",
   photoType: "bday_photoType",
@@ -493,7 +541,7 @@ const LS = {
 
 const $ = (id) => document.getElementById(id);
 
-/* ✅ écran system robuste */
+/* ================= NAV ================= */
 const screenEls = () => Array.from(document.querySelectorAll("[data-screen]"));
 function setScreen(id){
   for(const el of screenEls()) el.style.display = "none";
@@ -504,12 +552,9 @@ function setScreen(id){
   setTimeout(() => target.classList.remove("fade-in"), 260);
 }
 
-/* ========= helpers ========= */
+/* ================= COMMON ================= */
 function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
 function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
-
-function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
-function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
 
 function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
 function incCount(){ localStorage.setItem(LS.count, String(getCount() + 1)); updateCountUI(); }
@@ -527,8 +572,8 @@ function updateBadge(){
 }
 
 function renderMenu(){
-  $("menuEntree").textContent = MENU_ENTREE;
-  $("menuPlat").textContent = MENU_PLAT;
+  $("menuEntree").textContent  = MENU_ENTREE;
+  $("menuPlat").textContent    = MENU_PLAT;
   $("menuFromage").textContent = MENU_FROMAGE;
 }
 
@@ -536,7 +581,7 @@ function updateAlbumFrame(){
   $("albumFrame").src = `https://drive.google.com/embeddedfolderview?id=${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}#grid`;
 }
 
-/* ========= Table ========= */
+/* ================= TABLE ================= */
 function renderTables(){
   const wrap = $("tableButtons");
   wrap.innerHTML = "";
@@ -547,18 +592,13 @@ function renderTables(){
       btn.classList.add("picked");
       setTableId(t.id);
       updateBadge();
-      setTimeout(() => setScreen("screenHome"), 220); // retour accueil
+      setTimeout(() => setScreen("screenHome"), 220);
     };
     wrap.appendChild(btn);
   });
 }
 
-/* ========= Défis ========= */
-function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defisDone) || "{}"); } catch { return {}; } }
-function setDefisDone(obj){ localStorage.setItem(LS.defisDone, JSON.stringify(obj)); }
-function markDefiDone(id){ const d = getDefisDone(); d[id] = true; setDefisDone(d); }
-function resetDefis(){ localStorage.removeItem(LS.defisDone); }
-
+/* ================= PROGRESS ================= */
 function setProgress(fillEl, percentEl, subEl, done, total, label){
   const pct = total ? Math.round((done/total)*100) : 0;
   fillEl.style.width = pct + "%";
@@ -566,10 +606,33 @@ function setProgress(fillEl, percentEl, subEl, done, total, label){
   subEl.textContent = `${done} / ${total} ${label}`;
 }
 
+/* ================= DEFIS ================= */
+function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defisDone) || "{}"); } catch { return {}; } }
+function setDefisDone(obj){ localStorage.setItem(LS.defisDone, JSON.stringify(obj)); }
+function markDefiDone(id){ const d = getDefisDone(); d[id] = true; setDefisDone(d); }
+function resetDefis(){ localStorage.removeItem(LS.defisDone); }
+
+function setMission(obj){ localStorage.setItem(LS.mission, JSON.stringify(obj || null)); updateMissionPill(); }
+function getMission(){ try { return JSON.parse(localStorage.getItem(LS.mission) || "null"); } catch { return null; } }
+function clearMission(){ localStorage.removeItem(LS.mission); updateMissionPill(); }
+
+function updateMissionPill(){
+  const m = getMission();
+  const pill = $("missionPill");
+  if(m && m.title){
+    pill.style.display = "inline-block";
+    pill.textContent = `🎯 ${m.title}`;
+  } else {
+    pill.style.display = "none";
+    pill.textContent = "";
+  }
+}
+
 function renderDefis(){
   const done = getDefisDone();
   const wrap = $("defisList");
   wrap.innerHTML = "";
+
   const nbDone = DEFIS.filter(d => done[d.id]).length;
   setProgress($("defisFill"), $("defisPercent"), $("defisSub"), nbDone, DEFIS.length, "défis");
 
@@ -598,9 +661,9 @@ function renderDefis(){
   });
 }
 
-/* ========= Code Game (sans code final) ========= */
+/* ================= CODE GAME ================= */
 function normalize(s){
-  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+  return (s||"").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
 }
 function getCodeOk(){ try { return JSON.parse(localStorage.getItem(LS.codeOk) || "{}"); } catch { return {}; } }
 function setCodeOk(obj){ localStorage.setItem(LS.codeOk, JSON.stringify(obj)); }
@@ -657,21 +720,13 @@ function renderCodeGame(){
   }
 }
 
-/* ========= Mission (défi) ========= */
-function setMission(obj){ localStorage.setItem(LS.mission, JSON.stringify(obj || null)); updateMissionPill(); }
-function getMission(){ try { return JSON.parse(localStorage.getItem(LS.mission) || "null"); } catch { return null; } }
-function clearMission(){ localStorage.removeItem(LS.mission); updateMissionPill(); }
-function updateMissionPill(){
-  const m = getMission();
-  const pill = $("missionPill");
-  if(m && m.title){ pill.style.display="inline-block"; pill.textContent = `🎯 ${m.title}`; }
-  else { pill.style.display="none"; pill.textContent=""; }
-}
-
-/* ========= Photo ========= */
-let camStream=null;
-let capturedDataUrl=null;
+/* ================= PHOTO ================= */
+let camStream = null;
+let capturedDataUrl = null;
 let cameraMode = localStorage.getItem(LS.camMode) || "environment";
+
+function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
+function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
 
 function updateSwitchCamUI(){
   $("switchCamText").textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
@@ -686,7 +741,7 @@ function flash(){
 }
 function setTypeUI(t){
   setPhotoType(t);
-  $("typeLabel").textContent = t;
+  $("typeLabel").textContent = (t === "codegame") ? "code game" : t;
 }
 
 async function startCamera(){
@@ -694,32 +749,35 @@ async function startCamera(){
     $("sendStatus").textContent = "🎥 Activation caméra…";
     if (camStream) camStream.getTracks().forEach(tr => tr.stop());
     camStream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode: cameraMode, width:{ ideal:1280 }, height:{ ideal:720 } },
-      audio:false
+      video: { facingMode: cameraMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
     });
     $("camVideo").srcObject = camStream;
     $("takePhotoBtn").disabled = false;
     $("sendStatus").textContent = "";
-  } catch {
+  } catch(e){
     $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée. Autorise-la via le cadenas 🔒.</span>`;
   }
 }
 function stopCamera(){
-  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  if(camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; }
   $("camVideo").srcObject = null;
   $("takePhotoBtn").disabled = true;
 }
 function takePhoto(){
-  const v=$("camVideo"), c=$("camCanvas");
-  const w=v.videoWidth||1280, h=v.videoHeight||720;
-  c.width=w; c.height=h;
-  c.getContext("2d").drawImage(v,0,0,w,h);
-  capturedDataUrl = c.toDataURL("image/jpeg",0.8);
+  const video = $("camVideo");
+  const canvas = $("camCanvas");
+  const w = video.videoWidth || 1280;
+  const h = video.videoHeight || 720;
+  canvas.width = w; canvas.height = h;
+  canvas.getContext("2d").drawImage(video, 0, 0, w, h);
+  capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
   flash();
   $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
   $("retakeBtn").style.display = "block";
   setTimeout(sendPhotoAuto, 200);
 }
+
 async function sendPhotoAuto(){
   const tableId = getTableId();
   if(!tableId){
@@ -733,11 +791,12 @@ async function sendPhotoAuto(){
   localStorage.setItem(LS.uploading, "1");
 
   const mission = getMission();
+
   try{
     await fetch(APPS_SCRIPT_URL, {
-      method:"POST",
-      mode:"no-cors",
-      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({
         tableId,
         type: getPhotoType(),
@@ -748,44 +807,72 @@ async function sendPhotoAuto(){
     });
 
     incCount();
-    if(mission && mission.kind==="defi" && mission.id) markDefiDone(mission.id);
+
+    if(mission && mission.kind === "defi" && mission.id){
+      markDefiDone(mission.id);
+    }
 
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉</span>`;
     capturedDataUrl = null;
     $("retakeBtn").style.display = "none";
     clearMission();
 
-    setTimeout(() => setScreen("screenGames"), 800);
-  } catch {
+    setTimeout(() => setScreen("screenGames"), 900);
+
+  } catch(e){
     $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau.</span>`;
   } finally {
     setTimeout(() => localStorage.removeItem(LS.uploading), 800);
   }
 }
 
-/* ========= Bouchons ========= */
+/* ================= BOUCHONS ================= */
 async function bouchonsState(){
-  try{
-    const res = await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state`, { method:"GET" });
-    return await res.json();
-  } catch {
-    return { locked:false, message:"Impossible de lire l'état." };
-  }
+  const res = await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state&t=${Date.now()}`, { method:"GET", cache:"no-store" });
+  return await res.json();
 }
 async function bouchonsGuess(guess){
-  try{
-    await fetch(APPS_SCRIPT_URL, {
-      method:"POST",
-      headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ action:"bouchons_guess", guess })
-    });
-  } catch {}
-  return await bouchonsState();
+  const res = await fetch(APPS_SCRIPT_URL, {
+    method:"POST",
+    headers:{ "Content-Type":"text/plain;charset=utf-8" },
+    body: JSON.stringify({ action:"bouchons_guess", guess })
+  });
+  return await res.json();
+}
+async function bouchonsReset(code){
+  const url = `${APPS_SCRIPT_URL}?action=bouchons_reset&code=${encodeURIComponent(code)}&t=${Date.now()}`;
+  const res = await fetch(url, { method:"GET", cache:"no-store" });
+  return await res.json();
 }
 
-/* ========= INIT ========= */
+const BOUCHONS_MAX_DIFF = 250;
+function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+function updateBouchonsGauge(diff){
+  const fill = $("bThermoFill");
+  const txt  = $("bThermoText");
+  if(!fill || !txt) return;
+
+  const d = clamp(Number(diff), 0, BOUCHONS_MAX_DIFF);
+  const pct = Math.round((1 - (d / BOUCHONS_MAX_DIFF)) * 100);
+
+  // bleu(210) -> rouge(0)
+  const hue = Math.round(210 * (1 - pct/100));
+  fill.style.width = pct + "%";
+  fill.style.backgroundColor = `hsl(${hue} 85% 55%)`;
+
+  let label = "🥶 Très loin";
+  if(pct >= 20) label = "🧊 Loin";
+  if(pct >= 40) label = "🙂 Tiède";
+  if(pct >= 60) label = "🌡️ Chaud";
+  if(pct >= 80) label = "🔥 Très chaud";
+  if(pct >= 95) label = "🚨 Brûlant";
+
+  txt.textContent = `${label} — ${pct}%`;
+}
+
+/* ================= INIT / EVENTS ================= */
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ Cache tout au démarrage
+  // Cache tout puis ouvre accueil
   for(const el of screenEls()) el.style.display = "none";
 
   renderTables();
@@ -797,12 +884,13 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSwitchCamUI();
   updateMissionPill();
 
+  // Start
   setScreen("screenHome");
 
-  // Home
+  // Home nav
   $("homeTable").onclick = () => setScreen("screenTable");
   $("homeMenu").onclick = () => setScreen("screenMenu");
-  $("homeAlbum").onclick = () => setScreen("screenAlbum");
+  $("homeAlbum").onclick = () => { updateAlbumFrame(); setScreen("screenAlbum"); };
   $("homeGames").onclick = () => setScreen("screenGames");
 
   // Back
@@ -818,25 +906,37 @@ document.addEventListener("DOMContentLoaded", () => {
     setScreen("screenTable");
   };
 
-  // Games
+  // Games nav
   $("goPhoto").onclick = () => {
     clearMission();
     $("sendStatus").textContent = "";
     $("retakeBtn").style.display = "none";
+    setTypeUI("libre");
     setScreen("screenPhoto");
   };
   $("goDefis").onclick = () => { renderDefis(); setScreen("screenDefis"); };
   $("goCodeGame").onclick = () => { renderCodeGame(); setScreen("screenCodeGame"); };
+
   $("goBouchons").onclick = async () => {
     setScreen("screenBouchons");
+    $("bGuess").value = "";
+    $("bHint").style.display = "none";
+    $("bThermoFill").style.width = "0%";
+    $("bThermoText").textContent = "";
+    $("bStatus").textContent = "";
+
     const st = await bouchonsState();
-    $("bStatus").textContent = st.message || "";
     if(st.locked){
       $("bLockInfo").innerHTML = `<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
-      $("bSubmit").disabled = true; $("bGuess").disabled = true;
+      $("bSubmit").disabled = true;
+      $("bGuess").disabled = true;
+      updateBouchonsGauge(0);
+      $("bHint").style.display = "block";
+      $("bHint").textContent = "✅ Trouvé !";
     } else {
       $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
-      $("bSubmit").disabled = false; $("bGuess").disabled = false;
+      $("bSubmit").disabled = false;
+      $("bGuess").disabled = false;
     }
   };
 
@@ -844,13 +944,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $("backFromDefis").onclick = () => setScreen("screenGames");
   $("backFromCode").onclick = () => setScreen("screenGames");
   $("backFromBouchons").onclick = () => setScreen("screenGames");
-  $("backFromPhoto").onclick = () => { stopCamera(); setScreen("screenGames"); };
 
-  // Resets
-  $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
-  $("resetCodeBtn").onclick = () => { resetCodeGame(); renderCodeGame(); };
-
-  // Types
+  // Photo types
   document.querySelectorAll(".typeBtn").forEach(btn => {
     btn.onclick = () => {
       clearMission();
@@ -867,12 +962,22 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(LS.camMode, cameraMode);
     spinFlipIcon();
     updateSwitchCamUI();
-    if(camStream) startCamera();
+    if (camStream) startCamera();
   };
   $("retakeBtn").onclick = () => {
     capturedDataUrl = null;
     $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;
   };
+  $("backFromPhoto").onclick = () => {
+    stopCamera();
+    setScreen("screenGames");
+  };
+
+  // Defis reset/back
+  $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
+
+  // Code reset/back
+  $("resetCodeBtn").onclick = () => { resetCodeGame(); renderCodeGame(); };
 
   // Bouchons submit
   $("bSubmit").onclick = async () => {
@@ -881,16 +986,70 @@ document.addEventListener("DOMContentLoaded", () => {
       $("bStatus").innerHTML = `<span class="err">Entre un nombre valide.</span>`;
       return;
     }
-    $("bStatus").textContent = "Envoi…";
+
+    $("bStatus").textContent = "Analyse…";
     const st = await bouchonsGuess(guess);
+
+    $("bHint").style.display = "block";
+    if(st.tooLow) $("bHint").textContent = "📈 Trop bas";
+    else if(st.tooHigh) $("bHint").textContent = "📉 Trop haut";
+
+    if(typeof st.diff === "number") updateBouchonsGauge(st.diff);
 
     if(st.locked){
       $("bLockInfo").innerHTML = `<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
-      $("bSubmit").disabled = true; $("bGuess").disabled = true;
+      $("bSubmit").disabled = true;
+      $("bGuess").disabled = true;
       $("bStatus").innerHTML = `<span class="ok">✅ Trouvé ! Jeu bloqué.</span>`;
+      $("bHint").textContent = "✅ Trouvé !";
     } else {
       $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
       $("bStatus").textContent = st.message || "Enregistré.";
+    }
+  };
+
+  // Admin reset (appui long sur le header)
+  let holdTimer = null;
+  $("brandHold").addEventListener("pointerdown", () => {
+    holdTimer = setTimeout(() => {
+      $("bAdminReset").classList.toggle("show");
+    }, 1200);
+  });
+  ["pointerup","pointercancel","pointerleave"].forEach(evt => {
+    $("brandHold").addEventListener(evt, () => { if(holdTimer) clearTimeout(holdTimer); holdTimer = null; });
+  });
+
+  $("bAdminReset").onclick = async () => {
+    const code = prompt("Code ADMIN pour réinitialiser le jeu :");
+    if(!code) return;
+
+    $("bStatus").textContent = "⏳ Réinitialisation…";
+    $("bAdminReset").disabled = true;
+
+    try{
+      const r = await bouchonsReset(code);
+      if(!r.ok){
+        $("bStatus").innerHTML = `<span class="err">${r.message || "Erreur reset"}</span>`;
+        return;
+      }
+
+      const st = await bouchonsState();
+      if(st.locked){
+        $("bStatus").innerHTML = `<span class="err">Reset reçu mais le jeu est encore verrouillé (déploiement pas à jour).</span>`;
+      } else {
+        $("bStatus").innerHTML = `<span class="ok">✅ Jeu réinitialisé</span>`;
+        $("bGuess").value = "";
+        $("bHint").style.display = "none";
+        $("bThermoText").textContent = "";
+        $("bThermoFill").style.width = "0%";
+        $("bSubmit").disabled = false;
+        $("bGuess").disabled = false;
+        $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
+      }
+    } catch(e){
+      $("bStatus").innerHTML = `<span class="err">❌ Reset bloqué (réseau/autorisation).</span>`;
+    } finally {
+      $("bAdminReset").disabled = false;
     }
   };
 });

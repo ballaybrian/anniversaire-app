@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#8aa685">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="B&A 10 ans">
+<link rel="apple-touch-icon" href="icon-192.png">
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>10 ans – B & A</title>
@@ -1054,5 +1062,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js");
+  }
+</script>
+
 </body>
 </html>

@@ -5,99 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>10 ans</title>
 
-  <!-- Typographies élégantes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg: #F3EBDD;
-      --card: rgba(255,255,255,0.62);
-      --border: #D9CDBA;
+      --bg:#F3EBDD;
+      --card:rgba(255,255,255,0.62);
+      --border:#D9CDBA;
 
-      --text: #5F7A68;
-      --muted: rgba(95,122,104,0.70);
+      --text:#5F7A68;
+      --muted:rgba(95,122,104,0.70);
 
-      --btn: #CBB79A;
-      --btnText: #2F2A22;
-      --btnBorder: #B39E7E;
+      /* ✅ Boutons vert sauge */
+      --btn:#8aa685;
+      --btnText:#ffffff;
+      --btnBorder:#6f8f6a;
 
-      --success: #3F7C5A;
-      --warning: #9B6A2C;
-      --danger: #A34848;
+      --success:#3F7C5A;
+      --warning:#9B6A2C;
+      --danger:#A34848;
 
-      --radius: 20px;
-      --shadow: 0 16px 40px rgba(0,0,0,0.10);
+      --radius:20px;
+      --shadow:0 16px 40px rgba(0,0,0,0.10);
     }
 
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
     }
-    .app{ max-width: 760px; margin: 0 auto; padding: 18px; }
+    .app{ max-width:760px; margin:0 auto; padding:18px; }
     .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(6px);
     }
 
     .grid{ display:grid; gap:12px; }
-    .grid2{ grid-template-columns: 1fr 1fr; }
+    .grid2{ grid-template-columns:1fr 1fr; }
 
-    .muted{ color: var(--muted); font-size: 13px; }
+    .muted{ color:var(--muted); font-size:13px; }
     .pill{
       display:inline-block;
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.45);
-      color: var(--text);
-      font-weight: 700;
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.45);
+      color:var(--text);
+      font-weight:800;
     }
-    .ok{ color: var(--success); font-weight: 700; }
-    .warn{ color: var(--warning); font-weight: 700; }
-    .err{ color: var(--danger); font-weight: 700; }
+    .ok{ color:var(--success); font-weight:800; }
+    .warn{ color:var(--warning); font-weight:800; }
+    .err{ color:var(--danger); font-weight:800; }
 
-    /* Header */
-    .topbar{ display:grid; gap:10px; padding-bottom: 8px; text-align:center; }
+    .topbar{ display:grid; gap:10px; padding-bottom:8px; text-align:center; }
     .brand{
       display:grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns:1fr auto 1fr;
       align-items:center;
-      gap: 8px;
+      gap:8px;
     }
     .title{
       margin:0;
-      font-family: "Playfair Display", serif;
-      font-weight: 700;
-      font-size: clamp(32px, 6vw, 46px);
-      letter-spacing: .3px;
-      line-height: 1.05;
-      color: var(--text);
+      font-family:"Playfair Display",serif;
+      font-weight:700;
+      font-size:clamp(32px,6vw,46px);
+      letter-spacing:.3px;
+      line-height:1.05;
     }
     .subtitle{
       margin:0;
-      font-size: 14px;
-      letter-spacing: 1.1px;
-      color: var(--muted);
+      font-size:14px;
+      letter-spacing:1.1px;
+      color:var(--muted);
     }
-
     .mono{
-      font-family: "Playfair Display", serif;
-      font-size: 16px;
-      letter-spacing: 1px;
-      opacity: .85;
-      user-select: none;
-    }
-    @media (max-width: 420px){
-      .mono{ font-size: 14px; }
+      font-family:"Playfair Display",serif;
+      font-size:16px;
+      letter-spacing:1px;
+      opacity:.85;
+      user-select:none;
     }
 
     .topbar-actions{
@@ -108,327 +102,369 @@
       flex-wrap:wrap;
     }
 
-    /* Buttons */
     button{
       width:100%;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--btnBorder);
-      background: var(--btn);
-      color: var(--btnText);
-      font-weight: 700;
-      letter-spacing: .2px;
-      cursor: pointer;
+      padding:14px 14px;
+      border-radius:16px;
+      border:1px solid var(--btnBorder);
+      background:var(--btn);
+      color:var(--btnText);
+      font-weight:900;
+      letter-spacing:.2px;
+      cursor:pointer;
     }
-    button:active{ transform: scale(.99); }
+    button:active{ transform:scale(.99); }
     button:disabled{ opacity:.55; cursor:not-allowed; }
 
     .smallbtn{
-      padding: 10px 12px;
-      font-size: 13px;
-      border-radius: 14px;
-      width: auto;
+      padding:10px 12px;
+      font-size:13px;
+      border-radius:14px;
+      width:auto;
+      font-weight:900;
     }
-
     .btn-subtle{
-      background: rgba(255,255,255,0.55);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 650;
+      background:rgba(255,255,255,0.55);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-weight:800;
     }
 
-    /* Camera */
-    .camBox{
-      position: relative;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.35);
-      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
-    }
-    #camVideo, #camCanvas{
-      width:100%;
-      display:block;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      background: rgba(0,0,0,0.04);
-    }
-    @media (min-width: 520px){
-      #camVideo, #camCanvas{ aspect-ratio: 16/9; }
-    }
+    .hr{ height:1px; background:var(--border); margin:14px 0; opacity:.9; }
 
-    .flash{
-      position:absolute; inset:0;
-      background:#fff;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity 120ms ease;
-    }
-    .flash.on{ opacity: 0.85; }
-
-    input[type="text"]{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.55);
-      color: var(--text);
-      font-size: 16px;
-      outline: none;
-    }
-
-    /* Écran TABLE */
-    #screenTable .section-title{
-      text-align:center;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: .3px;
-      margin: 0 0 4px;
-    }
+    /* Table 3x3 */
     #tableButtons{
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      justify-items: center;
-      margin-top: 6px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      justify-items:center;
+      margin-top:6px;
     }
     #tableButtons button{
-      width: 100%;
-      max-width: 170px;
-      padding: 16px 0;
-      font-size: 16px;
-      border-radius: 18px;
-      background: var(--btn);
-      border: 1px solid var(--btnBorder);
-      color: var(--btnText);
-      font-weight: 800;
+      width:100%;
+      max-width:170px;
+      padding:16px 0;
+      font-size:16px;
+      border-radius:18px;
+      font-weight:900;
+    }
+    @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1.02)} }
+    #tableButtons button.picked{ animation:pop 220ms ease-out; filter:brightness(1.03); }
+
+    /* Menu non éditable */
+    .menuBlock{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(255,255,255,0.45);
+      text-align:left;
+    }
+    .menuTitle{ font-weight:900; margin:0 0 8px; }
+    .menuText{
+      border:1px dashed rgba(95,122,104,0.35);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,0.35);
+      color:rgba(95,122,104,0.92);
+      line-height:1.35;
+      white-space:pre-wrap;
+      min-height:54px;
     }
 
-    @keyframes pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-      100% { transform: scale(1.02); }
+    /* Album */
+    .iframeWrap{
+      border:1px solid var(--border);
+      border-radius:18px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.45);
     }
-    #tableButtons button.picked{
-      animation: pop 220ms ease-out;
-      background: #D6C4A6;
-      border-color: var(--btnBorder);
+    iframe{ width:100%; height:70vh; border:0; display:block; }
+
+    /* Photo */
+    .camBox{
+      position:relative;
+      border:1px solid var(--border);
+      border-radius:18px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.35);
+      box-shadow:0 12px 26px rgba(0,0,0,0.08);
     }
-
-    .fade-in{ animation: fadeIn 220ms ease-out; }
-    @keyframes fadeIn{
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+    #camVideo,#camCanvas{
+      width:100%;
+      display:block;
+      aspect-ratio:3/4;
+      object-fit:cover;
+      background:rgba(0,0,0,0.04);
     }
+    @media (min-width:520px){
+      #camVideo,#camCanvas{ aspect-ratio:16/9; }
+    }
+    .flash{ position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; transition:opacity 120ms ease; }
+    .flash.on{ opacity:.85; }
 
-    .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
-
-    /* Icône flip */
     .flipIcon{
       display:inline-block;
-      margin-right: 8px;
-      transition: transform 260ms ease;
-      transform-origin: 50% 50%;
+      margin-right:8px;
+      transition:transform 260ms ease;
+      transform-origin:50% 50%;
     }
-    .flipIcon.spin{ transform: rotate(180deg); }
+    .flipIcon.spin{ transform:rotate(180deg); }
 
-    /* Cards list (défis/escape) */
     .item{
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(255,255,255,0.45);
-      display: grid;
-      gap: 8px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(255,255,255,0.45);
+      display:grid;
+      gap:8px;
     }
-    .itemTitle{
-      font-weight: 800;
-      text-align: left;
-      color: var(--text);
-    }
-    .itemDesc{
-      font-size: 13px;
-      color: var(--muted);
-      text-align: left;
-      line-height: 1.35;
-    }
-    .itemRow{
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-    .tiny{ font-size: 12px; }
+    .itemTitle{ font-weight:900; text-align:left; }
+    .itemDesc{ font-size:13px; color:var(--muted); text-align:left; line-height:1.35; }
+    .itemRow{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+    .tiny{ font-size:12px; }
 
-    /* ✅ Barres de progression (vert sauge) */
+    /* Progress */
     .progressWrap{
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.45);
-      border-radius: 999px;
-      padding: 10px 10px 8px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.45);
+      border-radius:999px;
+      padding:10px 10px 8px;
     }
     .progressBar{
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(95,122,104,0.20);
-      overflow: hidden;
+      height:12px;
+      border-radius:999px;
+      background:rgba(95,122,104,0.20);
+      overflow:hidden;
     }
     .progressFill{
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: var(--text);
-      transition: width 260ms ease;
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:var(--text);
+      transition:width 260ms ease;
     }
     .progressLabel{
-      margin-top: 8px;
-      text-align: center;
-      font-weight: 900;
-      color: var(--text);
-      letter-spacing: .3px;
+      margin-top:8px;
+      text-align:center;
+      font-weight:900;
+      letter-spacing:.3px;
     }
     .progressSub{
-      margin-top: 2px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
+      margin-top:2px;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
     }
+
+    /* Animation écran */
+    .fade-in{ animation:fadeIn 220ms ease-out; }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="card">
+<div class="app">
+  <div class="card">
 
-      <header class="topbar">
-        <div class="brand">
-          <div class="mono">B &amp; A</div>
-          <h1 class="title">10 ans</h1>
-          <div class="mono">B &amp; A</div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="mono">B &amp; A</div>
+        <h1 class="title">10 ans</h1>
+        <div class="mono">B &amp; A</div>
+      </div>
+      <p class="subtitle">✨ 2016 – 2026 ✨</p>
+
+      <div class="topbar-actions">
+        <div id="tableBadge" class="pill" style="display:none;"></div>
+        <button id="resetBtn" class="smallbtn" style="display:none;">Changer de table</button>
+      </div>
+    </header>
+
+    <!-- ✅ ACCUEIL -->
+    <section id="screenHome" data-screen class="grid">
+      <button id="homeTable">🪑 Table</button>
+      <button id="homeMenu">🍽️ Menu</button>
+      <button id="homeAlbum">🖼️ Voir photo</button>
+      <button id="homeGames">🎉 Jeux & Photos</button>
+
+      <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
+      <div class="hr"></div>
+      <p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p>
+    </section>
+
+    <!-- TABLE -->
+    <section id="screenTable" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">Choisis ta table</p>
+      <div id="tableButtons"></div>
+      <p class="muted" style="text-align:center;margin:0;">Après sélection, tu reviens à l’accueil.</p>
+      <button id="backFromTable" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- MENU (uniquement entrée/plat/fromage) -->
+    <section id="screenMenu" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">🍽️ Menu</p>
+      <p class="muted" style="text-align:center;margin:0;">(Texte défini dans le code — non modifiable)</p>
+
+      <div class="menuBlock">
+        <p class="menuTitle">Entrée</p>
+        <div id="menuEntree" class="menuText"></div>
+      </div>
+
+      <div class="menuBlock">
+        <p class="menuTitle">Plat</p>
+        <div id="menuPlat" class="menuText"></div>
+      </div>
+
+      <div class="menuBlock">
+        <p class="menuTitle">Fromage</p>
+        <div id="menuFromage" class="menuText"></div>
+      </div>
+
+      <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- ALBUM -->
+    <section id="screenAlbum" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">🖼️ Album photo</p>
+      <p class="muted" style="text-align:center;margin:0;">Lecture seule depuis Drive.</p>
+
+      <div class="iframeWrap">
+        <iframe id="albumFrame" title="Album Drive"></iframe>
+      </div>
+
+      <p class="muted" style="text-align:center;margin:0;">
+        Si ça n’affiche rien : dossier Drive → partage “Toute personne avec le lien peut voir”.
+      </p>
+
+      <button id="backFromAlbum" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- JEUX & PHOTOS -->
+    <section id="screenGames" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">🎉 Jeux & Photos</p>
+      <button id="goPhoto">📸 Prendre une photo</button>
+      <button id="goDefis">🎯 Défis photos</button>
+      <button id="goCodeGame">🔐 Code Game</button>
+      <button id="goBouchons">🍾 Combien de bouchons ?</button>
+      <button id="backFromGames" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- PHOTO -->
+    <section id="screenPhoto" data-screen class="grid">
+      <p style="margin:0;text-align:center;font-weight:900;">Photobooth</p>
+
+      <div class="muted" style="text-align:center;">
+        Type : <span id="typeLabel" class="pill">libre</span>
+        <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
+      </div>
+
+      <div class="grid grid2">
+        <button class="typeBtn" data-type="libre">📸 Libre</button>
+        <button class="typeBtn" data-type="defi">🎯 Défi</button>
+      </div>
+
+      <div class="camBox">
+        <video id="camVideo" playsinline autoplay muted></video>
+        <canvas id="camCanvas" style="display:none;"></canvas>
+        <div id="flash" class="flash"></div>
+      </div>
+
+      <div class="grid grid2">
+        <button id="startCamBtn">🎥 Activer la caméra</button>
+        <button id="switchCamBtn" class="btn-subtle">
+          <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
+        </button>
+      </div>
+
+      <div class="grid grid2">
+        <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+        <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
+      </div>
+
+      <div id="sendStatus" class="muted" style="text-align:center;"></div>
+
+      <button id="backFromPhoto" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- DEFIS -->
+    <section id="screenDefis" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">🎯 Défis photos</p>
+
+      <div class="progressWrap">
+        <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
+        <div id="defisPercent" class="progressLabel">0%</div>
+        <div id="defisSub" class="progressSub">0 / 0 défis</div>
+      </div>
+
+      <div id="defisList" class="grid"></div>
+
+      <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
+      <button id="backFromDefis" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- CODE GAME (sans révélation du code final) -->
+    <section id="screenCodeGame" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">🔐 Code Game</p>
+
+      <div class="progressWrap">
+        <div class="progressBar"><div id="codeFill" class="progressFill"></div></div>
+        <div id="codePercent" class="progressLabel">0%</div>
+        <div id="codeSub" class="progressSub">0 / 0 énigmes</div>
+      </div>
+
+      <div id="enigmesList" class="grid"></div>
+
+      <div class="hr"></div>
+      <div id="finalBox" class="pill warn" style="text-align:center;">🔒 Code final : à trouver…</div>
+
+      <button id="resetCodeBtn" class="btn-subtle">Réinitialiser le Code Game</button>
+      <button id="backFromCode" class="btn-subtle">⬅️ Retour</button>
+    </section>
+
+    <!-- BOUCHONS -->
+    <section id="screenBouchons" data-screen class="grid">
+      <p style="text-align:center;margin:0;font-weight:900;">🍾 Combien de bouchons ?</p>
+
+      <div class="item">
+        <div class="itemTitle">Ta proposition</div>
+        <div class="grid grid2">
+          <input id="bGuess" type="number" min="0" step="1" placeholder="Ex: 237">
+          <button id="bSubmit">Valider</button>
         </div>
-        <p class="subtitle">✨ 2016 – 2026 ✨</p>
+        <div id="bStatus" class="muted tiny"></div>
+      </div>
 
-        <div class="topbar-actions">
-          <div id="tableBadge" class="pill" style="display:none;"></div>
-          <button id="resetBtn" class="smallbtn" style="display:none;">Changer de table</button>
-        </div>
-      </header>
+      <div class="item">
+        <div class="itemTitle">État du jeu</div>
+        <div id="bLockInfo" class="muted">Chargement…</div>
+      </div>
 
-      <!-- ECRANS -->
-      <section id="screenTable" class="grid">
-        <p class="section-title">Choisis ta table</p>
-        <div id="tableButtons"></div>
-        <p class="muted" style="text-align:center;margin:0;">Scanne le QR code, puis sélectionne ta table.</p>
-      </section>
+      <button id="backFromBouchons" class="btn-subtle">⬅️ Retour</button>
+    </section>
 
-      <section id="screenMenu" class="grid">
-        <button id="goPhoto">📸 Prendre une photo</button>
-        <button id="goDefis">🎯 Défis photos</button>
-        <button id="goEscape">🧩 Escape game</button>
-
-        <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
-        <div class="hr"></div>
-        <p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p>
-      </section>
-
-      <section id="screenPhoto" class="grid">
-        <p style="margin:0;text-align:center;font-weight:800;">Photobooth</p>
-
-        <div class="grid">
-          <div class="muted" style="text-align:center;">
-            Type : <span id="typeLabel" class="pill">libre</span>
-            <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
-          </div>
-
-          <div class="grid grid2">
-            <button class="typeBtn" data-type="libre">📸 Libre</button>
-            <button class="typeBtn" data-type="defi">🎯 Défi</button>
-          </div>
-          <button class="typeBtn" data-type="escape">🧩 Escape</button>
-
-          <div class="camBox">
-            <video id="camVideo" playsinline autoplay muted></video>
-            <canvas id="camCanvas" style="display:none;"></canvas>
-            <div id="flash" class="flash"></div>
-          </div>
-
-          <div class="grid grid2">
-            <button id="startCamBtn">🎥 Activer la caméra</button>
-            <button id="switchCamBtn" class="btn-subtle">
-              <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
-            </button>
-          </div>
-
-          <div class="grid grid2">
-            <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
-            <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
-          </div>
-
-          <div id="sendStatus" class="muted" style="text-align:center;"></div>
-          <p class="muted" style="text-align:center;margin:0;">Si la caméra est bloquée : Chrome → cadenas 🔒 → Autorisations → Caméra → Autoriser.</p>
-
-          <button id="backFromPhoto">⬅️ Retour</button>
-        </div>
-      </section>
-
-      <section id="screenDefis" class="grid">
-        <p style="text-align:center;margin:0;font-weight:800;">🎯 Défis photos</p>
-        <p class="muted" style="text-align:center;margin:0;">Validez un défi en prenant une photo.</p>
-
-        <!-- ✅ Progress Défis -->
-        <div class="progressWrap">
-          <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
-          <div id="defisPercent" class="progressLabel">0%</div>
-          <div id="defisSub" class="progressSub">0 / 0 défis</div>
-        </div>
-
-        <div id="defisList" class="grid"></div>
-
-        <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
-        <button id="backFromDefis">⬅️ Retour menu</button>
-      </section>
-
-      <section id="screenEscape" class="grid">
-        <p style="text-align:center;margin:0;font-weight:800;">🧩 Escape game</p>
-        <p class="muted" style="text-align:center;margin:0;">Réponds aux énigmes. Chaque bonne réponse donne un chiffre.</p>
-
-        <!-- ✅ Progress Escape -->
-        <div class="progressWrap">
-          <div class="progressBar"><div id="escapeFill" class="progressFill"></div></div>
-          <div id="escapePercent" class="progressLabel">0%</div>
-          <div id="escapeSub" class="progressSub">0 / 0 énigmes</div>
-        </div>
-
-        <div id="enigmesList" class="grid"></div>
-
-        <div class="hr"></div>
-        <div id="finalBox" class="pill warn" style="text-align:center;">🔒 Code final : pas encore…</div>
-
-        <button id="resetEscapeBtn" class="btn-subtle">Réinitialiser l’escape</button>
-        <button id="backFromEscape">⬅️ Retour menu</button>
-      </section>
-
-    </div>
   </div>
+</div>
 
 <script>
-/** ========= CONFIG ========= */
+/* ========= À CONFIGURER ========= */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdAYy5ZlgekOsJRBb9J8Q_-3b5KQggFC7CrwP2Yzqc65CtZmPKBLMzYEzUqw99j2Ax1Q/exec";
 
+/* ✅ Ton dossier album Drive (depuis ton lien) */
+const DRIVE_ALBUM_FOLDER_ID = "1tABmop6f2NpJzeTJH4Xs8zesvax_h-eI";
+
+/* ✅ Ton menu (les invités ne peuvent PAS modifier) */
+const MENU_ENTREE  = `À compléter…`;
+const MENU_PLAT    = `À compléter…`;
+const MENU_FROMAGE = `À compléter…`;
+
+/* ========= DATA ========= */
 const TABLES = [
-  { id: 1, name: "Table 1" },
-  { id: 2, name: "Table 2" },
-  { id: 3, name: "Table 3" },
-  { id: 4, name: "Table 4" },
-  { id: 5, name: "Table 5" },
-  { id: 6, name: "Table 6" },
-  { id: 7, name: "Table 7" },
-  { id: 8, name: "Table 8" },
-  { id: 9, name: "Table 9" },
+  { id: 1, name: "Table 1" }, { id: 2, name: "Table 2" }, { id: 3, name: "Table 3" },
+  { id: 4, name: "Table 4" }, { id: 5, name: "Table 5" }, { id: 6, name: "Table 6" },
+  { id: 7, name: "Table 7" }, { id: 8, name: "Table 8" }, { id: 9, name: "Table 9" },
 ];
 
-/* Défis : tu peux changer title/desc comme tu veux */
 const DEFIS = [
   { id: "d1", title: "Tout le monde saute", desc: "Photo où tout le monde saute en même temps." },
   { id: "d2", title: "La plus drôle", desc: "Faites la photo la plus drôle possible." },
@@ -437,16 +473,13 @@ const DEFIS = [
   { id: "d5", title: "Sans sourire", desc: "Tout le monde sérieux 😐" },
 ];
 
-/* Escape : chaque énigme donne un chiffre */
 const ENIGMES = [
-  { id: "e1", digit: "1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
-  { id: "e2", digit: "6", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
-  { id: "e3", digit: "1", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier" },
-  { id: "e4", digit: "2", q: "j'ai eu que 5 de moyen en Français. Qui suis-je ?", a: "nolan" }
+  { id: "e1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
+  { id: "e2", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
+  { id: "e3", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier" },
+  { id: "e4", q: "j'ai eu que 5 de moyen en Français. Qui suis-je ?", a: "nolan" }
 ];
-const FINAL_CODE = () => ENIGMES.map(e => e.digit).join("");
 
-/** ========= STATE ========= */
 const LS = {
   tableId: "bday_tableId",
   photoType: "bday_photoType",
@@ -455,18 +488,23 @@ const LS = {
   camMode: "bday_cam_mode",
   mission: "bday_mission",
   defisDone: "bday_defis_done",
-  escapeOk: "bday_escape_ok",
+  codeOk: "bday_code_ok",
 };
 
 const $ = (id) => document.getElementById(id);
-const screens = ["screenTable","screenMenu","screenPhoto","screenDefis","screenEscape"];
 
+/* ✅ écran system robuste */
+const screenEls = () => Array.from(document.querySelectorAll("[data-screen]"));
 function setScreen(id){
-  screens.forEach(s => $(s).style.display = (s === id ? "grid" : "none"));
-  $(id).classList.add("fade-in");
-  setTimeout(() => $(id).classList.remove("fade-in"), 260);
+  for(const el of screenEls()) el.style.display = "none";
+  const target = $(id);
+  if(!target) return;
+  target.style.display = "grid";
+  target.classList.add("fade-in");
+  setTimeout(() => target.classList.remove("fade-in"), 260);
 }
 
+/* ========= helpers ========= */
 function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
 function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
 
@@ -474,129 +512,69 @@ function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
 function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
 
 function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
-function incCount(){
-  localStorage.setItem(LS.count, String(getCount() + 1));
-  updateCountUI();
-}
-function updateCountUI(){
-  const el = $("countPill");
-  if (el) el.textContent = `📷 Photos envoyées : ${getCount()}`;
-}
+function incCount(){ localStorage.setItem(LS.count, String(getCount() + 1)); updateCountUI(); }
+function updateCountUI(){ $("countPill").textContent = `📷 Photos envoyées : ${getCount()}`; }
 
 function updateBadge(){
   const id = getTableId();
   const badge = $("tableBadge");
   const reset = $("resetBtn");
-  if(!id){
-    badge.style.display = "none";
-    reset.style.display = "none";
-    return;
-  }
+  if(!id){ badge.style.display="none"; reset.style.display="none"; return; }
   const t = TABLES.find(x => x.id === id);
   badge.textContent = t ? `🪑 ${t.name}` : `🪑 Table ${id}`;
-  badge.style.display = "inline-block";
-  reset.style.display = "inline-block";
+  badge.style.display="inline-block";
+  reset.style.display="inline-block";
 }
 
-/** ========= Mission (défi/escape) ========= */
-function setMission(obj){
-  localStorage.setItem(LS.mission, JSON.stringify(obj || null));
-  updateMissionPill();
-}
-function getMission(){
-  try { return JSON.parse(localStorage.getItem(LS.mission) || "null"); }
-  catch { return null; }
-}
-function clearMission(){
-  localStorage.removeItem(LS.mission);
-  updateMissionPill();
-}
-function updateMissionPill(){
-  const m = getMission();
-  const pill = $("missionPill");
-  if(!pill) return;
-
-  if(m && m.title){
-    pill.style.display = "inline-block";
-    pill.textContent = `🎯 ${m.title}`;
-  } else {
-    pill.style.display = "none";
-    pill.textContent = "";
-  }
+function renderMenu(){
+  $("menuEntree").textContent = MENU_ENTREE;
+  $("menuPlat").textContent = MENU_PLAT;
+  $("menuFromage").textContent = MENU_FROMAGE;
 }
 
-/** ========= Défis ========= */
-function getDefisDone(){
-  try { return JSON.parse(localStorage.getItem(LS.defisDone) || "{}"); }
-  catch { return {}; }
-}
-function setDefisDone(obj){
-  localStorage.setItem(LS.defisDone, JSON.stringify(obj));
-}
-function markDefiDone(defiId){
-  const done = getDefisDone();
-  done[defiId] = true;
-  setDefisDone(done);
-}
-function resetDefis(){
-  localStorage.removeItem(LS.defisDone);
+function updateAlbumFrame(){
+  $("albumFrame").src = `https://drive.google.com/embeddedfolderview?id=${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}#grid`;
 }
 
-/** ========= Escape ========= */
-function normalize(s){
-  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
-}
-function getEscapeOk(){
-  try { return JSON.parse(localStorage.getItem(LS.escapeOk) || "{}"); }
-  catch { return {}; }
-}
-function setEscapeOk(obj){
-  localStorage.setItem(LS.escapeOk, JSON.stringify(obj));
-}
-function resetEscape(){
-  localStorage.removeItem(LS.escapeOk);
-}
-
-/** ========= UI Tables ========= */
+/* ========= Table ========= */
 function renderTables(){
   const wrap = $("tableButtons");
   wrap.innerHTML = "";
-
   TABLES.forEach(t => {
     const btn = document.createElement("button");
     btn.textContent = t.name;
-
     btn.onclick = () => {
       btn.classList.add("picked");
       setTableId(t.id);
       updateBadge();
-      setTimeout(() => setScreen("screenMenu"), 220);
+      setTimeout(() => setScreen("screenHome"), 220); // retour accueil
     };
-
     wrap.appendChild(btn);
   });
 }
 
-/** ✅ MAJ barre progression (helper) */
+/* ========= Défis ========= */
+function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defisDone) || "{}"); } catch { return {}; } }
+function setDefisDone(obj){ localStorage.setItem(LS.defisDone, JSON.stringify(obj)); }
+function markDefiDone(id){ const d = getDefisDone(); d[id] = true; setDefisDone(d); }
+function resetDefis(){ localStorage.removeItem(LS.defisDone); }
+
 function setProgress(fillEl, percentEl, subEl, done, total, label){
-  const pct = total ? Math.round((done / total) * 100) : 0;
-  if (fillEl) fillEl.style.width = pct + "%";
-  if (percentEl) percentEl.textContent = pct + "%";
-  if (subEl) subEl.textContent = `${done} / ${total} ${label}`;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  fillEl.style.width = pct + "%";
+  percentEl.textContent = pct + "%";
+  subEl.textContent = `${done} / ${total} ${label}`;
 }
 
-/** ========= UI Défis ========= */
 function renderDefis(){
   const done = getDefisDone();
   const wrap = $("defisList");
   wrap.innerHTML = "";
-
   const nbDone = DEFIS.filter(d => done[d.id]).length;
   setProgress($("defisFill"), $("defisPercent"), $("defisSub"), nbDone, DEFIS.length, "défis");
 
   DEFIS.forEach(d => {
     const isDone = !!done[d.id];
-
     const div = document.createElement("div");
     div.className = "item";
     div.innerHTML = `
@@ -606,62 +584,61 @@ function renderDefis(){
           <div class="itemDesc">${d.desc}</div>
         </div>
         <div style="min-width:160px;">
-          <button class="${isDone ? "btn-subtle" : ""}">
-            ${isDone ? "Reprendre" : "📸 Faire ce défi"}
-          </button>
+          <button class="${isDone ? "btn-subtle" : ""}">${isDone ? "Reprendre" : "📸 Faire ce défi"}</button>
         </div>
       </div>
       <div class="muted tiny">${isDone ? "Défi validé" : "Appuie pour ouvrir l’appareil photo"}</div>
     `;
-
     div.querySelector("button").onclick = () => {
       setTypeUI("defi");
-      setMission({ kind: "defi", id: d.id, title: d.title });
+      setMission({ kind:"defi", id:d.id, title:d.title });
       setScreen("screenPhoto");
     };
-
     wrap.appendChild(div);
   });
 }
 
-/** ========= UI Escape ========= */
-function renderEscape(){
-  const ok = getEscapeOk();
+/* ========= Code Game (sans code final) ========= */
+function normalize(s){
+  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+}
+function getCodeOk(){ try { return JSON.parse(localStorage.getItem(LS.codeOk) || "{}"); } catch { return {}; } }
+function setCodeOk(obj){ localStorage.setItem(LS.codeOk, JSON.stringify(obj)); }
+function resetCodeGame(){ localStorage.removeItem(LS.codeOk); }
+
+function renderCodeGame(){
+  const ok = getCodeOk();
   const wrap = $("enigmesList");
   wrap.innerHTML = "";
 
   const nbOk = ENIGMES.filter(e => ok[e.id]).length;
-  setProgress($("escapeFill"), $("escapePercent"), $("escapeSub"), nbOk, ENIGMES.length, "énigmes");
+  setProgress($("codeFill"), $("codePercent"), $("codeSub"), nbOk, ENIGMES.length, "énigmes");
 
   ENIGMES.forEach(e => {
     const isOk = !!ok[e.id];
-
     const div = document.createElement("div");
     div.className = "item";
     div.innerHTML = `
-      <div class="itemTitle">${isOk ? "✅" : "🧩"} Énigme</div>
+      <div class="itemTitle">${isOk ? "✅" : "🔐"} Énigme</div>
       <div class="itemDesc">${e.q}</div>
       <div class="grid grid2">
         <input type="text" id="ans_${e.id}" placeholder="Ta réponse…" ${isOk ? "disabled" : ""}>
         <button id="btn_${e.id}" class="${isOk ? "btn-subtle" : ""}" ${isOk ? "disabled" : ""}>Valider</button>
       </div>
-      <div class="muted tiny" id="st_${e.id}">${isOk ? `Chiffre obtenu : ${e.digit}` : ""}</div>
+      <div class="muted tiny" id="st_${e.id}">${isOk ? "✅ Résolu" : ""}</div>
     `;
-
     wrap.appendChild(div);
 
     if(!isOk){
       div.querySelector(`#btn_${e.id}`).onclick = () => {
         const input = div.querySelector(`#ans_${e.id}`);
         const st = div.querySelector(`#st_${e.id}`);
-
         if(normalize(input.value) === normalize(e.a)){
-          const next = getEscapeOk();
+          const next = getCodeOk();
           next[e.id] = true;
-          setEscapeOk(next);
-
-          st.innerHTML = `<span class="ok">✅ Correct ! Chiffre : ${e.digit}</span>`;
-          renderEscape();
+          setCodeOk(next);
+          st.innerHTML = `<span class="ok">✅ Correct !</span>`;
+          renderCodeGame();
         } else {
           st.innerHTML = `<span class="err">❌ Mauvaise réponse</span>`;
         }
@@ -669,58 +646,44 @@ function renderEscape(){
     }
   });
 
-  const allOk = ENIGMES.every(e => getEscapeOk()[e.id]);
+  const allOk = ENIGMES.every(e => getCodeOk()[e.id]);
   const box = $("finalBox");
   if(allOk){
     box.className = "pill ok";
-    box.textContent = `🔓 Code final : ${FINAL_CODE()}`;
+    box.textContent = "✅ Bravo ! Essayez maintenant le cadenas (pas de code affiché ici).";
   } else {
     box.className = "pill warn";
-    box.textContent = "🔒 Code final : pas encore…";
+    box.textContent = "🔒 Code final : à trouver…";
   }
 }
 
-/** ========= Photo module ========= */
-let camStream = null;
-let capturedDataUrl = null;
+/* ========= Mission (défi) ========= */
+function setMission(obj){ localStorage.setItem(LS.mission, JSON.stringify(obj || null)); updateMissionPill(); }
+function getMission(){ try { return JSON.parse(localStorage.getItem(LS.mission) || "null"); } catch { return null; } }
+function clearMission(){ localStorage.removeItem(LS.mission); updateMissionPill(); }
+function updateMissionPill(){
+  const m = getMission();
+  const pill = $("missionPill");
+  if(m && m.title){ pill.style.display="inline-block"; pill.textContent = `🎯 ${m.title}`; }
+  else { pill.style.display="none"; pill.textContent=""; }
+}
 
-let cameraMode = localStorage.getItem(LS.camMode) || "environment"; // "environment" | "user"
+/* ========= Photo ========= */
+let camStream=null;
+let capturedDataUrl=null;
+let cameraMode = localStorage.getItem(LS.camMode) || "environment";
 
 function updateSwitchCamUI(){
-  const txt = $("switchCamText");
-  if (!txt) return;
-  txt.textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
+  $("switchCamText").textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
 }
 function spinFlipIcon(){
-  const icon = $("flipIcon");
-  if(!icon) return;
-  icon.classList.toggle("spin");
-  setTimeout(() => icon.classList.toggle("spin"), 280);
+  $("flipIcon").classList.toggle("spin");
+  setTimeout(() => $("flipIcon").classList.toggle("spin"), 280);
 }
-
 function flash(){
-  const f = $("flash");
-  if(!f) return;
-  f.classList.add("on");
-  setTimeout(() => f.classList.remove("on"), 140);
+  $("flash").classList.add("on");
+  setTimeout(() => $("flash").classList.remove("on"), 140);
 }
-function haptic(){ if (navigator.vibrate) navigator.vibrate(30); }
-function clickSound(){
-  try{
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if(!Ctx) return;
-    const ctx = new Ctx();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "square";
-    o.frequency.value = 1200;
-    g.gain.value = 0.02;
-    o.connect(g); g.connect(ctx.destination);
-    o.start();
-    setTimeout(() => { o.stop(); ctx.close(); }, 80);
-  } catch {}
-}
-
 function setTypeUI(t){
   setPhotoType(t);
   $("typeLabel").textContent = t;
@@ -729,58 +692,34 @@ function setTypeUI(t){
 async function startCamera(){
   try{
     $("sendStatus").textContent = "🎥 Activation caméra…";
-
-    if (camStream) {
-      camStream.getTracks().forEach(tr => tr.stop());
-      camStream = null;
-    }
-
+    if (camStream) camStream.getTracks().forEach(tr => tr.stop());
     camStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: cameraMode,
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      },
-      audio: false
+      video:{ facingMode: cameraMode, width:{ ideal:1280 }, height:{ ideal:720 } },
+      audio:false
     });
-
     $("camVideo").srcObject = camStream;
     $("takePhotoBtn").disabled = false;
     $("sendStatus").textContent = "";
-  } catch(e){
+  } catch {
     $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée. Autorise-la via le cadenas 🔒.</span>`;
   }
 }
-
 function stopCamera(){
-  if(camStream){
-    camStream.getTracks().forEach(t => t.stop());
-    camStream = null;
-  }
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
   $("camVideo").srcObject = null;
   $("takePhotoBtn").disabled = true;
 }
-
 function takePhoto(){
-  const video = $("camVideo");
-  const canvas = $("camCanvas");
-  const w = video.videoWidth || 1280;
-  const h = video.videoHeight || 720;
-
-  canvas.width = w;
-  canvas.height = h;
-  canvas.getContext("2d").drawImage(video, 0, 0, w, h);
-
-  capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
-
-  flash(); haptic(); clickSound();
-
+  const v=$("camVideo"), c=$("camCanvas");
+  const w=v.videoWidth||1280, h=v.videoHeight||720;
+  c.width=w; c.height=h;
+  c.getContext("2d").drawImage(v,0,0,w,h);
+  capturedDataUrl = c.toDataURL("image/jpeg",0.8);
+  flash();
   $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
   $("retakeBtn").style.display = "block";
-
-  setTimeout(() => sendPhotoAuto(), 200);
+  setTimeout(sendPhotoAuto, 200);
 }
-
 async function sendPhotoAuto(){
   const tableId = getTableId();
   if(!tableId){
@@ -788,116 +727,130 @@ async function sendPhotoAuto(){
     setScreen("screenTable");
     return;
   }
-  if(!capturedDataUrl){
-    $("sendStatus").innerHTML = `<span class="warn">Aucune photo capturée.</span>`;
-    return;
-  }
-  if(!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes("/exec")){
-    $("sendStatus").innerHTML = `<span class="err">URL Apps Script invalide.</span>`;
-    return;
-  }
+  if(!capturedDataUrl) return;
+
   if (localStorage.getItem(LS.uploading) === "1") return;
   localStorage.setItem(LS.uploading, "1");
 
   const mission = getMission();
-
   try{
-    const payload = {
-      tableId,
-      type: getPhotoType(),
-      filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-      dataUrl: capturedDataUrl,
-      mission: mission || null,
-    };
-
     await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
+      method:"POST",
+      mode:"no-cors",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        tableId,
+        type: getPhotoType(),
+        filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
+        dataUrl: capturedDataUrl,
+        mission: mission || null,
+      }),
     });
 
     incCount();
-
-    if(mission && mission.kind === "defi" && mission.id){
-      markDefiDone(mission.id);
-    }
+    if(mission && mission.kind==="defi" && mission.id) markDefiDone(mission.id);
 
     $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉</span>`;
     capturedDataUrl = null;
     $("retakeBtn").style.display = "none";
-
-    const target = (mission && mission.kind === "defi") ? "screenDefis" : "screenMenu";
     clearMission();
 
-    setTimeout(() => {
-      if(target === "screenDefis") renderDefis();
-      setScreen(target);
-    }, 900);
-
-  } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau. Vérifie la connexion.</span>`;
+    setTimeout(() => setScreen("screenGames"), 800);
+  } catch {
+    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau.</span>`;
   } finally {
     setTimeout(() => localStorage.removeItem(LS.uploading), 800);
   }
 }
 
-function resetPhotoSession(){
-  capturedDataUrl = null;
-  $("sendStatus").textContent = "";
-  $("retakeBtn").style.display = "none";
-  updateMissionPill();
+/* ========= Bouchons ========= */
+async function bouchonsState(){
+  try{
+    const res = await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state`, { method:"GET" });
+    return await res.json();
+  } catch {
+    return { locked:false, message:"Impossible de lire l'état." };
+  }
+}
+async function bouchonsGuess(guess){
+  try{
+    await fetch(APPS_SCRIPT_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ action:"bouchons_guess", guess })
+    });
+  } catch {}
+  return await bouchonsState();
 }
 
-/** ========= INIT + NAV ========= */
+/* ========= INIT ========= */
 document.addEventListener("DOMContentLoaded", () => {
-  screens.forEach(s => $(s).style.display = "none");
+  // ✅ Cache tout au démarrage
+  for(const el of screenEls()) el.style.display = "none";
 
   renderTables();
+  renderMenu();
+  updateAlbumFrame();
   updateBadge();
   updateCountUI();
   setTypeUI(getPhotoType());
   updateSwitchCamUI();
   updateMissionPill();
 
-  if(!getTableId()) setScreen("screenTable");
-  else setScreen("screenMenu");
+  setScreen("screenHome");
 
-  $("goPhoto").onclick = () => {
-    clearMission();
-    resetPhotoSession();
-    setScreen("screenPhoto");
-  };
+  // Home
+  $("homeTable").onclick = () => setScreen("screenTable");
+  $("homeMenu").onclick = () => setScreen("screenMenu");
+  $("homeAlbum").onclick = () => setScreen("screenAlbum");
+  $("homeGames").onclick = () => setScreen("screenGames");
 
-  $("goDefis").onclick = () => {
-    renderDefis();
-    setScreen("screenDefis");
-  };
+  // Back
+  $("backFromTable").onclick = () => setScreen("screenHome");
+  $("backFromMenu").onclick = () => setScreen("screenHome");
+  $("backFromAlbum").onclick = () => setScreen("screenHome");
+  $("backFromGames").onclick = () => setScreen("screenHome");
 
-  $("goEscape").onclick = () => {
-    renderEscape();
-    setScreen("screenEscape");
-  };
-
-  $("backFromDefis").onclick = () => setScreen("screenMenu");
-  $("backFromEscape").onclick = () => setScreen("screenMenu");
-
-  $("backFromPhoto").onclick = () => {
-    stopCamera();
-    const m = getMission();
-    if(m && m.kind === "defi"){ renderDefis(); setScreen("screenDefis"); }
-    else setScreen("screenMenu");
-  };
-
+  // Reset table
   $("resetBtn").onclick = () => {
     setTableId(0);
     updateBadge();
     setScreen("screenTable");
   };
 
-  $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
-  $("resetEscapeBtn").onclick = () => { resetEscape(); renderEscape(); };
+  // Games
+  $("goPhoto").onclick = () => {
+    clearMission();
+    $("sendStatus").textContent = "";
+    $("retakeBtn").style.display = "none";
+    setScreen("screenPhoto");
+  };
+  $("goDefis").onclick = () => { renderDefis(); setScreen("screenDefis"); };
+  $("goCodeGame").onclick = () => { renderCodeGame(); setScreen("screenCodeGame"); };
+  $("goBouchons").onclick = async () => {
+    setScreen("screenBouchons");
+    const st = await bouchonsState();
+    $("bStatus").textContent = st.message || "";
+    if(st.locked){
+      $("bLockInfo").innerHTML = `<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
+      $("bSubmit").disabled = true; $("bGuess").disabled = true;
+    } else {
+      $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
+      $("bSubmit").disabled = false; $("bGuess").disabled = false;
+    }
+  };
 
+  // Back modules
+  $("backFromDefis").onclick = () => setScreen("screenGames");
+  $("backFromCode").onclick = () => setScreen("screenGames");
+  $("backFromBouchons").onclick = () => setScreen("screenGames");
+  $("backFromPhoto").onclick = () => { stopCamera(); setScreen("screenGames"); };
+
+  // Resets
+  $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
+  $("resetCodeBtn").onclick = () => { resetCodeGame(); renderCodeGame(); };
+
+  // Types
   document.querySelectorAll(".typeBtn").forEach(btn => {
     btn.onclick = () => {
       clearMission();
@@ -906,20 +859,39 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
+  // Photo controls
   $("startCamBtn").onclick = startCamera;
   $("takePhotoBtn").onclick = takePhoto;
-
   $("switchCamBtn").onclick = () => {
     cameraMode = (cameraMode === "environment") ? "user" : "environment";
     localStorage.setItem(LS.camMode, cameraMode);
     spinFlipIcon();
     updateSwitchCamUI();
-    if (camStream) startCamera();
+    if(camStream) startCamera();
   };
-
   $("retakeBtn").onclick = () => {
     capturedDataUrl = null;
     $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;
+  };
+
+  // Bouchons submit
+  $("bSubmit").onclick = async () => {
+    const guess = Number($("bGuess").value);
+    if(!Number.isFinite(guess) || guess < 0){
+      $("bStatus").innerHTML = `<span class="err">Entre un nombre valide.</span>`;
+      return;
+    }
+    $("bStatus").textContent = "Envoi…";
+    const st = await bouchonsGuess(guess);
+
+    if(st.locked){
+      $("bLockInfo").innerHTML = `<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
+      $("bSubmit").disabled = true; $("bGuess").disabled = true;
+      $("bStatus").innerHTML = `<span class="ok">✅ Trouvé ! Jeu bloqué.</span>`;
+    } else {
+      $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
+      $("bStatus").textContent = st.message || "Enregistré.";
+    }
   };
 });
 </script>

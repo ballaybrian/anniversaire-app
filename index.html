@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#8aa685">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="B&A 10 ans">
-<link rel="apple-touch-icon" href="icon-192.png">
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>10 ans – B & A</title>
@@ -26,7 +18,7 @@
       --text:#5F7A68;
       --muted:rgba(95,122,104,0.70);
 
-      --btn:#8aa685;        /* vert sauge */
+      --btn:#8aa685;
       --btnText:#fff;
       --btnBorder:#6f8f6a;
 
@@ -72,7 +64,6 @@
     .warn{ color: var(--warning); font-weight: 800; }
     .err{ color: var(--danger); font-weight: 800; }
 
-    /* Header */
     .topbar{ display:grid; gap:10px; padding-bottom: 8px; text-align:center; }
     .brand{
       display:grid;
@@ -109,7 +100,6 @@
       flex-wrap:wrap;
     }
 
-    /* Buttons */
     button{
       width:100%;
       padding: 14px 14px;
@@ -140,7 +130,6 @@
 
     .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
 
-    /* Screens */
     section[data-screen]{ display:none; }
     .fade-in{ animation: fadeIn 220ms ease-out; }
     @keyframes fadeIn{
@@ -148,7 +137,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Table 3x3 */
     #tableButtons{
       display:grid;
       grid-template-columns:repeat(3,1fr);
@@ -167,7 +155,6 @@
     @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1.02)} }
     #tableButtons button.picked{ animation: pop 220ms ease-out; filter: brightness(1.03); }
 
-    /* Menu blocks */
     .menuBlock{
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -187,16 +174,51 @@
       min-height: 54px;
     }
 
-    /* Album iframe */
-    .iframeWrap{
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.45);
+    /* Galerie interne */
+    .galleryGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
-    iframe{ width: 100%; height: 70vh; border: 0; display:block; }
+    @media (min-width: 520px){
+      .galleryGrid{ grid-template-columns: repeat(4, 1fr); }
+    }
+    .thumb{
+      width:100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+    }
+    .viewer{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.86);
+      z-index: 9999;
+      display:none;
+      padding: 14px;
+    }
+    .viewerTop{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .viewerImg{
+      display:block;
+      width: 100%;
+      height: calc(100% - 120px);
+      max-width: 980px;
+      margin: 12px auto 0;
+      object-fit: contain;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+    }
 
-    /* Camera */
     .camBox{
       position: relative;
       border: 1px solid var(--border);
@@ -232,7 +254,6 @@
     }
     .flipIcon.spin{ transform: rotate(180deg); }
 
-    /* Lists */
     .item{
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -257,7 +278,6 @@
       outline: none;
     }
 
-    /* Progress */
     .progressWrap{
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.45);
@@ -274,7 +294,7 @@
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: var(--text); /* vert sauge */
+      background: var(--text);
       transition: width 260ms ease;
     }
     .progressLabel{
@@ -292,7 +312,6 @@
       font-weight: 800;
     }
 
-    /* Admin hidden button */
     #bAdminReset { display:none; }
     #bAdminReset.show { display:block; }
   </style>
@@ -357,21 +376,38 @@
         <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button>
       </section>
 
-      <!-- ALBUM -->
+      <!-- ALBUM (galerie interne) -->
       <section id="screenAlbum" data-screen class="grid">
         <p style="text-align:center;margin:0;font-weight:900;">🖼️ Album photo</p>
-        <p class="muted" style="text-align:center;margin:0;">Lecture seule depuis Drive.</p>
+        <p class="muted" style="text-align:center;margin:0;">Galerie interne (lecture seule).</p>
 
-        <div class="iframeWrap">
-          <iframe id="albumFrame" title="Album Drive"></iframe>
+        <div class="grid grid2">
+          <button id="refreshGallery" class="btn-subtle">🔄 Actualiser</button>
+          <button id="openDriveAlbum" class="btn-subtle">📂 Ouvrir sur Drive</button>
         </div>
 
+        <div id="galleryStatus" class="muted" style="text-align:center;"></div>
+        <div id="gallery" class="galleryGrid"></div>
+
         <p class="muted" style="text-align:center;margin:0;">
-          Si rien ne s’affiche : dossier Drive → partage “Toute personne avec le lien peut voir”.
+          Si les images ne chargent pas : dossier Drive → partage “Toute personne avec le lien peut voir”.
         </p>
 
         <button id="backFromAlbum" class="btn-subtle">⬅️ Retour</button>
       </section>
+
+      <!-- VIEWER plein écran + swipe -->
+      <div id="viewer" class="viewer">
+        <div class="viewerTop">
+          <button id="closeViewer" class="btn-subtle" style="max-width:160px;">✖ Fermer</button>
+          <div id="viewerName" class="pill" style="max-width:60%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></div>
+        </div>
+        <img id="viewerImg" class="viewerImg" alt="Photo">
+        <div style="max-width:980px;margin:10px auto 0;display:flex;gap:10px;justify-content:space-between;">
+          <button id="prevPhoto" class="btn-subtle" style="max-width:160px;">◀</button>
+          <button id="nextPhoto" class="btn-subtle" style="max-width:160px;">▶</button>
+        </div>
+      </div>
 
       <!-- JEUX -->
       <section id="screenGames" data-screen class="grid">
@@ -438,10 +474,14 @@
         <button id="backFromDefis" class="btn-subtle">⬅️ Retour</button>
       </section>
 
-      <!-- CODE GAME -->
+      <!-- CODE GAME (✅ règles + chiffres révélés, ❌ plus de "code final") -->
       <section id="screenCodeGame" data-screen class="grid">
         <p style="text-align:center;margin:0;font-weight:900;">🔐 Code Game</p>
-        <p class="muted" style="text-align:center;margin:0;">Chaque bonne réponse valide une étape. (Le code final n’est pas affiché.)</p>
+
+        <div class="menuBlock">
+          <p class="menuTitle">Règles &amp; récompense</p>
+          <div id="codeRules" class="menuText"></div>
+        </div>
 
         <div class="progressWrap">
           <div class="progressBar"><div id="codeFill" class="progressFill"></div></div>
@@ -451,9 +491,6 @@
 
         <div id="enigmesList" class="grid"></div>
 
-        <div class="hr"></div>
-        <div id="finalBox" class="pill warn" style="text-align:center;">🔒 Code final : à trouver…</div>
-
         <button id="resetCodeBtn" class="btn-subtle">Réinitialiser le Code Game</button>
         <button id="backFromCode" class="btn-subtle">⬅️ Retour</button>
       </section>
@@ -461,7 +498,7 @@
       <!-- BOUCHONS -->
       <section id="screenBouchons" data-screen class="grid">
         <p style="text-align:center;margin:0;font-weight:900;">🍾 Combien de bouchons ?</p>
-        <p class="muted" style="text-align:center;margin:0;">Combien de bouteille a-t'on ouvert cette année.</p>
+        <p class="muted" style="text-align:center;margin:0;">Trouve le bon nombre. Le jeu se bloque dès qu’un gagnant trouve.</p>
 
         <div class="item">
           <div class="itemTitle">Ta proposition</div>
@@ -472,7 +509,6 @@
 
           <div id="bHint" class="pill" style="text-align:center; display:none;"></div>
 
-          <!-- Jauge bleu -> rouge -->
           <div style="margin-top:10px;">
             <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; color:rgba(95,122,104,0.75);">
               <span>🧊 Loin</span>
@@ -486,7 +522,6 @@
 
           <div id="bStatus" class="muted tiny" style="margin-top:8px;"></div>
 
-          <!-- Admin reset caché -->
           <button id="bAdminReset" class="btn-subtle">🔁 Réinitialiser le jeu (ADMIN)</button>
         </div>
 
@@ -506,10 +541,18 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRnt-PAf31mmcNUWThZQHyMgW7Fwl94LY-Sn3iiUOnZjBJiIVCidodBFt3T0wVAZizNQ/exec";
 const DRIVE_ALBUM_FOLDER_ID = "1tABmop6f2NpJzeTJH4Xs8zesvax_h-eI";
 
-/* ✅ Menu (tu modifies toi-même ici) */
+/* ✅ Menu (tu modifies ici) */
 const MENU_ENTREE  = `À compléter…`;
 const MENU_PLAT    = `À compléter…`;
 const MENU_FROMAGE = `À compléter…`;
+
+/* ✅ Code Game – règles & récompense (tu modifies ici) */
+const CODEGAME_RULES = `RÈGLES :
+- Résous les énigmes pour révéler un chiffre à chaque fois.
+- À la fin, assemble les chiffres pour ouvrir le cadenas.
+
+RÉCOMPENSE :
+🎁 À compléter…`;
 
 /* Tables */
 const TABLES = [
@@ -527,15 +570,15 @@ const DEFIS = [
   { id: "d5", title: "Sans sourire", desc: "Tout le monde sérieux 😐" },
 ];
 
-/* Code Game (ne révèle pas le code final) */
+/* ✅ Code Game : chaque énigme révèle un chiffre */
 const ENIGMES = [
-  { id: "e1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge" },
-  { id: "e2", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret" },
-  { id: "e3", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier" },
-  { id: "e4", q: "j'ai eu que 5 de moyen en Français. Qui suis-je ?", a: "nolan" }
+  { id: "e1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge", digit: "9" },
+  { id: "e2", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret", digit: "0" },
+  { id: "e3", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier", digit: "4" },
+  { id: "e4", q: "j'ai eu que 5 de moyen en Français. Qui suis-je ?", a: "nolan", digit: "2" }
 ];
 
-/* LocalStorage keys */
+/* LocalStorage */
 const LS = {
   tableId: "bday_tableId",
   photoType: "bday_photoType",
@@ -585,10 +628,6 @@ function renderMenu(){
   $("menuFromage").textContent = MENU_FROMAGE;
 }
 
-function updateAlbumFrame(){
-  $("albumFrame").src = `https://drive.google.com/embeddedfolderview?id=${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}#grid`;
-}
-
 /* ================= TABLE ================= */
 function renderTables(){
   const wrap = $("tableButtons");
@@ -636,6 +675,13 @@ function updateMissionPill(){
   }
 }
 
+function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
+function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
+function setTypeUI(t){
+  setPhotoType(t);
+  $("typeLabel").textContent = (t === "codegame") ? "code game" : t;
+}
+
 function renderDefis(){
   const done = getDefisDone();
   const wrap = $("defisList");
@@ -678,6 +724,8 @@ function setCodeOk(obj){ localStorage.setItem(LS.codeOk, JSON.stringify(obj)); }
 function resetCodeGame(){ localStorage.removeItem(LS.codeOk); }
 
 function renderCodeGame(){
+  $("codeRules").textContent = CODEGAME_RULES;
+
   const ok = getCodeOk();
   const wrap = $("enigmesList");
   wrap.innerHTML = "";
@@ -689,14 +737,19 @@ function renderCodeGame(){
     const isOk = !!ok[e.id];
     const div = document.createElement("div");
     div.className = "item";
+
     div.innerHTML = `
       <div class="itemTitle">${isOk ? "✅" : "🔐"} Énigme</div>
       <div class="itemDesc">${e.q}</div>
+
       <div class="grid grid2">
         <input type="text" id="ans_${e.id}" placeholder="Ta réponse…" ${isOk ? "disabled" : ""}>
         <button id="btn_${e.id}" class="${isOk ? "btn-subtle" : ""}" ${isOk ? "disabled" : ""}>Valider</button>
       </div>
-      <div class="muted tiny" id="st_${e.id}">${isOk ? "✅ Résolu" : ""}</div>
+
+      <div class="muted tiny" id="st_${e.id}">
+        ${isOk ? `🎉 Chiffre révélé : <span class="ok">${e.digit}</span>` : ""}
+      </div>
     `;
     wrap.appendChild(div);
 
@@ -704,11 +757,13 @@ function renderCodeGame(){
       div.querySelector(`#btn_${e.id}`).onclick = () => {
         const input = div.querySelector(`#ans_${e.id}`);
         const st = div.querySelector(`#st_${e.id}`);
+
         if(normalize(input.value) === normalize(e.a)){
           const next = getCodeOk();
           next[e.id] = true;
           setCodeOk(next);
-          st.innerHTML = `<span class="ok">✅ Correct !</span>`;
+
+          st.innerHTML = `🎉 Chiffre révélé : <span class="ok">${e.digit}</span>`;
           renderCodeGame();
         } else {
           st.innerHTML = `<span class="err">❌ Mauvaise réponse</span>`;
@@ -716,25 +771,12 @@ function renderCodeGame(){
       };
     }
   });
-
-  const allOk = ENIGMES.every(e => getCodeOk()[e.id]);
-  const box = $("finalBox");
-  if(allOk){
-    box.className = "pill ok";
-    box.textContent = "✅ Bravo ! Essayez maintenant le cadenas (pas de code affiché ici).";
-  } else {
-    box.className = "pill warn";
-    box.textContent = "🔒 Code final : à trouver…";
-  }
 }
 
 /* ================= PHOTO ================= */
 let camStream = null;
 let capturedDataUrl = null;
 let cameraMode = localStorage.getItem(LS.camMode) || "environment";
-
-function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
-function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
 
 function updateSwitchCamUI(){
   $("switchCamText").textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
@@ -746,10 +788,6 @@ function spinFlipIcon(){
 function flash(){
   $("flash").classList.add("on");
   setTimeout(() => $("flash").classList.remove("on"), 140);
-}
-function setTypeUI(t){
-  setPhotoType(t);
-  $("typeLabel").textContent = (t === "codegame") ? "code game" : t;
 }
 
 async function startCamera(){
@@ -834,6 +872,80 @@ async function sendPhotoAuto(){
   }
 }
 
+/* ================= ALBUM INTERNE + VIEWER (swipe) ================= */
+let albumItems = [];
+let viewerIndex = -1;
+
+async function loadGallery(){
+  $("galleryStatus").textContent = "Chargement des photos…";
+  $("gallery").innerHTML = "";
+  albumItems = [];
+
+  try{
+    const url = `${APPS_SCRIPT_URL}?action=album_list&folderId=${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}&t=${Date.now()}`;
+    const res = await fetch(url, { method:"GET", cache:"no-store" });
+    const data = await res.json();
+
+    if(!data.ok){
+      $("galleryStatus").innerHTML = `<span class="err">${data.message || "Erreur galerie"}</span>`;
+      return;
+    }
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    albumItems = items;
+
+    if(items.length === 0){
+      $("galleryStatus").textContent = "Aucune photo pour le moment.";
+      return;
+    }
+
+    $("galleryStatus").textContent = `${items.length} photo(s)`;
+
+    items.forEach((it) => {
+      const img = document.createElement("img");
+      img.className = "thumb";
+      img.loading = "lazy";
+      img.src = it.imgUrl;
+      img.alt = it.name || "photo";
+      img.onclick = () => openViewer(it);
+      $("gallery").appendChild(img);
+    });
+
+  } catch(e){
+    $("galleryStatus").innerHTML = `<span class="err">Erreur de chargement (droits Drive ?)</span>`;
+  }
+}
+
+function openViewer(it){
+  viewerIndex = albumItems.findIndex(x => x.id === it.id);
+  if(viewerIndex < 0) viewerIndex = 0;
+  renderViewer();
+  $("viewer").style.display = "block";
+}
+
+function renderViewer(){
+  const it = albumItems[viewerIndex];
+  if(!it) return;
+  $("viewerImg").src = it.imgUrl;
+  $("viewerName").textContent = it.name || "";
+  $("prevPhoto").disabled = (viewerIndex <= 0);
+  $("nextPhoto").disabled = (viewerIndex >= albumItems.length - 1);
+}
+
+function closeViewer(){
+  $("viewer").style.display = "none";
+  $("viewerImg").src = "";
+  $("viewerName").textContent = "";
+  viewerIndex = -1;
+}
+
+function prevViewer(){
+  if(viewerIndex > 0){ viewerIndex--; renderViewer(); }
+}
+function nextViewer(){
+  if(viewerIndex < albumItems.length - 1){ viewerIndex++; renderViewer(); }
+}
+
 /* ================= BOUCHONS ================= */
 async function bouchonsState(){
   const res = await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state&t=${Date.now()}`, { method:"GET", cache:"no-store" });
@@ -863,7 +975,6 @@ function updateBouchonsGauge(diff){
   const d = clamp(Number(diff), 0, BOUCHONS_MAX_DIFF);
   const pct = Math.round((1 - (d / BOUCHONS_MAX_DIFF)) * 100);
 
-  // bleu(210) -> rouge(0)
   const hue = Math.round(210 * (1 - pct/100));
   fill.style.width = pct + "%";
   fill.style.backgroundColor = `hsl(${hue} 85% 55%)`;
@@ -878,27 +989,24 @@ function updateBouchonsGauge(diff){
   txt.textContent = `${label} — ${pct}%`;
 }
 
-/* ================= INIT / EVENTS ================= */
+/* ================= INIT ================= */
 document.addEventListener("DOMContentLoaded", () => {
-  // Cache tout puis ouvre accueil
   for(const el of screenEls()) el.style.display = "none";
 
   renderTables();
   renderMenu();
-  updateAlbumFrame();
   updateBadge();
   updateCountUI();
   setTypeUI(getPhotoType());
   updateSwitchCamUI();
   updateMissionPill();
 
-  // Start
   setScreen("screenHome");
 
   // Home nav
   $("homeTable").onclick = () => setScreen("screenTable");
   $("homeMenu").onclick = () => setScreen("screenMenu");
-  $("homeAlbum").onclick = () => { updateAlbumFrame(); setScreen("screenAlbum"); };
+  $("homeAlbum").onclick = async () => { setScreen("screenAlbum"); await loadGallery(); };
   $("homeGames").onclick = () => setScreen("screenGames");
 
   // Back
@@ -907,6 +1015,42 @@ document.addEventListener("DOMContentLoaded", () => {
   $("backFromAlbum").onclick = () => setScreen("screenHome");
   $("backFromGames").onclick = () => setScreen("screenHome");
 
+  // Album controls
+  $("refreshGallery").onclick = loadGallery;
+  $("openDriveAlbum").onclick = () => window.open(`https://drive.google.com/drive/folders/${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}`, "_blank", "noopener");
+
+  $("closeViewer").onclick = closeViewer;
+  $("prevPhoto").onclick = prevViewer;
+  $("nextPhoto").onclick = nextViewer;
+
+  $("viewer").addEventListener("click", (e) => { if(e.target.id === "viewer") closeViewer(); });
+
+  // Clavier (PC)
+  document.addEventListener("keydown", (e) => {
+    if($("viewer").style.display === "block"){
+      if(e.key === "Escape") closeViewer();
+      if(e.key === "ArrowLeft") prevViewer();
+      if(e.key === "ArrowRight") nextViewer();
+    }
+  });
+
+  // Swipe (mobile)
+  let touchStartX = 0, touchStartY = 0;
+  $("viewer").addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+  }, { passive:true });
+
+  $("viewer").addEventListener("touchend", (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    if(Math.abs(dy) > Math.abs(dx)) return;
+    if(dx > 50) prevViewer();
+    else if(dx < -50) nextViewer();
+  }, { passive:true });
+
   // Reset table
   $("resetBtn").onclick = () => {
     setTableId(0);
@@ -914,7 +1058,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setScreen("screenTable");
   };
 
-  // Games nav
+  // Games
   $("goPhoto").onclick = () => {
     clearMission();
     $("sendStatus").textContent = "";
@@ -923,6 +1067,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setScreen("screenPhoto");
   };
   $("goDefis").onclick = () => { renderDefis(); setScreen("screenDefis"); };
+
   $("goCodeGame").onclick = () => { renderCodeGame(); setScreen("screenCodeGame"); };
 
   $("goBouchons").onclick = async () => {
@@ -953,7 +1098,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("backFromCode").onclick = () => setScreen("screenGames");
   $("backFromBouchons").onclick = () => setScreen("screenGames");
 
-  // Photo types
+  // Photo type buttons
   document.querySelectorAll(".typeBtn").forEach(btn => {
     btn.onclick = () => {
       clearMission();
@@ -981,10 +1126,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setScreen("screenGames");
   };
 
-  // Defis reset/back
+  // Defis reset
   $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
 
-  // Code reset/back
+  // Code reset
   $("resetCodeBtn").onclick = () => { resetCodeGame(); renderCodeGame(); };
 
   // Bouchons submit
@@ -1016,7 +1161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Admin reset (appui long sur le header)
+  // Admin reset (appui long sur header)
   let holdTimer = null;
   $("brandHold").addEventListener("pointerdown", () => {
     holdTimer = setTimeout(() => {
@@ -1062,11 +1207,5 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 </script>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js");
-  }
-</script>
-
 </body>
 </html>

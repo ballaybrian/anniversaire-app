@@ -905,7 +905,7 @@ async function loadGallery(){
       const img = document.createElement("img");
       img.className = "thumb";
       img.loading = "lazy";
-      img.src = it.imgUrl;
+      img.src = it.thumbUrl || it.imgUrl;
       img.alt = it.name || "photo";
       img.onclick = () => openViewer(it);
       $("gallery").appendChild(img);
@@ -926,7 +926,7 @@ function openViewer(it){
 function renderViewer(){
   const it = albumItems[viewerIndex];
   if(!it) return;
-  $("viewerImg").src = it.imgUrl;
+  $("viewerImg").src = it.fullUrl || it.imgUrl || it.thumbUrl;
   $("viewerName").textContent = it.name || "";
   $("prevPhoto").disabled = (viewerIndex <= 0);
   $("nextPhoto").disabled = (viewerIndex >= albumItems.length - 1);
@@ -937,6 +937,11 @@ function closeViewer(){
   $("viewerImg").src = "";
   $("viewerName").textContent = "";
   viewerIndex = -1;
+$("viewerImg").onerror = () => {
+  // si Drive bloque l'image, on ouvre la photo sur Drive
+  window.open(it.viewUrl, "_blank", "noopener");
+  closeViewer();
+};
 }
 
 function prevViewer(){

@@ -4,1210 +4,781 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>10 ans – B & A</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --bg:#F3EBDD;
-      --card: rgba(255,255,255,0.62);
+      --card:rgba(255,255,255,.62);
       --border:#D9CDBA;
-
       --text:#5F7A68;
-      --muted:rgba(95,122,104,0.70);
-
+      --muted:rgba(95,122,104,.70);
       --btn:#8aa685;
       --btnText:#fff;
       --btnBorder:#6f8f6a;
-
       --success:#3F7C5A;
-      --warning:#9B6A2C;
       --danger:#A34848;
-
       --radius:20px;
-      --shadow:0 16px 40px rgba(0,0,0,0.10);
+      --shadow:0 16px 40px rgba(0,0,0,.10);
     }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    .app{max-width:780px;margin:0 auto;padding:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+    .grid{display:grid;gap:12px}
+    .grid2{grid-template-columns:1fr 1fr}
+    .pill{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.45);font-weight:800}
+    .muted{color:var(--muted);font-size:13px}
+    .ok{color:var(--success);font-weight:900}
+    .err{color:var(--danger);font-weight:900}
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    }
-    .app{ max-width: 760px; margin: 0 auto; padding: 18px; }
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-    }
+    header{display:grid;gap:10px;text-align:center;padding-bottom:8px}
+    .brand{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+    h1{margin:0;font-family:"Playfair Display",serif;font-weight:700;font-size:clamp(32px,6vw,46px);line-height:1.05}
+    .mono{font-family:"Playfair Display",serif;font-size:16px;letter-spacing:1px;opacity:.85;user-select:none}
+    .subtitle{margin:0;font-size:14px;letter-spacing:1.1px;color:var(--muted)}
+    .top-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;align-items:center}
 
-    .grid{ display:grid; gap:12px; }
-    .grid2{ grid-template-columns: 1fr 1fr; }
+    button{width:100%;padding:14px;border-radius:16px;border:1px solid var(--btnBorder);background:var(--btn);color:var(--btnText);font-weight:900;letter-spacing:.2px;cursor:pointer}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .smallbtn{width:auto;padding:10px 12px;border-radius:14px;font-size:13px}
+    .btn-subtle{background:rgba(255,255,255,.55);border:1px solid var(--border);color:var(--text);font-weight:800}
 
-    .muted{ color: var(--muted); font-size: 13px; }
-    .pill{
-      display:inline-block;
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.45);
-      color: var(--text);
-      font-weight: 800;
-    }
-    .ok{ color: var(--success); font-weight: 800; }
-    .warn{ color: var(--warning); font-weight: 800; }
-    .err{ color: var(--danger); font-weight: 800; }
+    section[data-screen]{display:none}
+    .fade-in{animation:fadeIn 220ms ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-    .topbar{ display:grid; gap:10px; padding-bottom: 8px; text-align:center; }
-    .brand{
-      display:grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items:center;
-      gap: 8px;
-    }
-    .title{
-      margin:0;
-      font-family: "Playfair Display", serif;
-      font-weight: 700;
-      font-size: clamp(32px, 6vw, 46px);
-      letter-spacing: .3px;
-      line-height: 1.05;
-    }
-    .subtitle{
-      margin:0;
-      font-size: 14px;
-      letter-spacing: 1.1px;
-      color: var(--muted);
-    }
-    .mono{
-      font-family: "Playfair Display", serif;
-      font-size: 16px;
-      letter-spacing: 1px;
-      opacity: .85;
-      user-select: none;
-    }
-    .topbar-actions{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+    #tableButtons{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center}
+    #tableButtons button{max-width:170px;padding:16px 0;border-radius:18px}
+    @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1.02)}}
+    #tableButtons button.picked{animation:pop 220ms ease-out}
 
-    button{
-      width:100%;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--btnBorder);
-      background: var(--btn);
-      color: var(--btnText);
-      font-weight: 900;
-      letter-spacing: .2px;
-      cursor: pointer;
-    }
-    button:active{ transform: scale(.99); }
-    button:disabled{ opacity:.55; cursor:not-allowed; }
+    .menuBlock{border:1px solid var(--border);border-radius:16px;padding:12px;background:rgba(255,255,255,.45);text-align:left}
+    .menuTitle{font-weight:900;margin:0 0 8px}
+    .menuText{border:1px dashed rgba(95,122,104,.35);border-radius:14px;padding:12px;background:rgba(255,255,255,.35);white-space:pre-wrap;min-height:54px}
 
-    .smallbtn{
-      padding: 10px 12px;
-      font-size: 13px;
-      border-radius: 14px;
-      width: auto;
-      font-weight: 900;
-    }
-    .btn-subtle{
-      background: rgba(255,255,255,0.55);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 800;
-    }
+    .progressWrap{border:1px solid var(--border);background:rgba(255,255,255,.45);border-radius:999px;padding:10px 10px 8px}
+    .progressBar{height:12px;border-radius:999px;background:rgba(95,122,104,.20);overflow:hidden}
+    .progressFill{height:100%;width:0%;border-radius:999px;background:var(--text);transition:width 260ms ease}
+    .progressLabel{margin-top:8px;text-align:center;font-weight:900}
+    .progressSub{margin-top:2px;text-align:center;font-size:12px;color:var(--muted);font-weight:800}
 
-    .hr{ height:1px; background: var(--border); margin: 14px 0; opacity:.9; }
+    .item{border:1px solid var(--border);border-radius:16px;padding:12px;background:rgba(255,255,255,.45);display:grid;gap:8px}
+    .itemTitle{font-weight:900}
+    .itemDesc{font-size:13px;color:var(--muted);line-height:1.35}
+    .itemRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .tiny{font-size:12px}
 
-    section[data-screen]{ display:none; }
-    .fade-in{ animation: fadeIn 220ms ease-out; }
-    @keyframes fadeIn{
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    input[type="text"],input[type="number"]{width:100%;padding:12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.55);color:var(--text);font-size:16px;outline:none}
 
-    #tableButtons{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:14px;
-      justify-items:center;
-      margin-top: 6px;
-    }
-    #tableButtons button{
-      width:100%;
-      max-width:170px;
-      padding: 16px 0;
-      font-size: 16px;
-      border-radius: 18px;
-      font-weight: 900;
-    }
-    @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1.02)} }
-    #tableButtons button.picked{ animation: pop 220ms ease-out; filter: brightness(1.03); }
+    /* Camera */
+    .camBox{position:relative;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.35);box-shadow:0 12px 26px rgba(0,0,0,.08)}
+    #camVideo,#camCanvas{width:100%;display:block;aspect-ratio:3/4;object-fit:cover;background:rgba(0,0,0,.04)}
+    @media(min-width:520px){#camVideo,#camCanvas{aspect-ratio:16/9}}
+    .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity 120ms ease}
+    .flash.on{opacity:.85}
+    .flipIcon{display:inline-block;margin-right:8px;transition:transform 260ms ease;transform-origin:50% 50%}
+    .flipIcon.spin{transform:rotate(180deg)}
 
-    .menuBlock{
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(255,255,255,0.45);
-      text-align: left;
-    }
-    .menuTitle{ font-weight: 900; margin: 0 0 8px; }
-    .menuText{
-      border: 1px dashed rgba(95,122,104,0.35);
-      border-radius: 14px;
-      padding: 12px;
-      background: rgba(255,255,255,0.35);
-      color: rgba(95,122,104,0.92);
-      line-height: 1.35;
-      white-space: pre-wrap;
-      min-height: 54px;
-    }
+    /* Album */
+    .galleryGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    @media(min-width:520px){.galleryGrid{grid-template-columns:repeat(4,1fr)}}
+    .thumb{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.35);cursor:pointer}
+    .viewer{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:9999;display:none;padding:14px}
+    .viewerTop{display:flex;justify-content:space-between;align-items:center;gap:10px;max-width:980px;margin:0 auto}
+    .viewerImg{display:block;width:100%;height:calc(100% - 120px);max-width:980px;margin:12px auto 0;object-fit:contain;border-radius:14px;background:rgba(255,255,255,.06)}
 
-    /* Galerie interne */
-    .galleryGrid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-    @media (min-width: 520px){
-      .galleryGrid{ grid-template-columns: repeat(4, 1fr); }
-    }
-    .thumb{
-      width:100%;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.35);
-      cursor: pointer;
-    }
-    .viewer{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.86);
-      z-index: 9999;
-      display:none;
-      padding: 14px;
-    }
-    .viewerTop{
-      display:flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      max-width: 980px;
-      margin: 0 auto;
-    }
-    .viewerImg{
-      display:block;
-      width: 100%;
-      height: calc(100% - 120px);
-      max-width: 980px;
-      margin: 12px auto 0;
-      object-fit: contain;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.06);
-    }
-
-    .camBox{
-      position: relative;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.35);
-      box-shadow: 0 12px 26px rgba(0,0,0,0.08);
-    }
-    #camVideo, #camCanvas{
-      width:100%;
-      display:block;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      background: rgba(0,0,0,0.04);
-    }
-    @media (min-width: 520px){
-      #camVideo, #camCanvas{ aspect-ratio: 16/9; }
-    }
-    .flash{
-      position:absolute; inset:0;
-      background:#fff;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity 120ms ease;
-    }
-    .flash.on{ opacity: 0.85; }
-
-    .flipIcon{
-      display:inline-block;
-      margin-right: 8px;
-      transition: transform 260ms ease;
-      transform-origin: 50% 50%;
-    }
-    .flipIcon.spin{ transform: rotate(180deg); }
-
-    .item{
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(255,255,255,0.45);
-      display: grid;
-      gap: 8px;
-    }
-    .itemTitle{ font-weight: 900; }
-    .itemDesc{ font-size: 13px; color: var(--muted); line-height: 1.35; }
-    .itemRow{ display:grid; grid-template-columns: 1fr auto; gap: 10px; align-items:center; }
-    .tiny{ font-size: 12px; }
-
-    input[type="text"], input[type="number"]{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.55);
-      color: var(--text);
-      font-size: 16px;
-      outline: none;
-    }
-
-    .progressWrap{
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.45);
-      border-radius: 999px;
-      padding: 10px 10px 8px;
-    }
-    .progressBar{
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(95,122,104,0.20);
-      overflow: hidden;
-    }
-    .progressFill{
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: var(--text);
-      transition: width 260ms ease;
-    }
-    .progressLabel{
-      margin-top: 8px;
-      text-align: center;
-      font-weight: 900;
-      color: var(--text);
-      letter-spacing: .3px;
-    }
-    .progressSub{
-      margin-top: 2px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    #bAdminReset { display:none; }
-    #bAdminReset.show { display:block; }
+    #bAdminReset{display:none}
+    #bAdminReset.show{display:block}
   </style>
 </head>
-
 <body>
-  <div class="app">
-    <div class="card">
+<div class="app"><div class="card">
+  <header id="brandHold">
+    <div class="brand">
+      <div class="mono">B &amp; A</div>
+      <h1>10 ans</h1>
+      <div class="mono">B &amp; A</div>
+    </div>
+    <p class="subtitle">✨ 2016 – 2026 ✨</p>
+    <div class="top-actions">
+      <div id="tableBadge" class="pill" style="display:none;"></div>
+      <button id="resetBtn" class="smallbtn" style="display:none;">Changer de table</button>
+    </div>
+  </header>
 
-      <header class="topbar" id="brandHold">
-        <div class="brand">
-          <div class="mono">B &amp; A</div>
-          <h1 class="title">10 ans</h1>
-          <div class="mono">B &amp; A</div>
-        </div>
-        <p class="subtitle">✨ 2016 – 2026 ✨</p>
+  <section id="screenHome" data-screen class="grid">
+    <button id="homeTable">🪑 Table</button>
+    <button id="homeMenu">🍽️ Menu</button>
+    <button id="homeAlbum">🖼️ Album photo</button>
+    <button id="homeGames">🎉 Jeux &amp; Photos</button>
+    <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
+    <p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p>
+  </section>
 
-        <div class="topbar-actions">
-          <div id="tableBadge" class="pill" style="display:none;"></div>
-          <button id="resetBtn" class="smallbtn" style="display:none;">Changer de table</button>
-        </div>
-      </header>
+  <section id="screenTable" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">Choisis ta table</p>
+    <div id="tableButtons"></div>
+    <p class="muted" style="text-align:center;margin:0;">Après sélection, tu reviens à l’accueil.</p>
+    <button id="backFromTable" class="btn-subtle">⬅️ Retour</button>
+  </section>
 
-      <!-- ACCUEIL -->
-      <section id="screenHome" data-screen class="grid">
-        <button id="homeTable">🪑 Table</button>
-        <button id="homeMenu">🍽️ Menu</button>
-        <button id="homeAlbum">🖼️ Album Photo</button>
-        <button id="homeGames">🎉 Jeux &amp; Photos</button>
+  <section id="screenMenu" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🍽️ Menu</p>
+    <p class="muted" style="text-align:center;margin:0;">(Texte défini dans le code — non modifiable)</p>
+    <div class="menuBlock"><p class="menuTitle">Entrée</p><div id="menuEntree" class="menuText"></div></div>
+    <div class="menuBlock"><p class="menuTitle">Plat</p><div id="menuPlat" class="menuText"></div></div>
+    <div class="menuBlock"><p class="menuTitle">Fromage</p><div id="menuFromage" class="menuText"></div></div>
+    <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button>
+  </section>
 
-        <div class="pill" id="countPill">📷 Photos envoyées : 0</div>
-        <div class="hr"></div>
-        <p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p>
-      </section>
+  <section id="screenAlbum" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🖼️ Album photo</p>
+    <p class="muted" style="text-align:center;margin:0;">Galerie interne (lecture seule).</p>
+    <div class="grid grid2">
+      <button id="refreshGallery" class="btn-subtle">🔄 Actualiser</button>
+      <button id="openDriveAlbum" class="btn-subtle">📂 Ouvrir sur Drive</button>
+    </div>
+    <div id="galleryStatus" class="muted" style="text-align:center;"></div>
+    <div id="gallery" class="galleryGrid"></div>
+    <p class="muted" style="text-align:center;margin:0;">Si les images ne chargent pas : dossier Drive → partage “Toute personne avec le lien peut voir”.</p>
+    <button id="backFromAlbum" class="btn-subtle">⬅️ Retour</button>
+  </section>
 
-      <!-- TABLE -->
-      <section id="screenTable" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">Choisis ta table</p>
-        <div id="tableButtons"></div>
-        <p class="muted" style="text-align:center;margin:0;">Après sélection, tu reviens à l’accueil.</p>
-        <button id="backFromTable" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- MENU -->
-      <section id="screenMenu" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">🍽️ Menu</p>
-        <p class="muted" style="text-align:center;margin:0;">(Texte défini dans le code — non modifiable)</p>
-
-        <div class="menuBlock">
-          <p class="menuTitle">Entrée</p>
-          <div id="menuEntree" class="menuText"></div>
-        </div>
-        <div class="menuBlock">
-          <p class="menuTitle">Plat</p>
-          <div id="menuPlat" class="menuText"></div>
-        </div>
-        <div class="menuBlock">
-          <p class="menuTitle">Fromage</p>
-          <div id="menuFromage" class="menuText"></div>
-        </div>
-
-        <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- ALBUM (galerie interne) -->
-      <section id="screenAlbum" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">🖼️ Album photo</p>
-        <p class="muted" style="text-align:center;margin:0;">Galerie interne (lecture seule).</p>
-
-        <div class="grid grid2">
-          <button id="refreshGallery" class="btn-subtle">🔄 Actualiser</button>
-          <button id="openDriveAlbum" class="btn-subtle">📂 Ouvrir sur Drive</button>
-        </div>
-
-        <div id="galleryStatus" class="muted" style="text-align:center;"></div>
-        <div id="gallery" class="galleryGrid"></div>
-
-        <p class="muted" style="text-align:center;margin:0;">
-          Si les images ne chargent pas : dossier Drive → partage “Toute personne avec le lien peut voir”.
-        </p>
-
-        <button id="backFromAlbum" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- VIEWER plein écran + swipe -->
-      <div id="viewer" class="viewer">
-        <div class="viewerTop">
-          <button id="closeViewer" class="btn-subtle" style="max-width:160px;">✖ Fermer</button>
-          <div id="viewerName" class="pill" style="max-width:60%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></div>
-        </div>
-        <img id="viewerImg" class="viewerImg" alt="Photo">
-        <div style="max-width:980px;margin:10px auto 0;display:flex;gap:10px;justify-content:space-between;">
-          <button id="prevPhoto" class="btn-subtle" style="max-width:160px;">◀</button>
-          <button id="nextPhoto" class="btn-subtle" style="max-width:160px;">▶</button>
-        </div>
-      </div>
-
-      <!-- JEUX -->
-      <section id="screenGames" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">🎉 Jeux &amp; Photos</p>
-        <button id="goPhoto">📸 Prendre une photo</button>
-        <button id="goDefis">🎯 Défis photos</button>
-        <button id="goCodeGame">🔐 Code Game</button>
-        <button id="goBouchons">🍾 Combien de bouchons ?</button>
-        <button id="backFromGames" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- PHOTO -->
-      <section id="screenPhoto" data-screen class="grid">
-        <p style="margin:0;text-align:center;font-weight:900;">Photobooth</p>
-
-        <div class="muted" style="text-align:center;">
-          Type : <span id="typeLabel" class="pill">libre</span>
-          <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
-        </div>
-
-        <div class="grid grid2">
-          <button class="typeBtn" data-type="libre">📸 Libre</button>
-          <button class="typeBtn" data-type="defi">🎯 Défi</button>
-        </div>
-        <button class="typeBtn" data-type="codegame">🔐 Code Game</button>
-
-        <div class="camBox">
-          <video id="camVideo" playsinline autoplay muted></video>
-          <canvas id="camCanvas" style="display:none;"></canvas>
-          <div id="flash" class="flash"></div>
-        </div>
-
-        <div class="grid grid2">
-          <button id="startCamBtn">🎥 Activer la caméra</button>
-          <button id="switchCamBtn" class="btn-subtle">
-            <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
-          </button>
-        </div>
-
-        <div class="grid grid2">
-          <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
-          <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
-        </div>
-
-        <div id="sendStatus" class="muted" style="text-align:center;"></div>
-
-        <button id="backFromPhoto" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- DEFIS -->
-      <section id="screenDefis" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">🎯 Défis photos</p>
-        <p class="muted" style="text-align:center;margin:0;">Validez un défi en prenant une photo.</p>
-
-        <div class="progressWrap">
-          <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
-          <div id="defisPercent" class="progressLabel">0%</div>
-          <div id="defisSub" class="progressSub">0 / 0 défis</div>
-        </div>
-
-        <div id="defisList" class="grid"></div>
-
-        <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
-        <button id="backFromDefis" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- CODE GAME (✅ règles + chiffres révélés, ❌ plus de "code final") -->
-      <section id="screenCodeGame" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">🔐 Code Game</p>
-
-        <div class="menuBlock">
-          <p class="menuTitle">Règles &amp; récompense</p>
-          <div id="codeRules" class="menuText"></div>
-        </div>
-
-        <div class="progressWrap">
-          <div class="progressBar"><div id="codeFill" class="progressFill"></div></div>
-          <div id="codePercent" class="progressLabel">0%</div>
-          <div id="codeSub" class="progressSub">0 / 0 énigmes</div>
-        </div>
-
-        <div id="enigmesList" class="grid"></div>
-
-        <button id="resetCodeBtn" class="btn-subtle">Réinitialiser le Code Game</button>
-        <button id="backFromCode" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
-      <!-- BOUCHONS -->
-      <section id="screenBouchons" data-screen class="grid">
-        <p style="text-align:center;margin:0;font-weight:900;">🍾 Combien de bouchons ?</p>
-        <p class="muted" style="text-align:center;margin:0;">Trouve le bon nombre. Le jeu se bloque dès qu’un gagnant trouve.</p>
-
-        <div class="item">
-          <div class="itemTitle">Ta proposition</div>
-          <div class="grid grid2">
-            <input id="bGuess" type="number" min="0" step="1">
-            <button id="bSubmit">Valider</button>
-          </div>
-
-          <div id="bHint" class="pill" style="text-align:center; display:none;"></div>
-
-          <div style="margin-top:10px;">
-            <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:900; color:rgba(95,122,104,0.75);">
-              <span>🧊 Loin</span>
-              <span>🔥 Proche</span>
-            </div>
-            <div style="margin-top:6px; height:14px; border-radius:999px; overflow:hidden; border:1px solid var(--border); background:rgba(255,255,255,0.45);">
-              <div id="bThermoFill" style="height:100%; width:0%; border-radius:999px; transition: width 260ms ease, background-color 260ms ease;"></div>
-            </div>
-            <div id="bThermoText" class="muted tiny" style="text-align:center; margin-top:6px;"></div>
-          </div>
-
-          <div id="bStatus" class="muted tiny" style="margin-top:8px;"></div>
-
-          <button id="bAdminReset" class="btn-subtle">🔁 Réinitialiser le jeu (ADMIN)</button>
-        </div>
-
-        <div class="item">
-          <div class="itemTitle">État du jeu</div>
-          <div id="bLockInfo" class="muted">Chargement…</div>
-        </div>
-
-        <button id="backFromBouchons" class="btn-subtle">⬅️ Retour</button>
-      </section>
-
+  <div id="viewer" class="viewer">
+    <div class="viewerTop">
+      <button id="closeViewer" class="btn-subtle" style="max-width:160px;">✖ Fermer</button>
+      <div id="viewerName" class="pill" style="max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+    </div>
+    <img id="viewerImg" class="viewerImg" alt="Photo">
+    <div style="max-width:980px;margin:10px auto 0;display:flex;gap:10px;justify-content:space-between;">
+      <button id="prevPhoto" class="btn-subtle" style="max-width:160px;">◀</button>
+      <button id="nextPhoto" class="btn-subtle" style="max-width:160px;">▶</button>
     </div>
   </div>
 
+  <section id="screenGames" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🎉 Jeux &amp; Photos</p>
+    <button id="goPhoto">📸 Prendre une photo</button>
+    <button id="goDefis">🎯 Défis photos</button>
+    <button id="goCodeGame">🔐 Code Game</button>
+    <button id="goFableDept">🗺️ Fable des départements</button>
+    <button id="goBouchons">🍾 Combien de bouchons ?</button>
+    <button id="backFromGames" class="btn-subtle">⬅️ Retour</button>
+  </section>
+
+  <section id="screenPhoto" data-screen class="grid">
+    <p style="margin:0;text-align:center;font-weight:900;">Photobooth</p>
+    <div class="muted" style="text-align:center;">
+      Type : <span id="typeLabel" class="pill">libre</span>
+      <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span>
+    </div>
+    <div class="grid grid2">
+      <button class="typeBtn" data-type="libre">📸 Libre</button>
+      <button class="typeBtn" data-type="defi">🎯 Défi</button>
+    </div>
+    <button class="typeBtn" data-type="codegame">🔐 Code Game</button>
+
+    <div class="camBox">
+      <video id="camVideo" playsinline autoplay muted></video>
+      <canvas id="camCanvas" style="display:none;"></canvas>
+      <div id="flash" class="flash"></div>
+    </div>
+
+    <div class="grid grid2">
+      <button id="startCamBtn">🎥 Activer la caméra</button>
+      <button id="switchCamBtn" class="btn-subtle">
+        <span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span>
+      </button>
+    </div>
+
+    <div class="grid grid2">
+      <button id="takePhotoBtn" disabled>📸 Prendre la photo</button>
+      <button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button>
+    </div>
+
+    <div id="sendStatus" class="muted" style="text-align:center;"></div>
+    <button id="backFromPhoto" class="btn-subtle">⬅️ Retour</button>
+  </section>
+
+  <section id="screenDefis" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🎯 Défis photos</p>
+    <p class="muted" style="text-align:center;margin:0;">Validez un défi en prenant une photo.</p>
+    <div class="progressWrap">
+      <div class="progressBar"><div id="defisFill" class="progressFill"></div></div>
+      <div id="defisPercent" class="progressLabel">0%</div>
+      <div id="defisSub" class="progressSub">0 / 0 défis</div>
+    </div>
+    <div id="defisList" class="grid"></div>
+    <button id="resetDefisBtn" class="btn-subtle">Réinitialiser les défis</button>
+    <button id="backFromDefis" class="btn-subtle">⬅️ Retour</button>
+  </section>
+
+  <section id="screenCodeGame" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🔐 Code Game</p>
+    <div class="menuBlock"><p class="menuTitle">Règles &amp; récompense</p><div id="codeRules" class="menuText"></div></div>
+    <div class="progressWrap">
+      <div class="progressBar"><div id="codeFill" class="progressFill"></div></div>
+      <div id="codePercent" class="progressLabel">0%</div>
+      <div id="codeSub" class="progressSub">0 / 0 énigmes</div>
+    </div>
+    <div id="enigmesList" class="grid"></div>
+    <button id="resetCodeBtn" class="btn-subtle">Réinitialiser le Code Game</button>
+    <button id="backFromCode" class="btn-subtle">⬅️ Retour</button>
+  </section>
+
+  <section id="screenFableDept" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🗺️ La fable des départements</p>
+    <div class="menuBlock"><p class="menuTitle">Règles &amp; récompense</p><div id="fableRules" class="menuText"></div></div>
+    <div class="progressWrap">
+      <div class="progressBar"><div id="fableFill" class="progressFill"></div></div>
+      <div id="fablePercent" class="progressLabel">0%</div>
+      <div id="fableSub" class="progressSub">0 / 0 mots</div>
+    </div>
+    <div class="menuBlock"><p class="menuTitle">Histoire</p><div id="fableText" class="menuText"></div></div>
+    <div class="item">
+      <div class="itemTitle">Trou actuel</div>
+      <div id="fablePrompt" class="muted">—</div>
+      <div class="grid grid2" style="margin-top:10px;">
+        <input id="fableInput" type="text" placeholder="Ta réponse…">
+        <button id="fableValidate">Valider</button>
+      </div>
+      <div id="fableStatus" class="muted tiny" style="margin-top:8px;"></div>
+      <button id="fableNext" class="btn-subtle" style="margin-top:10px;">Passer au trou suivant</button>
+    </div>
+    <button id="resetFableBtn" class="btn-subtle">Réinitialiser la fable</button>
+    <button id="backFromFableDept" class="btn-subtle">⬅️ Retour</button>
+  </section>
+
+  <section id="screenBouchons" data-screen class="grid">
+    <p style="text-align:center;margin:0;font-weight:900;">🍾 Combien de bouchons ?</p>
+    <p class="muted" style="text-align:center;margin:0;">Trouve le bon nombre. Le jeu se bloque dès qu’un gagnant trouve.</p>
+
+    <div class="item">
+      <div class="itemTitle">Ta proposition</div>
+      <div class="grid grid2">
+        <input id="bGuess" type="number" min="0" step="1">
+        <button id="bSubmit">Valider</button>
+      </div>
+
+      <div id="bHint" class="pill" style="text-align:center;display:none;"></div>
+
+      <div style="margin-top:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:rgba(95,122,104,.75);">
+          <span>🧊 Loin</span><span>🔥 Proche</span>
+        </div>
+        <div style="margin-top:6px;height:14px;border-radius:999px;overflow:hidden;border:1px solid var(--border);background:rgba(255,255,255,.45);">
+          <div id="bThermoFill" style="height:100%;width:0%;border-radius:999px;transition:width 260ms ease, background-color 260ms ease;"></div>
+        </div>
+        <div id="bThermoText" class="muted tiny" style="text-align:center;margin-top:6px;"></div>
+      </div>
+
+      <div id="bStatus" class="muted tiny" style="margin-top:8px;"></div>
+      <button id="bAdminReset" class="btn-subtle">🔁 Réinitialiser le jeu (ADMIN)</button>
+    </div>
+
+    <div class="item">
+      <div class="itemTitle">État du jeu</div>
+      <div id="bLockInfo" class="muted">Chargement…</div>
+    </div>
+
+    <button id="backFromBouchons" class="btn-subtle">⬅️ Retour</button>
+  </section>
+
+</div></div>
+
 <script>
 /* ================= CONFIG ================= */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRnt-PAf31mmcNUWThZQHyMgW7Fwl94LY-Sn3iiUOnZjBJiIVCidodBFt3T0wVAZizNQ/exec";
-const DRIVE_ALBUM_FOLDER_ID = "1tABmop6f2NpJzeTJH4Xs8zesvax_h-eI";
+const APPS_SCRIPT_URL = "PASTE_YOUR_SCRIPT_URL_HERE";
+const DRIVE_ALBUM_FOLDER_ID = "PASTE_YOUR_FOLDER_ID_HERE";
 
-/* ✅ Menu (tu modifies ici) */
+/* Menu (modifie ici) */
 const MENU_ENTREE  = `À compléter…`;
 const MENU_PLAT    = `À compléter…`;
 const MENU_FROMAGE = `À compléter…`;
 
-/* ✅ Code Game – règles & récompense (tu modifies ici) */
+/* Règles (modifie ici) */
 const CODEGAME_RULES = `RÈGLES :
-- Résous les énigmes pour révéler un chiffre à chaque fois.
+- Résous les énigmes pour révéler un chiffre.
 - À la fin, assemble les chiffres pour ouvrir le cadenas.
 
 RÉCOMPENSE :
 🎁 À compléter…`;
 
+const FABLE_RULES = `RÈGLES :
+- Complète les trous de l’histoire avec le bon département.
+- Accents non obligatoires.
+- Tirets/espaces acceptés.
+
+RÉCOMPENSE :
+🎁 À compléter…`;
+
 /* Tables */
-const TABLES = [
-  { id: 1, name: "Table 1" }, { id: 2, name: "Table 2" }, { id: 3, name: "Table 3" },
-  { id: 4, name: "Table 4" }, { id: 5, name: "Table 5" }, { id: 6, name: "Table 6" },
-  { id: 7, name: "Table 7" }, { id: 8, name: "Table 8" }, { id: 9, name: "Table 9" },
-];
+const TABLES = Array.from({length:9}, (_,i)=>({id:i+1, name:`Table ${i+1}`}));
 
 /* Défis */
 const DEFIS = [
-  { id: "d1", title: "Tout le monde saute", desc: "Photo où tout le monde saute en même temps." },
-  { id: "d2", title: "La plus drôle", desc: "Faites la photo la plus drôle possible." },
-  { id: "d3", title: "Couple (ou duo)", desc: "Photo en duo, pose stylée." },
-  { id: "d4", title: "Objet rouge", desc: "Un objet rouge bien visible dans l’image." },
-  { id: "d5", title: "Sans sourire", desc: "Tout le monde sérieux 😐" },
+  { id:"d1", title:"Tout le monde saute", desc:"Photo où tout le monde saute en même temps." },
+  { id:"d2", title:"La plus drôle", desc:"Faites la photo la plus drôle possible." },
+  { id:"d3", title:"Couple (ou duo)", desc:"Photo en duo, pose stylée." },
+  { id:"d4", title:"Objet rouge", desc:"Un objet rouge bien visible dans l’image." },
+  { id:"d5", title:"Sans sourire", desc:"Tout le monde sérieux 😐" },
 ];
 
-/* ✅ Code Game : chaque énigme révèle un chiffre */
+/* Code Game */
 const ENIGMES = [
-  { id: "e1", q: "Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a: "eponge", digit: "9" },
-  { id: "e2", q: "Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a: "secret", digit: "0" },
-  { id: "e3", q: "Je monte et je descends sans bouger. Qui suis-je ?", a: "escalier", digit: "4" },
-  { id: "e4", q: "j'ai eu que 5 de moyen en Français. Qui suis-je ?", a: "nolan", digit: "2" }
+  { id:"e1", q:"Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a:"eponge", digit:"3" },
+  { id:"e2", q:"Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a:"secret", digit:"2" },
+  { id:"e3", q:"Je monte et je descends sans bouger. Qui suis-je ?", a:"escalier", digit:"6" },
+  { id:"e4", q:"j'ai eu que 5 de moyen en Français. Qui suis-je ?", a:"nolan", digit:"9" },
 ];
+
+/* Fable des départements */
+const FABLE_WORDS = ["CALVADOS","MANCHE","LOIRE","LOIR-ET-CHER","SAVOIE","DOUBS","VIENNE","GARD","NORD","AVEYRON","GIRONDE","AUBE","PAS-DE-CALAIS","ARDENNES","CANTAL","HERAULT","CORSE","EURE","SOMME","CHER","SEINE","AISNE","ALLIER","BAS-RHIN","JURA"];
+const FABLE_TEXT_TEMPLATE =
+`J'étais assis au bar en train de boire un {0} tandis que je regardais un
+clochard faire la {1}.
+Une dame vint s'asseoir à côté de moi ; elle portait un manteau de {2} et j'en
+fus impressionné car je sais que le {3}.
+Nous engageâmes la conversation, et ce qui me charma chez elle furent {4}
+et ses yeux {5}.
+Au bout de quelques minutes, elle me proposa de monter chez elle. Il fallait donc
+que je {6} et j'acceptai sans crier {7}.
+Elle ne perdit pas le {8}. Nous entrâmes dans sa chambre, et à peine arrivés,
+elle se déshabilla ; ses seins étaient magnifiques, elle les {9} !!!
+En fait cette fille était vraiment {10} et l'on s'amusa jusqu'à l'{11}. 
+Là, il ne s'agit {12} !
+L'exercice ça CREUSE, aussi, au petit matin, je lui proposai du jambon des
+{13}, du saucisson et du {14}.
+Elle fut si contente de ce petit déjeuner, qu'elle m'appela son {15}.
+Où l'histoire se {16}, c'est que lorsqu'on eut fini, un peu fatigués, elle
+regarda l'{17} et me demanda une {18} que je refusai de payer, trouvant
+que c'était trop {19}.
+Elle me fit alors une terrible {20} et je vis dans ses yeux beaucoup de
+{21}.
+A cet instant, j'aurais bien eu besoin d'un {22} car elle me lança son sac au
+visage et me donna un coup de pied dans le {23}.
+Tout finit par s'arranger, mais avec des histoires pareilles, elle {24} qu'on ne
+l'y prendrait plus.`;
 
 /* LocalStorage */
-const LS = {
-  tableId: "bday_tableId",
-  photoType: "bday_photoType",
-  uploading: "bday_uploading",
-  count: "bday_photo_count",
-  camMode: "bday_cam_mode",
-  mission: "bday_mission",
-  defisDone: "bday_defis_done",
-  codeOk: "bday_code_ok",
-};
+const LS={tableId:"bday_tableId",photoType:"bday_photoType",uploading:"bday_uploading",count:"bday_photo_count",camMode:"bday_cam_mode",mission:"bday_mission",defisDone:"bday_defis_done",codeOk:"bday_code_ok",fableOk:"bday_fable_dept_ok"};
+const $=id=>document.getElementById(id);
+const screens=()=>Array.from(document.querySelectorAll("[data-screen]"));
 
-const $ = (id) => document.getElementById(id);
-
-/* ================= NAV ================= */
-const screenEls = () => Array.from(document.querySelectorAll("[data-screen]"));
 function setScreen(id){
-  for(const el of screenEls()) el.style.display = "none";
-  const target = $(id);
-  if(!target) return;
-  target.style.display = "grid";
-  target.classList.add("fade-in");
-  setTimeout(() => target.classList.remove("fade-in"), 260);
+  for(const el of screens()) el.style.display="none";
+  const t=$(id); if(!t) return;
+  t.style.display="grid"; t.classList.add("fade-in");
+  setTimeout(()=>t.classList.remove("fade-in"),260);
 }
 
-/* ================= COMMON ================= */
-function getTableId(){ return Number(localStorage.getItem(LS.tableId) || 0); }
-function setTableId(v){ localStorage.setItem(LS.tableId, String(v)); }
-
-function getCount(){ return Number(localStorage.getItem(LS.count) || 0); }
-function incCount(){ localStorage.setItem(LS.count, String(getCount() + 1)); updateCountUI(); }
-function updateCountUI(){ $("countPill").textContent = `📷 Photos envoyées : ${getCount()}`; }
+const getTableId=()=>Number(localStorage.getItem(LS.tableId)||0);
+const setTableId=v=>localStorage.setItem(LS.tableId,String(v));
+const getCount=()=>Number(localStorage.getItem(LS.count)||0);
+const incCount=()=>{localStorage.setItem(LS.count,String(getCount()+1)); updateCountUI();};
+const updateCountUI=()=>{$("countPill").textContent=`📷 Photos envoyées : ${getCount()}`;};
 
 function updateBadge(){
-  const id = getTableId();
-  const badge = $("tableBadge");
-  const reset = $("resetBtn");
-  if(!id){ badge.style.display="none"; reset.style.display="none"; return; }
-  const t = TABLES.find(x => x.id === id);
-  badge.textContent = t ? `🪑 ${t.name}` : `🪑 Table ${id}`;
-  badge.style.display="inline-block";
-  reset.style.display="inline-block";
+  const id=getTableId();
+  const badge=$("tableBadge"), reset=$("resetBtn");
+  if(!id){badge.style.display="none";reset.style.display="none";return;}
+  badge.textContent=`🪑 Table ${id}`; badge.style.display="inline-block"; reset.style.display="inline-block";
 }
 
 function renderMenu(){
-  $("menuEntree").textContent  = MENU_ENTREE;
-  $("menuPlat").textContent    = MENU_PLAT;
-  $("menuFromage").textContent = MENU_FROMAGE;
+  $("menuEntree").textContent=MENU_ENTREE;
+  $("menuPlat").textContent=MENU_PLAT;
+  $("menuFromage").textContent=MENU_FROMAGE;
 }
 
-/* ================= TABLE ================= */
 function renderTables(){
-  const wrap = $("tableButtons");
-  wrap.innerHTML = "";
-  TABLES.forEach(t => {
-    const btn = document.createElement("button");
-    btn.textContent = t.name;
-    btn.onclick = () => {
-      btn.classList.add("picked");
-      setTableId(t.id);
-      updateBadge();
-      setTimeout(() => setScreen("screenHome"), 220);
-    };
-    wrap.appendChild(btn);
+  const wrap=$("tableButtons"); wrap.innerHTML="";
+  TABLES.forEach(t=>{
+    const b=document.createElement("button");
+    b.textContent=t.name;
+    b.onclick=()=>{b.classList.add("picked"); setTableId(t.id); updateBadge(); setTimeout(()=>setScreen("screenHome"),220);};
+    wrap.appendChild(b);
   });
 }
 
-/* ================= PROGRESS ================= */
 function setProgress(fillEl, percentEl, subEl, done, total, label){
-  const pct = total ? Math.round((done/total)*100) : 0;
-  fillEl.style.width = pct + "%";
-  percentEl.textContent = pct + "%";
-  subEl.textContent = `${done} / ${total} ${label}`;
+  const pct=total?Math.round(done/total*100):0;
+  fillEl.style.width=pct+"%";
+  percentEl.textContent=pct+"%";
+  subEl.textContent=`${done} / ${total} ${label}`;
 }
+function normalize(s){return (s||"").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");}
 
-/* ================= DEFIS ================= */
-function getDefisDone(){ try { return JSON.parse(localStorage.getItem(LS.defisDone) || "{}"); } catch { return {}; } }
-function setDefisDone(obj){ localStorage.setItem(LS.defisDone, JSON.stringify(obj)); }
-function markDefiDone(id){ const d = getDefisDone(); d[id] = true; setDefisDone(d); }
-function resetDefis(){ localStorage.removeItem(LS.defisDone); }
+function getDefisDone(){try{return JSON.parse(localStorage.getItem(LS.defisDone)||"{}");}catch{return {};}}
+function setDefisDone(o){localStorage.setItem(LS.defisDone,JSON.stringify(o));}
+function markDefiDone(id){const d=getDefisDone(); d[id]=true; setDefisDone(d);}
+function resetDefis(){localStorage.removeItem(LS.defisDone);}
 
-function setMission(obj){ localStorage.setItem(LS.mission, JSON.stringify(obj || null)); updateMissionPill(); }
-function getMission(){ try { return JSON.parse(localStorage.getItem(LS.mission) || "null"); } catch { return null; } }
-function clearMission(){ localStorage.removeItem(LS.mission); updateMissionPill(); }
-
+function setMission(o){localStorage.setItem(LS.mission,JSON.stringify(o||null)); updateMissionPill();}
+function getMission(){try{return JSON.parse(localStorage.getItem(LS.mission)||"null");}catch{return null;}}
+function clearMission(){localStorage.removeItem(LS.mission); updateMissionPill();}
 function updateMissionPill(){
-  const m = getMission();
-  const pill = $("missionPill");
-  if(m && m.title){
-    pill.style.display = "inline-block";
-    pill.textContent = `🎯 ${m.title}`;
-  } else {
-    pill.style.display = "none";
-    pill.textContent = "";
-  }
+  const m=getMission(), pill=$("missionPill");
+  if(m&&m.title){pill.style.display="inline-block"; pill.textContent=`🎯 ${m.title}`;}
+  else{pill.style.display="none"; pill.textContent="";}
 }
-
-function setPhotoType(v){ localStorage.setItem(LS.photoType, v); }
-function getPhotoType(){ return localStorage.getItem(LS.photoType) || "libre"; }
-function setTypeUI(t){
-  setPhotoType(t);
-  $("typeLabel").textContent = (t === "codegame") ? "code game" : t;
-}
+function setPhotoType(v){localStorage.setItem(LS.photoType,v);}
+function getPhotoType(){return localStorage.getItem(LS.photoType)||"libre";}
+function setTypeUI(t){setPhotoType(t); $("typeLabel").textContent=(t==="codegame")?"code game":t;}
 
 function renderDefis(){
-  const done = getDefisDone();
-  const wrap = $("defisList");
-  wrap.innerHTML = "";
-
-  const nbDone = DEFIS.filter(d => done[d.id]).length;
-  setProgress($("defisFill"), $("defisPercent"), $("defisSub"), nbDone, DEFIS.length, "défis");
-
-  DEFIS.forEach(d => {
-    const isDone = !!done[d.id];
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
+  const done=getDefisDone(); const wrap=$("defisList"); wrap.innerHTML="";
+  const nbDone=DEFIS.filter(d=>done[d.id]).length;
+  setProgress($("defisFill"),$("defisPercent"),$("defisSub"),nbDone,DEFIS.length,"défis");
+  DEFIS.forEach(d=>{
+    const isDone=!!done[d.id];
+    const div=document.createElement("div"); div.className="item";
+    div.innerHTML=`
       <div class="itemRow">
         <div>
-          <div class="itemTitle">${isDone ? "✅" : "⏳"} ${d.title}</div>
+          <div class="itemTitle">${isDone?"✅":"⏳"} ${d.title}</div>
           <div class="itemDesc">${d.desc}</div>
         </div>
         <div style="min-width:160px;">
-          <button class="${isDone ? "btn-subtle" : ""}">${isDone ? "Reprendre" : "📸 Faire ce défi"}</button>
+          <button class="${isDone?"btn-subtle":""}">${isDone?"Reprendre":"📸 Faire ce défi"}</button>
         </div>
       </div>
-      <div class="muted tiny">${isDone ? "Défi validé" : "Appuie pour ouvrir l’appareil photo"}</div>
-    `;
-    div.querySelector("button").onclick = () => {
+      <div class="muted tiny">${isDone?"Défi validé":"Appuie pour ouvrir l’appareil photo"}</div>`;
+    div.querySelector("button").onclick=()=>{
       setTypeUI("defi");
-      setMission({ kind:"defi", id:d.id, title:d.title });
+      setMission({kind:"defi", id:d.id, title:d.title});
       setScreen("screenPhoto");
     };
     wrap.appendChild(div);
   });
 }
 
-/* ================= CODE GAME ================= */
-function normalize(s){
-  return (s||"").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
-}
-function getCodeOk(){ try { return JSON.parse(localStorage.getItem(LS.codeOk) || "{}"); } catch { return {}; } }
-function setCodeOk(obj){ localStorage.setItem(LS.codeOk, JSON.stringify(obj)); }
-function resetCodeGame(){ localStorage.removeItem(LS.codeOk); }
+function getCodeOk(){try{return JSON.parse(localStorage.getItem(LS.codeOk)||"{}");}catch{return {};}}
+function setCodeOk(o){localStorage.setItem(LS.codeOk,JSON.stringify(o));}
+function resetCodeGame(){localStorage.removeItem(LS.codeOk);}
 
 function renderCodeGame(){
-  $("codeRules").textContent = CODEGAME_RULES;
-
-  const ok = getCodeOk();
-  const wrap = $("enigmesList");
-  wrap.innerHTML = "";
-
-  const nbOk = ENIGMES.filter(e => ok[e.id]).length;
-  setProgress($("codeFill"), $("codePercent"), $("codeSub"), nbOk, ENIGMES.length, "énigmes");
-
-  ENIGMES.forEach(e => {
-    const isOk = !!ok[e.id];
-    const div = document.createElement("div");
-    div.className = "item";
-
-    div.innerHTML = `
-      <div class="itemTitle">${isOk ? "✅" : "🔐"} Énigme</div>
+  $("codeRules").textContent=CODEGAME_RULES;
+  const ok=getCodeOk(); const wrap=$("enigmesList"); wrap.innerHTML="";
+  const nbOk=ENIGMES.filter(e=>ok[e.id]).length;
+  setProgress($("codeFill"),$("codePercent"),$("codeSub"),nbOk,ENIGMES.length,"énigmes");
+  ENIGMES.forEach(e=>{
+    const isOk=!!ok[e.id];
+    const div=document.createElement("div"); div.className="item";
+    div.innerHTML=`
+      <div class="itemTitle">${isOk?"✅":"🔐"} Énigme</div>
       <div class="itemDesc">${e.q}</div>
-
       <div class="grid grid2">
-        <input type="text" id="ans_${e.id}" placeholder="Ta réponse…" ${isOk ? "disabled" : ""}>
-        <button id="btn_${e.id}" class="${isOk ? "btn-subtle" : ""}" ${isOk ? "disabled" : ""}>Valider</button>
+        <input type="text" id="ans_${e.id}" placeholder="Ta réponse…" ${isOk?"disabled":""}>
+        <button id="btn_${e.id}" class="${isOk?"btn-subtle":""}" ${isOk?"disabled":""}>Valider</button>
       </div>
-
-      <div class="muted tiny" id="st_${e.id}">
-        ${isOk ? `🎉 Chiffre révélé : <span class="ok">${e.digit}</span>` : ""}
-      </div>
-    `;
+      <div class="muted tiny" id="st_${e.id}">${isOk?`🎉 Chiffre révélé : <span class="ok">${e.digit}</span>`:""}</div>`;
     wrap.appendChild(div);
-
     if(!isOk){
-      div.querySelector(`#btn_${e.id}`).onclick = () => {
-        const input = div.querySelector(`#ans_${e.id}`);
-        const st = div.querySelector(`#st_${e.id}`);
-
-        if(normalize(input.value) === normalize(e.a)){
-          const next = getCodeOk();
-          next[e.id] = true;
-          setCodeOk(next);
-
-          st.innerHTML = `🎉 Chiffre révélé : <span class="ok">${e.digit}</span>`;
+      div.querySelector(`#btn_${e.id}`).onclick=()=>{
+        const v=div.querySelector(`#ans_${e.id}`).value;
+        const st=div.querySelector(`#st_${e.id}`);
+        if(normalize(v)===normalize(e.a)){
+          const next=getCodeOk(); next[e.id]=true; setCodeOk(next);
+          st.innerHTML=`🎉 Chiffre révélé : <span class="ok">${e.digit}</span>`;
           renderCodeGame();
-        } else {
-          st.innerHTML = `<span class="err">❌ Mauvaise réponse</span>`;
-        }
+        }else st.innerHTML=`<span class="err">❌ Mauvaise réponse</span>`;
       };
     }
   });
 }
 
-/* ================= PHOTO ================= */
-let camStream = null;
-let capturedDataUrl = null;
-let cameraMode = localStorage.getItem(LS.camMode) || "environment";
-
-function updateSwitchCamUI(){
-  $("switchCamText").textContent = (cameraMode === "user") ? "Caméra arrière" : "Mode selfie";
-}
-function spinFlipIcon(){
-  $("flipIcon").classList.toggle("spin");
-  setTimeout(() => $("flipIcon").classList.toggle("spin"), 280);
-}
-function flash(){
-  $("flash").classList.add("on");
-  setTimeout(() => $("flash").classList.remove("on"), 140);
-}
+/* Camera */
+let camStream=null, capturedDataUrl=null;
+let cameraMode=localStorage.getItem(LS.camMode)||"environment";
+function updateSwitchCamUI(){ $("switchCamText").textContent=(cameraMode==="user")?"Caméra arrière":"Mode selfie"; }
+function spinFlipIcon(){ $("flipIcon").classList.toggle("spin"); setTimeout(()=>$("flipIcon").classList.toggle("spin"),280); }
+function flash(){ $("flash").classList.add("on"); setTimeout(()=>$("flash").classList.remove("on"),140); }
 
 async function startCamera(){
   try{
-    $("sendStatus").textContent = "🎥 Activation caméra…";
-    if (camStream) camStream.getTracks().forEach(tr => tr.stop());
-    camStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: cameraMode, width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: false
-    });
-    $("camVideo").srcObject = camStream;
-    $("takePhotoBtn").disabled = false;
-    $("sendStatus").textContent = "";
-  } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Caméra refusée. Autorise-la via le cadenas 🔒.</span>`;
+    $("sendStatus").textContent="🎥 Activation caméra…";
+    if(camStream) camStream.getTracks().forEach(t=>t.stop());
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:cameraMode,width:{ideal:1280},height:{ideal:720}},audio:false});
+    $("camVideo").srcObject=camStream;
+    $("takePhotoBtn").disabled=false;
+    $("sendStatus").textContent="";
+  }catch(e){
+    $("sendStatus").innerHTML=`<span class="err">❌ Caméra refusée. Autorise-la via le cadenas 🔒.</span>`;
   }
 }
-function stopCamera(){
-  if(camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; }
-  $("camVideo").srcObject = null;
-  $("takePhotoBtn").disabled = true;
-}
+function stopCamera(){ if(camStream){camStream.getTracks().forEach(t=>t.stop()); camStream=null;} $("camVideo").srcObject=null; $("takePhotoBtn").disabled=true; }
 function takePhoto(){
-  const video = $("camVideo");
-  const canvas = $("camCanvas");
-  const w = video.videoWidth || 1280;
-  const h = video.videoHeight || 720;
-  canvas.width = w; canvas.height = h;
-  canvas.getContext("2d").drawImage(video, 0, 0, w, h);
-  capturedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
-  flash();
-  $("sendStatus").innerHTML = `<span class="muted">📤 Envoi automatique…</span>`;
-  $("retakeBtn").style.display = "block";
-  setTimeout(sendPhotoAuto, 200);
+  const v=$("camVideo"), c=$("camCanvas");
+  const w=v.videoWidth||1280, h=v.videoHeight||720;
+  c.width=w; c.height=h; c.getContext("2d").drawImage(v,0,0,w,h);
+  capturedDataUrl=c.toDataURL("image/jpeg",.8);
+  flash(); $("sendStatus").innerHTML=`<span class="muted">📤 Envoi automatique…</span>`;
+  $("retakeBtn").style.display="block";
+  setTimeout(sendPhotoAuto,200);
 }
-
 async function sendPhotoAuto(){
-  const tableId = getTableId();
-  if(!tableId){
-    $("sendStatus").innerHTML = `<span class="err">Choisis d’abord une table.</span>`;
-    setScreen("screenTable");
-    return;
-  }
+  const tableId=getTableId();
+  if(!tableId){ $("sendStatus").innerHTML=`<span class="err">Choisis d’abord une table.</span>`; setScreen("screenTable"); return; }
   if(!capturedDataUrl) return;
-
-  if (localStorage.getItem(LS.uploading) === "1") return;
-  localStorage.setItem(LS.uploading, "1");
-
-  const mission = getMission();
-
+  if(localStorage.getItem(LS.uploading)==="1") return;
+  localStorage.setItem(LS.uploading,"1");
+  const mission=getMission();
   try{
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        tableId,
-        type: getPhotoType(),
-        filename: `table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,
-        dataUrl: capturedDataUrl,
-        mission: mission || null,
-      }),
+    await fetch(APPS_SCRIPT_URL,{
+      method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({tableId,type:getPhotoType(),filename:`table${tableId}_${getPhotoType()}_${Date.now()}.jpg`,dataUrl:capturedDataUrl,mission:mission||null})
     });
-
     incCount();
-
-    if(mission && mission.kind === "defi" && mission.id){
-      markDefiDone(mission.id);
-    }
-
-    $("sendStatus").innerHTML = `<span class="ok">✅ Photo envoyée 🎉</span>`;
-    capturedDataUrl = null;
-    $("retakeBtn").style.display = "none";
-    clearMission();
-
-    setTimeout(() => setScreen("screenGames"), 900);
-
-  } catch(e){
-    $("sendStatus").innerHTML = `<span class="err">❌ Erreur réseau.</span>`;
-  } finally {
-    setTimeout(() => localStorage.removeItem(LS.uploading), 800);
+    if(mission&&mission.kind==="defi"&&mission.id) markDefiDone(mission.id);
+    $("sendStatus").innerHTML=`<span class="ok">✅ Photo envoyée 🎉</span>`;
+    capturedDataUrl=null; $("retakeBtn").style.display="none"; clearMission();
+    setTimeout(()=>setScreen("screenGames"),900);
+  }catch(e){
+    $("sendStatus").innerHTML=`<span class="err">❌ Erreur réseau.</span>`;
+  }finally{
+    setTimeout(()=>localStorage.removeItem(LS.uploading),800);
   }
 }
 
-/* ================= ALBUM INTERNE + VIEWER (swipe) ================= */
-let albumItems = [];
-let viewerIndex = -1;
-
+/* Album */
+let albumItems=[], viewerIndex=-1;
 async function loadGallery(){
-  $("galleryStatus").textContent = "Chargement des photos…";
-  $("gallery").innerHTML = "";
-  albumItems = [];
-
+  $("galleryStatus").textContent="Chargement des photos…";
+  $("gallery").innerHTML=""; albumItems=[];
   try{
-    const url = `${APPS_SCRIPT_URL}?action=album_list&folderId=${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}&t=${Date.now()}`;
-    const res = await fetch(url, { method:"GET", cache:"no-store" });
-    const data = await res.json();
-
-    if(!data.ok){
-      $("galleryStatus").innerHTML = `<span class="err">${data.message || "Erreur galerie"}</span>`;
-      return;
-    }
-
-    const items = Array.isArray(data.items) ? data.items : [];
-    albumItems = items;
-
-    if(items.length === 0){
-      $("galleryStatus").textContent = "Aucune photo pour le moment.";
-      return;
-    }
-
-    $("galleryStatus").textContent = `${items.length} photo(s)`;
-
-    items.forEach((it) => {
-      const img = document.createElement("img");
-      img.className = "thumb";
-      img.loading = "lazy";
-      img.src = it.thumbUrl || it.imgUrl;
-      img.alt = it.name || "photo";
-      img.onclick = () => openViewer(it);
+    const url=`${APPS_SCRIPT_URL}?action=album_list&folderId=${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}&t=${Date.now()}`;
+    const res=await fetch(url,{method:"GET",cache:"no-store"});
+    const data=await res.json();
+    if(!data.ok){ $("galleryStatus").innerHTML=`<span class="err">${data.message||"Erreur galerie"}</span>`; return; }
+    albumItems=Array.isArray(data.items)?data.items:[];
+    if(albumItems.length===0){ $("galleryStatus").textContent="Aucune photo pour le moment."; return; }
+    $("galleryStatus").textContent=`${albumItems.length} photo(s)`;
+    albumItems.forEach(it=>{
+      const img=document.createElement("img");
+      img.className="thumb"; img.loading="lazy"; img.src=it.thumbUrl||it.imgUrl; img.alt=it.name||"photo";
+      img.onclick=()=>openViewer(it);
       $("gallery").appendChild(img);
     });
-
-  } catch(e){
-    $("galleryStatus").innerHTML = `<span class="err">Erreur de chargement (droits Drive ?)</span>`;
+  }catch(e){
+    $("galleryStatus").innerHTML=`<span class="err">Erreur de chargement (droits Drive ?)</span>`;
   }
 }
-
 function openViewer(it){
-  viewerIndex = albumItems.findIndex(x => x.id === it.id);
-  if(viewerIndex < 0) viewerIndex = 0;
-  renderViewer();
-  $("viewer").style.display = "block";
+  viewerIndex=albumItems.findIndex(x=>x.id===it.id); if(viewerIndex<0) viewerIndex=0;
+  renderViewer(); $("viewer").style.display="block";
 }
-
 function renderViewer(){
-  const it = albumItems[viewerIndex];
-  if(!it) return;
-  $("viewerImg").src = it.fullUrl || it.imgUrl || it.thumbUrl;
-  $("viewerName").textContent = it.name || "";
-  $("prevPhoto").disabled = (viewerIndex <= 0);
-  $("nextPhoto").disabled = (viewerIndex >= albumItems.length - 1);
+  const it=albumItems[viewerIndex]; if(!it) return;
+  $("viewerImg").src=it.fullUrl||it.imgUrl||it.thumbUrl;
+  $("viewerName").textContent=it.name||"";
+  $("prevPhoto").disabled=(viewerIndex<=0);
+  $("nextPhoto").disabled=(viewerIndex>=albumItems.length-1);
+  $("viewerImg").onerror=()=>{ if(it.viewUrl) window.open(it.viewUrl,"_blank","noopener"); closeViewer(); };
+}
+function closeViewer(){ $("viewer").style.display="none"; $("viewerImg").src=""; $("viewerName").textContent=""; viewerIndex=-1; }
+function prevViewer(){ if(viewerIndex>0){viewerIndex--; renderViewer();} }
+function nextViewer(){ if(viewerIndex<albumItems.length-1){viewerIndex++; renderViewer();} }
+
+/* Fable */
+function normalizeDept(s){
+  return (s||"").toString().trim().toLowerCase()
+    .normalize("NFD").replace(/\p{Diacritic}/gu,"")
+    .replace(/['’]/g,"'")
+    .replace(/[^a-z0-9]+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
+}
+function getFableOk(){try{return JSON.parse(localStorage.getItem(LS.fableOk)||"{}");}catch{return {};}}
+function setFableOk(o){localStorage.setItem(LS.fableOk,JSON.stringify(o));}
+function resetFable(){localStorage.removeItem(LS.fableOk); fableIndex=0;}
+let fableIndex=0;
+
+function renderFable(){
+  $("fableRules").textContent=FABLE_RULES;
+  const ok=getFableOk(), total=FABLE_WORDS.length, done=Object.keys(ok).length;
+  setProgress($("fableFill"),$("fablePercent"),$("fableSub"),done,total,"mots");
+
+  let txt=FABLE_TEXT_TEMPLATE;
+  for(let i=0;i<total;i++){
+    txt=txt.replace(`{${i}}`, ok[String(i)]?`✅ ${FABLE_WORDS[i]}`:"____");
+  }
+  $("fableText").textContent=txt;
+
+  let next=-1; for(let i=0;i<total;i++){ if(!ok[String(i)]){next=i;break;} }
+  if(next===-1){
+    $("fablePrompt").innerHTML=`<span class="ok">Bravo ! Tout est complété 🎉</span>`;
+    $("fableInput").disabled=true; $("fableValidate").disabled=true; $("fableNext").disabled=true; $("fableStatus").textContent="";
+    return;
+  }
+  fableIndex=next;
+  $("fablePrompt").innerHTML=`Trou <b>${next+1}</b> / ${total}`;
+  $("fableInput").disabled=false; $("fableValidate").disabled=false; $("fableNext").disabled=false;
+  $("fableInput").value=""; $("fableStatus").textContent="";
+}
+function validateFable(){
+  const expected=FABLE_WORDS[fableIndex], user=$("fableInput").value;
+  if(normalizeDept(user)===normalizeDept(expected)){
+    const ok=getFableOk(); ok[String(fableIndex)]=true; setFableOk(ok);
+    $("fableStatus").innerHTML=`<span class="ok">✅ Correct : ${expected}</span>`;
+    setTimeout(renderFable,250);
+  }else $("fableStatus").innerHTML=`<span class="err">❌ Mauvais mot</span>`;
+}
+function nextFableHole(){
+  const ok=getFableOk();
+  for(let i=fableIndex+1;i<FABLE_WORDS.length;i++){ if(!ok[String(i)]){fableIndex=i;break;} }
+  $("fableInput").value=""; $("fableStatus").textContent="";
+  $("fablePrompt").innerHTML=`Trou <b>${fableIndex+1}</b> / ${FABLE_WORDS.length}`;
 }
 
-function closeViewer(){
-  $("viewer").style.display = "none";
-  $("viewerImg").src = "";
-  $("viewerName").textContent = "";
-  viewerIndex = -1;
-$("viewerImg").onerror = () => {
-  // si Drive bloque l'image, on ouvre la photo sur Drive
-  window.open(it.viewUrl, "_blank", "noopener");
-  closeViewer();
-};
-}
-
-function prevViewer(){
-  if(viewerIndex > 0){ viewerIndex--; renderViewer(); }
-}
-function nextViewer(){
-  if(viewerIndex < albumItems.length - 1){ viewerIndex++; renderViewer(); }
-}
-
-/* ================= BOUCHONS ================= */
-async function bouchonsState(){
-  const res = await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state&t=${Date.now()}`, { method:"GET", cache:"no-store" });
-  return await res.json();
-}
+/* Bouchons */
+async function bouchonsState(){ const r=await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state&t=${Date.now()}`,{cache:"no-store"}); return await r.json(); }
 async function bouchonsGuess(guess){
-  const res = await fetch(APPS_SCRIPT_URL, {
-    method:"POST",
-    headers:{ "Content-Type":"text/plain;charset=utf-8" },
-    body: JSON.stringify({ action:"bouchons_guess", guess })
-  });
-  return await res.json();
+  const r=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"bouchons_guess",guess})});
+  return await r.json();
 }
 async function bouchonsReset(code){
-  const url = `${APPS_SCRIPT_URL}?action=bouchons_reset&code=${encodeURIComponent(code)}&t=${Date.now()}`;
-  const res = await fetch(url, { method:"GET", cache:"no-store" });
-  return await res.json();
+  const r=await fetch(`${APPS_SCRIPT_URL}?action=bouchons_reset&code=${encodeURIComponent(code)}&t=${Date.now()}`,{cache:"no-store"});
+  return await r.json();
 }
-
-const BOUCHONS_MAX_DIFF = 250;
-function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+const BOUCHONS_MAX_DIFF=250;
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function updateBouchonsGauge(diff){
-  const fill = $("bThermoFill");
-  const txt  = $("bThermoText");
-  if(!fill || !txt) return;
-
-  const d = clamp(Number(diff), 0, BOUCHONS_MAX_DIFF);
-  const pct = Math.round((1 - (d / BOUCHONS_MAX_DIFF)) * 100);
-
-  const hue = Math.round(210 * (1 - pct/100));
-  fill.style.width = pct + "%";
-  fill.style.backgroundColor = `hsl(${hue} 85% 55%)`;
-
-  let label = "🥶 Très loin";
-  if(pct >= 20) label = "🧊 Loin";
-  if(pct >= 40) label = "🙂 Tiède";
-  if(pct >= 60) label = "🌡️ Chaud";
-  if(pct >= 80) label = "🔥 Très chaud";
-  if(pct >= 95) label = "🚨 Brûlant";
-
-  txt.textContent = `${label} — ${pct}%`;
+  const d=clamp(Number(diff),0,BOUCHONS_MAX_DIFF);
+  const pct=Math.round((1-(d/BOUCHONS_MAX_DIFF))*100);
+  const hue=Math.round(210*(1-pct/100));
+  $("bThermoFill").style.width=pct+"%";
+  $("bThermoFill").style.backgroundColor=`hsl(${hue} 85% 55%)`;
+  let label="🥶 Très loin";
+  if(pct>=20) label="🧊 Loin";
+  if(pct>=40) label="🙂 Tiède";
+  if(pct>=60) label="🌡️ Chaud";
+  if(pct>=80) label="🔥 Très chaud";
+  if(pct>=95) label="🚨 Brûlant";
+  $("bThermoText").textContent=`${label} — ${pct}%`;
 }
 
-/* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", () => {
-  for(const el of screenEls()) el.style.display = "none";
-
-  renderTables();
-  renderMenu();
-  updateBadge();
-  updateCountUI();
-  setTypeUI(getPhotoType());
-  updateSwitchCamUI();
-  updateMissionPill();
-
+/* INIT */
+document.addEventListener("DOMContentLoaded",()=>{
+  screens().forEach(el=>el.style.display="none");
+  renderTables(); renderMenu(); updateBadge(); updateCountUI(); setTypeUI(getPhotoType()); updateSwitchCamUI(); updateMissionPill();
   setScreen("screenHome");
 
-  // Home nav
-  $("homeTable").onclick = () => setScreen("screenTable");
-  $("homeMenu").onclick = () => setScreen("screenMenu");
-  $("homeAlbum").onclick = async () => { setScreen("screenAlbum"); await loadGallery(); };
-  $("homeGames").onclick = () => setScreen("screenGames");
+  $("homeTable").onclick=()=>setScreen("screenTable");
+  $("homeMenu").onclick=()=>setScreen("screenMenu");
+  $("homeAlbum").onclick=async()=>{setScreen("screenAlbum"); await loadGallery();};
+  $("homeGames").onclick=()=>setScreen("screenGames");
 
-  // Back
-  $("backFromTable").onclick = () => setScreen("screenHome");
-  $("backFromMenu").onclick = () => setScreen("screenHome");
-  $("backFromAlbum").onclick = () => setScreen("screenHome");
-  $("backFromGames").onclick = () => setScreen("screenHome");
+  $("backFromTable").onclick=()=>setScreen("screenHome");
+  $("backFromMenu").onclick=()=>setScreen("screenHome");
+  $("backFromAlbum").onclick=()=>setScreen("screenHome");
+  $("backFromGames").onclick=()=>setScreen("screenHome");
 
-  // Album controls
-  $("refreshGallery").onclick = loadGallery;
-  $("openDriveAlbum").onclick = () => window.open(`https://drive.google.com/drive/folders/${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}`, "_blank", "noopener");
-
-  $("closeViewer").onclick = closeViewer;
-  $("prevPhoto").onclick = prevViewer;
-  $("nextPhoto").onclick = nextViewer;
-
-  $("viewer").addEventListener("click", (e) => { if(e.target.id === "viewer") closeViewer(); });
-
-  // Clavier (PC)
-  document.addEventListener("keydown", (e) => {
-    if($("viewer").style.display === "block"){
-      if(e.key === "Escape") closeViewer();
-      if(e.key === "ArrowLeft") prevViewer();
-      if(e.key === "ArrowRight") nextViewer();
-    }
-  });
-
-  // Swipe (mobile)
-  let touchStartX = 0, touchStartY = 0;
-  $("viewer").addEventListener("touchstart", (e) => {
-    const t = e.touches[0];
-    touchStartX = t.clientX;
-    touchStartY = t.clientY;
-  }, { passive:true });
-
-  $("viewer").addEventListener("touchend", (e) => {
-    const t = e.changedTouches[0];
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
-    if(Math.abs(dy) > Math.abs(dx)) return;
-    if(dx > 50) prevViewer();
-    else if(dx < -50) nextViewer();
-  }, { passive:true });
+  $("refreshGallery").onclick=loadGallery;
+  $("openDriveAlbum").onclick=()=>window.open(`https://drive.google.com/drive/folders/${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}`,"_blank","noopener");
+  $("closeViewer").onclick=closeViewer;
+  $("prevPhoto").onclick=prevViewer;
+  $("nextPhoto").onclick=nextViewer;
+  $("viewer").addEventListener("click",e=>{if(e.target.id==="viewer") closeViewer();});
 
   // Reset table
-  $("resetBtn").onclick = () => {
-    setTableId(0);
-    updateBadge();
-    setScreen("screenTable");
-  };
+  $("resetBtn").onclick=()=>{setTableId(0); updateBadge(); setScreen("screenTable");};
 
   // Games
-  $("goPhoto").onclick = () => {
-    clearMission();
-    $("sendStatus").textContent = "";
-    $("retakeBtn").style.display = "none";
-    setTypeUI("libre");
-    setScreen("screenPhoto");
-  };
-  $("goDefis").onclick = () => { renderDefis(); setScreen("screenDefis"); };
-
-  $("goCodeGame").onclick = () => { renderCodeGame(); setScreen("screenCodeGame"); };
-
-  $("goBouchons").onclick = async () => {
+  $("goPhoto").onclick=()=>{clearMission(); $("sendStatus").textContent=""; $("retakeBtn").style.display="none"; setTypeUI("libre"); setScreen("screenPhoto");};
+  $("goDefis").onclick=()=>{renderDefis(); setScreen("screenDefis");};
+  $("goCodeGame").onclick=()=>{renderCodeGame(); setScreen("screenCodeGame");};
+  $("goFableDept").onclick=()=>{renderFable(); setScreen("screenFableDept");};
+  $("goBouchons").onclick=async()=>{
     setScreen("screenBouchons");
-    $("bGuess").value = "";
-    $("bHint").style.display = "none";
-    $("bThermoFill").style.width = "0%";
-    $("bThermoText").textContent = "";
-    $("bStatus").textContent = "";
-
-    const st = await bouchonsState();
+    $("bGuess").value=""; $("bHint").style.display="none"; $("bThermoFill").style.width="0%"; $("bThermoText").textContent=""; $("bStatus").textContent="";
+    const st=await bouchonsState();
     if(st.locked){
-      $("bLockInfo").innerHTML = `<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
-      $("bSubmit").disabled = true;
-      $("bGuess").disabled = true;
+      $("bLockInfo").innerHTML=`<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
+      $("bSubmit").disabled=true; $("bGuess").disabled=true;
       updateBouchonsGauge(0);
-      $("bHint").style.display = "block";
-      $("bHint").textContent = "✅ Trouvé !";
-    } else {
-      $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
-      $("bSubmit").disabled = false;
-      $("bGuess").disabled = false;
+      $("bHint").style.display="block"; $("bHint").textContent="✅ Trouvé !";
+    }else{
+      $("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
+      $("bSubmit").disabled=false; $("bGuess").disabled=false;
     }
   };
 
-  // Back modules
-  $("backFromDefis").onclick = () => setScreen("screenGames");
-  $("backFromCode").onclick = () => setScreen("screenGames");
-  $("backFromBouchons").onclick = () => setScreen("screenGames");
+  $("backFromDefis").onclick=()=>setScreen("screenGames");
+  $("backFromCode").onclick=()=>setScreen("screenGames");
+  $("backFromFableDept").onclick=()=>setScreen("screenGames");
+  $("backFromBouchons").onclick=()=>setScreen("screenGames");
 
-  // Photo type buttons
-  document.querySelectorAll(".typeBtn").forEach(btn => {
-    btn.onclick = () => {
-      clearMission();
-      setTypeUI(btn.dataset.type);
-      updateMissionPill();
-    };
+  document.querySelectorAll(".typeBtn").forEach(btn=>{
+    btn.onclick=()=>{clearMission(); setTypeUI(btn.dataset.type); updateMissionPill();};
   });
 
-  // Photo controls
-  $("startCamBtn").onclick = startCamera;
-  $("takePhotoBtn").onclick = takePhoto;
-  $("switchCamBtn").onclick = () => {
-    cameraMode = (cameraMode === "environment") ? "user" : "environment";
-    localStorage.setItem(LS.camMode, cameraMode);
-    spinFlipIcon();
-    updateSwitchCamUI();
-    if (camStream) startCamera();
+  $("startCamBtn").onclick=startCamera;
+  $("takePhotoBtn").onclick=takePhoto;
+  $("switchCamBtn").onclick=()=>{
+    cameraMode=(cameraMode==="environment")?"user":"environment";
+    localStorage.setItem(LS.camMode,cameraMode);
+    spinFlipIcon(); updateSwitchCamUI();
+    if(camStream) startCamera();
   };
-  $("retakeBtn").onclick = () => {
-    capturedDataUrl = null;
-    $("sendStatus").innerHTML = `<span class="muted">📸 Reprends la photo</span>`;
-  };
-  $("backFromPhoto").onclick = () => {
-    stopCamera();
-    setScreen("screenGames");
-  };
+  $("retakeBtn").onclick=()=>{capturedDataUrl=null; $("sendStatus").innerHTML=`<span class="muted">📸 Reprends la photo</span>`;};
+  $("backFromPhoto").onclick=()=>{stopCamera(); setScreen("screenGames");};
 
-  // Defis reset
-  $("resetDefisBtn").onclick = () => { resetDefis(); renderDefis(); };
+  $("resetDefisBtn").onclick=()=>{resetDefis(); renderDefis();};
+  $("resetCodeBtn").onclick=()=>{resetCodeGame(); renderCodeGame();};
 
-  // Code reset
-  $("resetCodeBtn").onclick = () => { resetCodeGame(); renderCodeGame(); };
+  $("resetFableBtn").onclick=()=>{resetFable(); renderFable();};
+  $("fableValidate").onclick=validateFable;
+  $("fableNext").onclick=nextFableHole;
+  $("fableInput").addEventListener("keydown",e=>{if(e.key==="Enter") validateFable();});
 
-  // Bouchons submit
-  $("bSubmit").onclick = async () => {
-    const guess = Number($("bGuess").value);
-    if(!Number.isFinite(guess) || guess < 0){
-      $("bStatus").innerHTML = `<span class="err">Entre un nombre valide.</span>`;
-      return;
-    }
-
-    $("bStatus").textContent = "Analyse…";
-    const st = await bouchonsGuess(guess);
-
-    $("bHint").style.display = "block";
-    if(st.tooLow) $("bHint").textContent = "📈 Trop bas";
-    else if(st.tooHigh) $("bHint").textContent = "📉 Trop haut";
-
-    if(typeof st.diff === "number") updateBouchonsGauge(st.diff);
+  $("bSubmit").onclick=async()=>{
+    const guess=Number($("bGuess").value);
+    if(!Number.isFinite(guess)||guess<0){$("bStatus").innerHTML=`<span class="err">Entre un nombre valide.</span>`;return;}
+    $("bStatus").textContent="Analyse…";
+    const st=await bouchonsGuess(guess);
+    $("bHint").style.display="block";
+    if(st.tooLow) $("bHint").textContent="📈 Trop bas";
+    else if(st.tooHigh) $("bHint").textContent="📉 Trop haut";
+    if(typeof st.diff==="number") updateBouchonsGauge(st.diff);
 
     if(st.locked){
-      $("bLockInfo").innerHTML = `<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
-      $("bSubmit").disabled = true;
-      $("bGuess").disabled = true;
-      $("bStatus").innerHTML = `<span class="ok">✅ Trouvé ! Jeu bloqué.</span>`;
-      $("bHint").textContent = "✅ Trouvé !";
-    } else {
-      $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
-      $("bStatus").textContent = st.message || "Enregistré.";
+      $("bLockInfo").innerHTML=`<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`;
+      $("bSubmit").disabled=true; $("bGuess").disabled=true;
+      $("bStatus").innerHTML=`<span class="ok">✅ Trouvé ! Jeu bloqué.</span>`;
+      $("bHint").textContent="✅ Trouvé !";
+    }else{
+      $("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
+      $("bStatus").textContent=st.message||"Enregistré.";
     }
   };
 
-  // Admin reset (appui long sur header)
-  let holdTimer = null;
-  $("brandHold").addEventListener("pointerdown", () => {
-    holdTimer = setTimeout(() => {
-      $("bAdminReset").classList.toggle("show");
-    }, 1200);
-  });
-  ["pointerup","pointercancel","pointerleave"].forEach(evt => {
-    $("brandHold").addEventListener(evt, () => { if(holdTimer) clearTimeout(holdTimer); holdTimer = null; });
-  });
+  // admin reset: appui long sur le header
+  let holdTimer=null;
+  $("brandHold").addEventListener("pointerdown",()=>{holdTimer=setTimeout(()=>{$("bAdminReset").classList.toggle("show");},1200);});
+  ["pointerup","pointercancel","pointerleave"].forEach(evt=>$("brandHold").addEventListener(evt,()=>{if(holdTimer) clearTimeout(holdTimer); holdTimer=null;}));
 
-  $("bAdminReset").onclick = async () => {
-    const code = prompt("Code ADMIN pour réinitialiser le jeu :");
+  $("bAdminReset").onclick=async()=>{
+    const code=prompt("Code ADMIN pour réinitialiser le jeu :");
     if(!code) return;
-
-    $("bStatus").textContent = "⏳ Réinitialisation…";
-    $("bAdminReset").disabled = true;
-
+    $("bStatus").textContent="⏳ Réinitialisation…";
+    $("bAdminReset").disabled=true;
     try{
-      const r = await bouchonsReset(code);
-      if(!r.ok){
-        $("bStatus").innerHTML = `<span class="err">${r.message || "Erreur reset"}</span>`;
-        return;
+      const r=await bouchonsReset(code);
+      if(!r.ok){$("bStatus").innerHTML=`<span class="err">${r.message||"Erreur reset"}</span>`;return;}
+      const st=await bouchonsState();
+      if(st.locked) $("bStatus").innerHTML=`<span class="err">Reset reçu mais le jeu est encore verrouillé (déploiement pas à jour).</span>`;
+      else{
+        $("bStatus").innerHTML=`<span class="ok">✅ Jeu réinitialisé</span>`;
+        $("bGuess").value=""; $("bHint").style.display="none"; $("bThermoText").textContent=""; $("bThermoFill").style.width="0%";
+        $("bSubmit").disabled=false; $("bGuess").disabled=false;
+        $("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
       }
-
-      const st = await bouchonsState();
-      if(st.locked){
-        $("bStatus").innerHTML = `<span class="err">Reset reçu mais le jeu est encore verrouillé (déploiement pas à jour).</span>`;
-      } else {
-        $("bStatus").innerHTML = `<span class="ok">✅ Jeu réinitialisé</span>`;
-        $("bGuess").value = "";
-        $("bHint").style.display = "none";
-        $("bThermoText").textContent = "";
-        $("bThermoFill").style.width = "0%";
-        $("bSubmit").disabled = false;
-        $("bGuess").disabled = false;
-        $("bLockInfo").innerHTML = `<span class="muted">Jeu ouvert : à vous de jouer !</span>`;
-      }
-    } catch(e){
-      $("bStatus").innerHTML = `<span class="err">❌ Reset bloqué (réseau/autorisation).</span>`;
-    } finally {
-      $("bAdminReset").disabled = false;
+    }catch(e){
+      $("bStatus").innerHTML=`<span class="err">❌ Reset bloqué (réseau/autorisation).</span>`;
+    }finally{
+      $("bAdminReset").disabled=false;
     }
   };
 });

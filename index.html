@@ -290,8 +290,8 @@
 
 <script>
 /* ================= CONFIG ================= */
-const APPS_SCRIPT_URL = "PASTE_YOUR_SCRIPT_URL_HERE";
-const DRIVE_ALBUM_FOLDER_ID = "PASTE_YOUR_FOLDER_ID_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRnt-PAf31mmcNUWThZQHyMgW7Fwl94LY-Sn3iiUOnZjBJiIVCidodBFt3T0wVAZizNQ/exec";
+const DRIVE_ALBUM_FOLDER_ID = "1JxXsZYxizwzUW3rNmEJ5cfBBIQTKKxBl";
 
 /* Menu (modifie ici) */
 const MENU_ENTREE  = `À compléter…`;
@@ -319,19 +319,19 @@ const TABLES = Array.from({length:9}, (_,i)=>({id:i+1, name:`Table ${i+1}`}));
 
 /* Défis */
 const DEFIS = [
-  { id:"d1", title:"Tout le monde saute", desc:"Photo où tout le monde saute en même temps." },
-  { id:"d2", title:"La plus drôle", desc:"Faites la photo la plus drôle possible." },
-  { id:"d3", title:"Couple (ou duo)", desc:"Photo en duo, pose stylée." },
-  { id:"d4", title:"Objet rouge", desc:"Un objet rouge bien visible dans l’image." },
+  { id:"d1", title:"Photo avec les Mariés", desc:"Prend une photo avec les deux mariés." },
+  { id:"d2", title:"Photo Table", desc:"Faite une photo avec tous les membres de la table sur la même photo." },
+  { id:"d3", title:"Insolite", desc:"Laisse ton imagination decidé de la photo la plus insolite à tes yeux." },
+  { id:"d4", title:"Photo générationnel", desc:"Prend une photo avec une personne agée de + ou - 10 ans que toi." },
   { id:"d5", title:"Sans sourire", desc:"Tout le monde sérieux 😐" },
 ];
 
 /* Code Game */
 const ENIGMES = [
-  { id:"e1", q:"Je suis plein de trous mais je retiens l’eau. Qui suis-je ?", a:"eponge", digit:"3" },
-  { id:"e2", q:"Plus j’ai de gardiens, moins je suis en sécurité. Qui suis-je ?", a:"secret", digit:"2" },
-  { id:"e3", q:"Je monte et je descends sans bouger. Qui suis-je ?", a:"escalier", digit:"6" },
-  { id:"e4", q:"j'ai eu que 5 de moyen en Français. Qui suis-je ?", a:"nolan", digit:"9" },
+  { id:"e1", q:"D'où vient le prénom Shadow qu'on a donnée à notre chien  ", a:"Shadow Hunters", digit:"6" },
+  { id:"e2", q:"Où nous sommes nous marié", a:"Lillebonne", digit:"2" },
+  { id:"e3", q:"Comment aurai du s'appeler notre 1er enfant si ça avait été une Fille", a:"Eleonor", digit:"4" },
+  { id:"e4", q:"A quelle age Anais a eu son permis de conduire", a:"34", digit:"2" },
 ];
 
 /* Fable des départements */

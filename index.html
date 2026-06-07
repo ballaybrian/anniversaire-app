@@ -42,7 +42,7 @@
 <header id="brandHold"><div class="brand"><div class="mono">B &amp; A</div><h1>10 ans</h1><div class="mono">B &amp; A</div></div><p class="subtitle">✨ 2016 – 2026 ✨</p><div class="top-actions"><div id="tableBadge" class="pill" style="display:none;"></div><button id="resetBtn" class="smallbtn" style="display:none;">Changer de place</button></div></header>
 
 <section id="screenHome" data-screen class="grid">
-<button id="homeTable">🪑 Table</button><button id="homeMenu">🍽️ Menu</button><button id="homeAlbum">🖼️ Album photo</button><button id="homeGames">🎉 Jeux &amp; Photos</button>
+<button id="homeTable">🪑 Table</button><button id="homeMenu">🍽️ Menu</button><button id="homePhoto">📸 Photo</button><button id="homeGames">🎉 Jeux &amp; Photos</button>
 <div class="pill" id="countPill">📷 Photos envoyées : 0</div><p class="muted" style="text-align:center;margin:0;">Envoi automatique sur Drive.</p></section>
 
 <section id="screenTable" data-screen class="grid">
@@ -68,7 +68,7 @@
 
 <section id="screenGames" data-screen class="grid">
 <p style="text-align:center;margin:0;font-weight:900;">🎉 Jeux &amp; Photos</p>
-<button id="goPhoto">📸 Prendre une photo</button><button id="goDefis">🎯 Défis photos</button><button id="goCodeGame">🔐 Code Game</button><button id="goBinomes">👥 Jeux des binômes</button><button id="goFableDept">🗺️ Fable des départements</button><button id="goBouchons">🍾 Combien de bouchons ?</button>
+<button id="goDefis">🎯 Défis photos</button><button id="goCodeGame">🔐 Code Game</button><button id="goBinomes">👥 Jeux des binômes</button><button id="goFableDept">🗺️ Fable des départements</button><button id="goBouchons">🍾 Combien de bouchons ?</button>
 <button id="backFromGames" class="btn-subtle">⬅️ Retour</button></section>
 
 <section id="screenPhoto" data-screen class="grid">
@@ -79,6 +79,11 @@
 <div class="camBox"><video id="camVideo" playsinline autoplay muted></video><canvas id="camCanvas" style="display:none;"></canvas><div id="flash" class="flash"></div></div>
 <div class="grid grid2"><button id="startCamBtn">🎥 Activer la caméra</button><button id="switchCamBtn" class="btn-subtle"><span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span></button></div>
 <div class="grid grid2"><button id="takePhotoBtn" disabled>📸 Prendre la photo</button><button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button></div>
+<div class="menuBlock">
+  <p class="menuTitle">Ajouter depuis la galerie du téléphone</p>
+  <input id="galleryFileInput" type="file" accept="image/*">
+  <button id="sendGalleryPhotoBtn" class="btn-subtle" style="margin-top:10px;">📤 Envoyer cette photo</button>
+</div>
 <div id="sendStatus" class="muted" style="text-align:center;"></div><button id="backFromPhoto" class="btn-subtle">⬅️ Retour</button></section>
 
 <section id="screenDefis" data-screen class="grid">
@@ -124,20 +129,21 @@ Jeux_des_binomes</div>
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRnt-PAf31mmcNUWThZQHyMgW7Fwl94LY-Sn3iiUOnZjBJiIVCidodBFt3T0wVAZizNQ/exec";
 const DRIVE_ALBUM_FOLDER_ID = "1JxXsZYxizwzUW3rNmEJ5cfBBIQTKKxBl";
-const MENU_ENTREE=`Mousse de canard
-Cornichon
-Tomate mozza
-Chiffonnade charcuterie
-`, MENU_PLAT=`Roti de boeuf
-Poulet 
-Roti de porc en tranche 
-Jambon blanc Tian de légumes 
-Gratin dauphinois
-`, MENU_FROMAGE=`Comté 
-Coulommiers
-Fromage de chèvre
-Macarons
-Mini eclair
+const MENU_ENTREE=`• Mousse de canard
+• Cornichon
+• Tomate mozza
+• Chiffonnade charcuterie
+`, MENU_PLAT=`• Roti de boeuf
+• Poulet 
+• Roti de porc en tranche 
+• Jambon blanc 
+• Tian de légumes 
+• Gratin dauphinois
+`, MENU_FROMAGE=`• Comté 
+• Coulommiers
+• Fromage de chèvre
+• Macarons
+• Mini eclair
 `;
 const CODEGAME_RULES=`RÈGLES :
 - Résous les énigmes pour révéler un chiffre.
@@ -153,12 +159,12 @@ const FABLE_RULES=`RÈGLES :
 RÉCOMPENSE :
 🎁 À compléter…`;
 const TABLES=[
-{id:1,name:"Table Rectangle 1",shape:"rectangle",guests:["Brian","Anaïs","Océane","Natacha","Djessy","Dolores","Mickael","Jean Luc","Carole"]},
-{id:2,name:"Table 2",shape:"round",guests:["Therry","Mireille","Nathalie","Mémé","Mamie Jojo","DJ","Sandra","Christian"]},
-{id:3,name:"Table 3",shape:"round",guests:["Adrien","Déborah","Gäelle","Mélanie","Quentin","Shanna","Copine Shanna","Invité 25"]},
-{id:4,name:"Table 4",shape:"round",guests:["Yoann","Lucile","Guillaume","Alice","Victor","Sandy","Invité 32","Invité 33"]},
-{id:5,name:"Table 5",shape:"round",guests:["Christophe","Marie","Philippe","Céline","Bryan","Kim","Invité 40","Invité 41"]},
-{id:6,name:"Table 6",shape:"round",guests:["Damien","Lola","Jérémy","Gaetan","Anne Sophie","Amélie","Arnaud","Invité 49"]}
+{id:1,name:"Table Rectangle 1",shape:"rectangle",guests:["Invité 1","Invité 2","Invité 3","Invité 4","Invité 5","Invité 6","Invité 7","Invité 8","Invité 9"]},
+{id:2,name:"Table 2",shape:"round",guests:["Invité 10","Invité 11","Invité 12","Invité 13","Invité 14","Invité 15","Invité 16","Invité 17"]},
+{id:3,name:"Table 3",shape:"round",guests:["Invité 18","Invité 19","Invité 20","Invité 21","Invité 22","Invité 23","Invité 24","Invité 25"]},
+{id:4,name:"Table 4",shape:"round",guests:["Invité 26","Invité 27","Invité 28","Invité 29","Invité 30","Invité 31","Invité 32","Invité 33"]},
+{id:5,name:"Table 5",shape:"round",guests:["Invité 34","Invité 35","Invité 36","Invité 37","Invité 38","Invité 39","Invité 40","Invité 41"]},
+{id:6,name:"Table 6",shape:"round",guests:["Invité 42","Invité 43","Invité 44","Invité 45","Invité 46","Invité 47","Invité 48","Invité 49"]}
 ];
 const DEFIS=[{id:"d1",title:"Photo avec les mariés",desc:"Prends une photo avec les deux mariés."},{id:"d2",title:"Photo de table",desc:"Faites une photo avec tous les membres de la table sur la même photo."},{id:"d3",title:"Insolite",desc:"Laisse ton imagination décider de la photo la plus insolite à tes yeux."},{id:"d4",title:"Photo générationnelle",desc:"Prends une photo avec une personne âgée de plus ou moins 10 ans que toi."},{id:"d5",title:"Sans sourire",desc:"Tout le monde sérieux 😐"}];
 const ENIGMES=[{id:"e1",q:`D'où vient le prénom "Shadow" qu'on a donné à notre chien ?`,a:"Shadow Hunters",digit:"6"},{id:"e2",q:"Où nous sommes-nous mariés ?",a:"Lillebonne",digit:"2"},{id:"e3",q:"Comment aurait dû s'appeler notre 1er enfant si ça avait été une fille ?",a:"Eleonor",digit:"4"},{id:"e4",q:"À quel âge Anaïs a eu son permis de conduire ?",a:"34",digit:"2"}];
@@ -288,9 +294,10 @@ function setProgress(fillEl,percentEl,subEl,done,total,label){const pct=total?Ma
 function getDefisDone(){try{return JSON.parse(localStorage.getItem(LS.defisDone)||"{}");}catch{return {};}} function setDefisDone(o){localStorage.setItem(LS.defisDone,JSON.stringify(o));} function markDefiDone(id){const d=getDefisDone(); d[id]=true; setDefisDone(d);} function resetDefis(){localStorage.removeItem(LS.defisDone);}
 function setMission(o){localStorage.setItem(LS.mission,JSON.stringify(o||null)); updateMissionPill();} function getMission(){try{return JSON.parse(localStorage.getItem(LS.mission)||"null");}catch{return null;}} function clearMission(){localStorage.removeItem(LS.mission); updateMissionPill();} function updateMissionPill(){const m=getMission(), pill=$("missionPill"); if(m&&m.title){pill.style.display="inline-block"; pill.textContent=`🎯 ${m.title}`;} else {pill.style.display="none"; pill.textContent="";}}
 function setPhotoType(v){localStorage.setItem(LS.photoType,v);} function getPhotoType(){return localStorage.getItem(LS.photoType)||"libre";} function setTypeUI(t){setPhotoType(t); $("typeLabel").textContent=(t==="codegame")?"code game":(t==="binomes"?"binômes":t);}
-function renderDefis(){const done=getDefisDone(), wrap=$("defisList"); wrap.innerHTML=""; const nbDone=DEFIS.filter(d=>done[d.id]).length; setProgress($("defisFill"),$("defisPercent"),$("defisSub"),nbDone,DEFIS.length,"défis"); DEFIS.forEach(d=>{const isDone=!!done[d.id], div=document.createElement("div"); div.className="item"; div.innerHTML=`<div class="itemRow"><div><div class="itemTitle">${isDone?"✅":"⏳"} ${d.title}</div><div class="itemDesc">${d.desc}</div></div><div style="min-width:160px;"><button class="${isDone?"btn-subtle":""}">${isDone?"Reprendre":"📸 Faire ce défi"}</button></div></div><div class="muted tiny">${isDone?"Défi validé":"Appuie pour ouvrir l’appareil photo"}</div>`; div.querySelector("button").onclick=()=>{setTypeUI("defi"); setMission({kind:"defi",id:d.id,title:d.title}); setScreen("screenPhoto");}; wrap.appendChild(div);});}
+function renderDefis(){const done=getDefisDone(), wrap=$("defisList"); wrap.innerHTML=""; const nbDone=DEFIS.filter(d=>done[d.id]).length; setProgress($("defisFill"),$("defisPercent"),$("defisSub"),nbDone,DEFIS.length,"défis"); DEFIS.forEach(d=>{const isDone=!!done[d.id], div=document.createElement("div"); div.className="item"; div.innerHTML=`<div class="itemRow"><div><div class="itemTitle">${isDone?"✅":"⏳"} ${d.title}</div><div class="itemDesc">${d.desc}</div></div><div style="min-width:160px;"><button class="${isDone?"btn-subtle":""}">${isDone?"Reprendre":"📸 Faire ce défi"}</button></div></div><div class="muted tiny">${isDone?"Défi validé":"Appuie pour ouvrir l’appareil photo"}</div>`; div.querySelector("button").onclick=()=>{photoReturnScreen="screenGames"; setTypeUI("defi"); setMission({kind:"defi",id:d.id,title:d.title}); setScreen("screenPhoto");}; wrap.appendChild(div);});}
 function getCodeOk(){try{return JSON.parse(localStorage.getItem(LS.codeOk)||"{}");}catch{return {};}} function setCodeOk(o){localStorage.setItem(LS.codeOk,JSON.stringify(o));} function resetCodeGame(){localStorage.removeItem(LS.codeOk);}
 function renderCodeGame(){ $("codeRules").textContent=CODEGAME_RULES; const ok=getCodeOk(), wrap=$("enigmesList"); wrap.innerHTML=""; const nbOk=ENIGMES.filter(e=>ok[e.id]).length; setProgress($("codeFill"),$("codePercent"),$("codeSub"),nbOk,ENIGMES.length,"énigmes"); ENIGMES.forEach(e=>{const isOk=!!ok[e.id], div=document.createElement("div"); div.className="item"; div.innerHTML=`<div class="itemTitle">${isOk?"✅":"🔐"} Énigme</div><div class="itemDesc">${e.q}</div><div class="grid grid2"><input type="text" id="ans_${e.id}" placeholder="Ta réponse…" ${isOk?"disabled":""}><button id="btn_${e.id}" class="${isOk?"btn-subtle":""}" ${isOk?"disabled":""}>Valider</button></div><div class="muted tiny" id="st_${e.id}">${isOk?`🎉 Chiffre révélé : <span class="ok">${e.digit}</span>`:""}</div>`; wrap.appendChild(div); if(!isOk){div.querySelector(`#btn_${e.id}`).onclick=()=>{const v=div.querySelector(`#ans_${e.id}`).value, st=div.querySelector(`#st_${e.id}`); if(normalize(v)===normalize(e.a)){const next=getCodeOk(); next[e.id]=true; setCodeOk(next); st.innerHTML=`🎉 Chiffre révélé : <span class="ok">${e.digit}</span>`; renderCodeGame();} else st.innerHTML=`<span class="err">❌ Mauvaise réponse</span>`;};}});}
+let photoReturnScreen="screenHome";
 let camStream=null, capturedDataUrl=null, cameraMode=localStorage.getItem(LS.camMode)||"environment";
 function updateSwitchCamUI(){$("switchCamText").textContent=(cameraMode==="user")?"Caméra arrière":"Mode selfie";} function spinFlipIcon(){$("flipIcon").classList.toggle("spin"); setTimeout(()=>$("flipIcon").classList.toggle("spin"),280);} function flash(){$("flash").classList.add("on"); setTimeout(()=>$("flash").classList.remove("on"),140);}
 async function startCamera(){try{$("sendStatus").textContent="🎥 Activation caméra…"; if(camStream) camStream.getTracks().forEach(t=>t.stop()); camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:cameraMode,width:{ideal:1280},height:{ideal:720}},audio:false}); $("camVideo").srcObject=camStream; $("takePhotoBtn").disabled=false; $("sendStatus").textContent="";}catch(e){$("sendStatus").innerHTML=`<span class="err">❌ Caméra refusée. Autorise-la via le cadenas 🔒.</span>`;}}
@@ -312,15 +319,28 @@ async function bouchonsReset(code){const r=await fetch(`${APPS_SCRIPT_URL}?actio
 const BOUCHONS_MAX_DIFF=250; const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function updateBouchonsGauge(diff){const d=clamp(Number(diff),0,BOUCHONS_MAX_DIFF), pct=Math.round((1-(d/BOUCHONS_MAX_DIFF))*100), hue=Math.round(210*(1-pct/100)); $("bThermoFill").style.width=pct+"%"; $("bThermoFill").style.backgroundColor=`hsl(${hue} 85% 55%)`; let label="🥶 Très loin"; if(pct>=20) label="🧊 Loin"; if(pct>=40) label="🙂 Tiède"; if(pct>=60) label="🌡️ Chaud"; if(pct>=80) label="🔥 Très chaud"; if(pct>=95) label="🚨 Brûlant"; $("bThermoText").textContent=`${label} — ${pct}%`;}
 document.addEventListener("DOMContentLoaded",()=>{screens().forEach(el=>el.style.display="none"); renderTables(); renderMenu(); updateBadge(); updateCountUI(); setTypeUI(getPhotoType()); updateSwitchCamUI(); updateMissionPill(); setScreen("screenHome");
-$("homeTable").onclick=()=>{renderTables(); setScreen("screenTable");}; $("homeMenu").onclick=()=>setScreen("screenMenu"); $("homeAlbum").onclick=async()=>{setScreen("screenAlbum"); await loadGallery();}; $("homeGames").onclick=()=>setScreen("screenGames");
+$("homeTable").onclick=()=>{renderTables(); setScreen("screenTable");}; $("homeMenu").onclick=()=>setScreen("screenMenu"); $("homePhoto").onclick=()=>{photoReturnScreen="screenHome"; clearMission(); $("sendStatus").textContent=""; $("retakeBtn").style.display="none"; setTypeUI("libre"); setScreen("screenPhoto");}; $("homeGames").onclick=()=>setScreen("screenGames");
 $("backFromTable").onclick=()=>setScreen("screenHome"); $("backFromMenu").onclick=()=>setScreen("screenHome"); $("backFromAlbum").onclick=()=>setScreen("screenHome"); $("backFromGames").onclick=()=>setScreen("screenHome");
 $("refreshGallery").onclick=loadGallery; $("openDriveAlbum").onclick=()=>window.open(`https://drive.google.com/drive/folders/${encodeURIComponent(DRIVE_ALBUM_FOLDER_ID)}`,"_blank","noopener"); $("closeViewer").onclick=closeViewer; $("prevPhoto").onclick=prevViewer; $("nextPhoto").onclick=nextViewer; $("viewer").addEventListener("click",e=>{if(e.target.id==="viewer") closeViewer();});
-$("resetBtn").onclick=()=>{setTableId(0); clearGuestName(); updateBadge(); renderTables(); setScreen("screenTable");};
-$("goPhoto").onclick=()=>{clearMission(); $("sendStatus").textContent=""; $("retakeBtn").style.display="none"; setTypeUI("libre"); setScreen("screenPhoto");}; $("goDefis").onclick=()=>{renderDefis(); setScreen("screenDefis");}; $("goCodeGame").onclick=()=>{renderCodeGame(); setScreen("screenCodeGame");}; $("goBinomes").onclick=()=>{setScreen("screenBinomes");}; $("goFableDept").onclick=()=>{renderFable(); setScreen("screenFableDept");}; $("goBouchons").onclick=async()=>{setScreen("screenBouchons"); $("bGuess").value=""; $("bHint").style.display="none"; $("bThermoFill").style.width="0%"; $("bThermoText").textContent=""; $("bStatus").textContent=""; const st=await bouchonsState(); if(st.locked){$("bLockInfo").innerHTML=`<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`; $("bSubmit").disabled=true; $("bGuess").disabled=true; updateBouchonsGauge(0); $("bHint").style.display="block"; $("bHint").textContent="✅ Trouvé !";} else {$("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`; $("bSubmit").disabled=false; $("bGuess").disabled=false;}};
+$("resetBtn").onclick=()=>{setTableId(0); clearGuestName(); updateBadge(); renderTables(); setScreen("screenTable");}; $("goDefis").onclick=()=>{renderDefis(); setScreen("screenDefis");}; $("goCodeGame").onclick=()=>{renderCodeGame(); setScreen("screenCodeGame");}; $("goBinomes").onclick=()=>{setScreen("screenBinomes");}; $("goFableDept").onclick=()=>{renderFable(); setScreen("screenFableDept");}; $("goBouchons").onclick=async()=>{setScreen("screenBouchons"); $("bGuess").value=""; $("bHint").style.display="none"; $("bThermoFill").style.width="0%"; $("bThermoText").textContent=""; $("bStatus").textContent=""; const st=await bouchonsState(); if(st.locked){$("bLockInfo").innerHTML=`<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`; $("bSubmit").disabled=true; $("bGuess").disabled=true; updateBouchonsGauge(0); $("bHint").style.display="block"; $("bHint").textContent="✅ Trouvé !";} else {$("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`; $("bSubmit").disabled=false; $("bGuess").disabled=false;}};
 $("backFromDefis").onclick=()=>setScreen("screenGames"); $("backFromCode").onclick=()=>setScreen("screenGames"); $("backFromBinomes").onclick=()=>setScreen("screenGames"); $("backFromFableDept").onclick=()=>setScreen("screenGames"); $("backFromBouchons").onclick=()=>setScreen("screenGames");
-$("startBinomesPhoto").onclick=()=>{ clearMission(); setTypeUI("binomes"); setMission({kind:"binomes", title:"Jeux des binômes"}); $("sendStatus").textContent=""; $("retakeBtn").style.display="none"; setScreen("screenPhoto"); };
+$("startBinomesPhoto").onclick=()=>{ photoReturnScreen="screenGames"; clearMission(); setTypeUI("binomes"); setMission({kind:"binomes", title:"Jeux des binômes"}); $("sendStatus").textContent=""; $("retakeBtn").style.display="none"; setScreen("screenPhoto"); };
 document.querySelectorAll(".typeBtn").forEach(btn=>btn.onclick=()=>{clearMission(); setTypeUI(btn.dataset.type); updateMissionPill();});
-$("startCamBtn").onclick=startCamera; $("takePhotoBtn").onclick=takePhoto; $("switchCamBtn").onclick=()=>{cameraMode=(cameraMode==="environment")?"user":"environment"; localStorage.setItem(LS.camMode,cameraMode); spinFlipIcon(); updateSwitchCamUI(); if(camStream) startCamera();}; $("retakeBtn").onclick=()=>{capturedDataUrl=null; $("sendStatus").innerHTML=`<span class="muted">📸 Reprends la photo</span>`;}; $("backFromPhoto").onclick=()=>{stopCamera(); setScreen("screenGames");};
+$("startCamBtn").onclick=startCamera; $("takePhotoBtn").onclick=takePhoto; $("switchCamBtn").onclick=()=>{cameraMode=(cameraMode==="environment")?"user":"environment"; localStorage.setItem(LS.camMode,cameraMode); spinFlipIcon(); updateSwitchCamUI(); if(camStream) startCamera();}; $("retakeBtn").onclick=()=>{capturedDataUrl=null; $("sendStatus").innerHTML=`<span class="muted">📸 Reprends la photo</span>`;}; $("sendGalleryPhotoBtn").onclick=()=>{
+  const file=$("galleryFileInput").files && $("galleryFileInput").files[0];
+  if(!file){$("sendStatus").innerHTML=`<span class="err">Choisis d’abord une photo dans ta galerie.</span>`; return;}
+  if(!file.type || !file.type.startsWith("image/")){$("sendStatus").innerHTML=`<span class="err">Le fichier choisi doit être une image.</span>`; return;}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    capturedDataUrl=reader.result;
+    $("sendStatus").innerHTML=`<span class="muted">📤 Envoi de la photo sélectionnée…</span>`;
+    sendPhotoAuto();
+    $("galleryFileInput").value="";
+  };
+  reader.onerror=()=>{$("sendStatus").innerHTML=`<span class="err">Impossible de lire cette photo.</span>`;};
+  reader.readAsDataURL(file);
+};
+$("backFromPhoto").onclick=()=>{stopCamera(); setScreen(photoReturnScreen||"screenHome");};
 $("resetDefisBtn").onclick=()=>{resetDefis(); renderDefis();}; $("resetCodeBtn").onclick=()=>{resetCodeGame(); renderCodeGame();}; $("resetFableBtn").onclick=()=>{resetFable(); renderFable();}; $("fableValidate").onclick=validateFable; $("fableNext").onclick=nextFableHole; $("fableInput").addEventListener("keydown",e=>{if(e.key==="Enter") validateFable();});
 $("bSubmit").onclick=async()=>{const guess=Number($("bGuess").value); if(!Number.isFinite(guess)||guess<0){$("bStatus").innerHTML=`<span class="err">Entre un nombre valide.</span>`; return;} $("bStatus").textContent="Analyse…"; const st=await bouchonsGuess(guess); $("bHint").style.display="block"; if(st.tooLow) $("bHint").textContent="📈 Trop bas"; else if(st.tooHigh) $("bHint").textContent="📉 Trop haut"; if(typeof st.diff==="number") updateBouchonsGauge(st.diff); if(st.locked){$("bLockInfo").innerHTML=`<span class="ok">✅ Jeu terminé : un gagnant a trouvé le bon nombre.</span>`; $("bSubmit").disabled=true; $("bGuess").disabled=true; $("bStatus").innerHTML=`<span class="ok">✅ Trouvé ! Jeu bloqué.</span>`; $("bHint").textContent="✅ Trouvé !";} else {$("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`; $("bStatus").textContent=st.message||"Enregistré.";}}; let holdTimer=null; $("brandHold").addEventListener("pointerdown",()=>{holdTimer=setTimeout(()=>{$("bAdminReset").classList.toggle("show");},1200);}); ["pointerup","pointercancel","pointerleave"].forEach(evt=>$("brandHold").addEventListener(evt,()=>{if(holdTimer) clearTimeout(holdTimer); holdTimer=null;})); $("bAdminReset").onclick=async()=>{const code=prompt("Code ADMIN pour réinitialiser le jeu :"); if(!code) return; $("bStatus").textContent="⏳ Réinitialisation…"; $("bAdminReset").disabled=true; try{const r=await bouchonsReset(code); if(!r.ok){$("bStatus").innerHTML=`<span class="err">${r.message||"Erreur reset"}</span>`; return;} const st=await bouchonsState(); if(st.locked) $("bStatus").innerHTML=`<span class="err">Reset reçu mais le jeu est encore verrouillé (déploiement pas à jour).</span>`; else {$("bStatus").innerHTML=`<span class="ok">✅ Jeu réinitialisé</span>`; $("bGuess").value=""; $("bHint").style.display="none"; $("bThermoText").textContent=""; $("bThermoFill").style.width="0%"; $("bSubmit").disabled=false; $("bGuess").disabled=false; $("bLockInfo").innerHTML=`<span class="muted">Jeu ouvert : à vous de jouer !</span>`;}} catch(e){$("bStatus").innerHTML=`<span class="err">❌ Reset bloqué (réseau/autorisation).</span>`;} finally{$("bAdminReset").disabled=false;}};});
 </script>

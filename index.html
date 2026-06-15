@@ -22,7 +22,10 @@
     .tableGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center}.tableGrid button{max-width:170px;padding:16px 0;border-radius:18px}
     .menuBlock{border:1px solid var(--border);border-radius:16px;padding:12px;background:rgba(255,255,255,.45);text-align:left}.menuTitle{font-weight:900;margin:0 0 8px}.menuText{border:1px dashed rgba(95,122,104,.35);border-radius:14px;padding:12px;background:rgba(255,255,255,.35);white-space:pre-wrap;min-height:54px}
     .progressWrap{border:1px solid var(--border);background:rgba(255,255,255,.45);border-radius:999px;padding:10px 10px 8px}.progressBar{height:12px;border-radius:999px;background:rgba(95,122,104,.20);overflow:hidden}.progressFill{height:100%;width:0%;border-radius:999px;background:var(--text);transition:width 260ms ease}.progressLabel{margin-top:8px;text-align:center;font-weight:900}.progressSub{margin-top:2px;text-align:center;font-size:12px;color:var(--muted);font-weight:800}
-    .item{border:1px solid var(--border);border-radius:16px;padding:12px;background:rgba(255,255,255,.45);display:grid;gap:8px}.itemTitle{font-weight:900}.itemDesc{font-size:13px;color:var(--muted);line-height:1.35}.itemRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.tiny{font-size:12px}
+    .item{border:1px solid var(--border);border-radius:16px;padding:12px;background:rgba(255,255,255,.45);display:grid;gap:8px}.itemTitle{font-weight:900}.itemDesc{font-size:13px;color:var(--muted);line-height:1.35}.itemRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+#defisList .itemRow{grid-template-columns:1fr;align-items:stretch}
+#defisList .itemRow>div:last-child{min-width:0!important;width:100%}
+#defisList button{text-align:left}.tiny{font-size:12px}
     input[type="text"],input[type="number"]{width:100%;padding:12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.55);color:var(--text);font-size:16px;outline:none}
     .camBox{position:relative;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.35);box-shadow:0 12px 26px rgba(0,0,0,.08)}
     #camVideo,#camCanvas{width:100%;display:block;aspect-ratio:3/4;object-fit:cover;background:rgba(0,0,0,.04)} @media(min-width:520px){#camVideo,#camCanvas{aspect-ratio:16/9}}
@@ -55,7 +58,7 @@
 <p style="text-align:center;margin:0;font-weight:900;">🍽️ Menu</p><p class="muted" style="text-align:center;margin:0;">(Texte défini dans le code — non modifiable)</p>
 <div class="menuBlock"><p class="menuTitle">Entrée</p><div id="menuEntree" class="menuText"></div></div>
 <div class="menuBlock"><p class="menuTitle">Plat</p><div id="menuPlat" class="menuText"></div></div>
-<div class="menuBlock"><p class="menuTitle">Fromage</p><div id="menuFromage" class="menuText"></div></div>
+<div class="menuBlock"><p class="menuTitle">Fromage &amp; Dessert</p><div id="menuFromage" class="menuText"></div></div>
 <button id="backFromMenu" class="btn-subtle">⬅️ Retour</button></section>
 
 <section id="screenAlbum" data-screen class="grid">
@@ -75,8 +78,7 @@
 <section id="screenPhoto" data-screen class="grid">
 <p style="margin:0;text-align:center;font-weight:900;">Photobooth</p>
 <div class="muted" style="text-align:center;">Type : <span id="typeLabel" class="pill">libre</span> <span id="missionPill" class="pill" style="display:none;margin-left:6px;"></span></div>
-<div class="grid grid2"><button class="typeBtn" data-type="libre">📸 Libre</button><button class="typeBtn" data-type="defi">🎯 Défi</button></div>
-<button class="typeBtn" data-type="codegame">🔐 Code Game</button>
+<button class="typeBtn" data-type="libre">📸 Libre</button>
 <div class="camBox"><video id="camVideo" playsinline autoplay muted></video><canvas id="camCanvas" style="display:none;"></canvas><div id="flash" class="flash"></div></div>
 <div class="grid grid2"><button id="startCamBtn">🎥 Activer la caméra</button><button id="switchCamBtn" class="btn-subtle"><span id="flipIcon" class="flipIcon">🔄</span><span id="switchCamText">Mode selfie</span></button></div>
 <div class="grid grid2"><button id="takePhotoBtn" disabled>📸 Prendre la photo</button><button id="retakeBtn" style="display:none;" class="btn-subtle">🔁 Reprendre</button></div>
@@ -151,26 +153,31 @@ const CODEGAME_RULES=`RÈGLES :
 - À la fin, assemble les chiffres pour ouvrir le cadenas.
 
 RÉCOMPENSE :
-🎁 À compléter…`;
+🎁 La Cage`;
 const FABLE_RULES=`RÈGLES :
 - Complète les trous de l’histoire avec le bon département.
 - Accents non obligatoires.
 - Tirets/espaces acceptés.
 
 RÉCOMPENSE :
-🎁 À compléter…`;
+🎁 Le droit de recommancer`;
 const TABLES=[
 {id:1,name:"Table 1",shape:"rectangle",guests:["Brian","Anaïs","Océane","Natacha","Djessy","Dolores","Mickael","Jean Luc","Carole"]},
 {id:2,name:"Table 2",shape:"round",guests:["Therry","Mireille","Nathalie","Mémé","Mamie Jojo","DJ","Sandra","Christian"]},
-{id:3,name:"Table 3",shape:"round",guests:["Adrien","Déborah","Gäelle","Mélanie","Quentin","Shanna","Copine Shanna","Invité 25"]},
-{id:4,name:"Table 4",shape:"round",guests:["Yoann","Lucile","Guillaume","Alice","Victor","Sandy","Invité 32","Invité 33"]},
-{id:5,name:"Table 5",shape:"round",guests:["Christophe","Marie","Philippe","Céline","Bryan","Kim","Invité 40","Invité 41"]},
-{id:6,name:"Table 6",shape:"round",guests:["Damien","Lola","Jérémy","Gaetan","Anne Sophie","Amélie","Arnaud","Invité 49"]},
-{id:7,name:"Table 7",shape:"rectangle",guests:["Invité 50","Invité 51","Invité 52","Invité 53","Invité 54","Invité 55","Invité 56","Invité 57","Invité 58","Invité 59","Invité 60","Invité 61","Invité 62","Invité 63","Invité 64","Invité 65","Invité 66","Invité 67","Invité 68","Invité 69"]}
+{id:3,name:"Table 3",shape:"round",guests:["Adrien","Déborah","Gäelle","Mélanie","Quentin","Shanna","Manel",""]},
+{id:4,name:"Table 4",shape:"round",guests:["Yoann","Lucile","Guillaume","Alice","Victor","Sandy","",""]},
+{id:5,name:"Table 5",shape:"round",guests:["Christophe","Marie","Philippe","Céline","Bryan","Kim","",""]},
+{id:6,name:"Table 6",shape:"round",guests:["Damien","Lola","Jérémy","Gaetan","Anne Sophie","Aurelia","",""]},
+{id:7,name:"Table 7",shape:"rectangle",guests:["Nolan","Jade B.","Timéo","Mathis","Clément","Julia","Émilie","Iris","Noah","Élia","Gabriel","Mathieu","Maël","Alice","Leinaya","Keillyo","Ava","Mia","Livio","Jade"]}
 ];
 const DEFIS=[{id:"d1",title:"Photo avec les mariés",desc:"Prends une photo avec les deux mariés."},{id:"d2",title:"Photo de table",desc:"Faites une photo avec tous les membres de la table sur la même photo."},{id:"d3",title:"Insolite",desc:"Laisse ton imagination décider de la photo la plus insolite à tes yeux."},{id:"d4",title:"Photo générationnelle",desc:"Prends une photo avec une personne âgée de plus ou moins 10 ans que toi."},{id:"d5",title:"Sans sourire",desc:"Tout le monde sérieux 😐"}];
-const ENIGMES=[{id:"e1",q:`D'où vient le prénom "Shadow" qu'on a donné à notre chien ?`,a:"Shadow Hunters",digit:"6"},{id:"e2",q:"Où nous sommes-nous mariés ?",a:"Lillebonne",digit:"2"},{id:"e3",q:"Comment aurait dû s'appeler notre 1er enfant si ça avait été une fille ?",a:"Eleonor",digit:"4"},{id:"e4",q:"À quel âge Anaïs a eu son permis de conduire ?",a:"34",digit:"2"}];
-const FABLE_WORDS=["CALVADOS","MANCHE","LOIRE","LOIR-ET-CHER","SAVOIE","DOUBS","VIENNE","GARD","NORD","AVEYRON","GIRONDE","AUBE","PAS-DE-CALAIS","ARDENNES","CANTAL","HERAULT","CORSE","EURE","SOMME","CHER","SEINE","AISNE","ALLIER","BAS-RHIN","JURA"];
+const ENIGMES=[
+{id:"e1",q:"Que représente le mois de mai 2020 pour nous ?",a:"Shadow",digit:"6"},
+{id:"e2",q:"Où sont nés nos enfants ?",a:"A la maternité",digit:"2"},
+{id:"e3",q:"À quelle date sommes-nous devenus un nous ?",a:"16 / 12 / 2009",digit:"4"},
+{id:"e4",q:"Quel pays rêve-t-on de visiter ?",a:"La grèce",digit:"2"}
+];
+const FABLE_WORDS=["CALVADOS","MANCHE","LOIRE","LOIR-ET-CHER","SAVOIE","DOUBS","VIENNE","GARD","NORD","AVEYRON","GIRONDE","AUBE","PAS-DE-CALAIS","CREUSE","ARDENNES","CANTAL","HERAULT","CORSE","EURE","SOMME","CHER","SEINE","AISNE","ALLIER","BAS-RHIN","JURA"];
 const FABLE_TEXT_TEMPLATE=`J'étais assis au bar en train de boire un {0} tandis que je regardais un
 clochard faire la {1}.
 Une dame vint s'asseoir à côté de moi ; elle portait un manteau de {2} et j'en
@@ -183,17 +190,17 @@ Elle ne perdit pas le {8}. Nous entrâmes dans sa chambre, et à peine arrivés,
 elle se déshabilla ; ses seins étaient magnifiques, elle les {9} !!!
 En fait cette fille était vraiment {10} et l'on s'amusa jusqu'à l'{11}. 
 Là, il ne s'agit {12} !
-L'exercice ça CREUSE, aussi, au petit matin, je lui proposai du jambon des
-{13}, du saucisson et du {14}.
-Elle fut si contente de ce petit déjeuner, qu'elle m'appela son {15}.
-Où l'histoire se {16}, c'est que lorsqu'on eut fini, un peu fatigués, elle
-regarda l'{17} et me demanda une {18} que je refusai de payer, trouvant
-que c'était trop {19}.
-Elle me fit alors une terrible {20} et je vis dans ses yeux beaucoup de
-{21}.
-A cet instant, j'aurais bien eu besoin d'un {22} car elle me lança son sac au
-visage et me donna un coup de pied dans le {23}.
-Tout finit par s'arranger, mais avec des histoires pareilles, elle {24} qu'on ne
+L'exercice ça {13}, aussi, au petit matin, je lui proposai du jambon des
+{14}, du saucisson et du {15}.
+Elle fut si contente de ce petit déjeuner, qu'elle m'appela son {16}.
+Où l'histoire se {17}, c'est que lorsqu'on eut fini, un peu fatigués, elle
+regarda l'{18} et me demanda une {19} que je refusai de payer, trouvant
+que c'était trop {20}.
+Elle me fit alors une terrible {21} et je vis dans ses yeux beaucoup de
+{22}.
+A cet instant, j'aurais bien eu besoin d'un {23} car elle me lança son sac au
+visage et me donna un coup de pied dans le {24}.
+Tout finit par s'arranger, mais avec des histoires pareilles, elle {25} qu'on ne
 l'y prendrait plus.`;
 
 const LS={tableId:"bday_tableId",guestName:"bday_guest_name",photoType:"bday_photoType",uploading:"bday_uploading",count:"bday_photo_count",camMode:"bday_cam_mode",mission:"bday_mission",defisDone:"bday_defis_done",codeOk:"bday_code_ok",fableOk:"bday_fable_dept_ok"};
@@ -201,7 +208,7 @@ const $=id=>document.getElementById(id), screens=()=>Array.from(document.querySe
 const getTableId=()=>Number(localStorage.getItem(LS.tableId)||0), setTableId=v=>localStorage.setItem(LS.tableId,String(v));
 const getGuestName=()=>localStorage.getItem(LS.guestName)||"", setGuestName=v=>localStorage.setItem(LS.guestName,v), clearGuestName=()=>localStorage.removeItem(LS.guestName);
 const getCount=()=>Number(localStorage.getItem(LS.count)||0);
-const normalize=s=>(s||"").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+const normalize=s=>(s||"").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/[^a-z0-9]+/g,"");
 const normalizeDept=s=>(s||"").toString().trim().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/['’]/g,"'").replace(/[^a-z0-9]+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
 const safeFilePart=str=>(str||"").normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/[^a-zA-Z0-9_-]+/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"");
 function setScreen(id){screens().forEach(el=>el.style.display="none"); const t=$(id); if(!t)return; t.style.display="grid"; t.classList.add("fade-in"); setTimeout(()=>t.classList.remove("fade-in"),260);}
@@ -344,7 +351,7 @@ function renderFable(){ $("fableRules").textContent=FABLE_RULES; const ok=getFab
 function validateFable(){const expected=FABLE_WORDS[fableIndex], user=$("fableInput").value; if(normalizeDept(user)===normalizeDept(expected)){const ok=getFableOk(); ok[String(fableIndex)]=true; setFableOk(ok); $("fableStatus").innerHTML=`<span class="ok">✅ Correct : ${expected}</span>`; setTimeout(renderFable,250);} else $("fableStatus").innerHTML=`<span class="err">❌ Mauvais mot</span>`;}
 function nextFableHole(){const ok=getFableOk(); for(let i=fableIndex+1;i<FABLE_WORDS.length;i++){if(!ok[String(i)]){fableIndex=i;break;}} $("fableInput").value=""; $("fableStatus").textContent=""; $("fablePrompt").innerHTML=`Trou <b>${fableIndex+1}</b> / ${FABLE_WORDS.length}`;}
 async function bouchonsState(){const r=await fetch(`${APPS_SCRIPT_URL}?action=bouchons_state&t=${Date.now()}`,{cache:"no-store"}); return await r.json();}
-async function bouchonsGuess(guess){const r=await fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"bouchons_guess",guess})}); return await r.json();}
+async function bouchonsGuess(guess){const r=await fetch(`${APPS_SCRIPT_URL}?action=bouchons_guess&guess=${encodeURIComponent(guess)}&t=${Date.now()}`,{cache:"no-store"}); return await r.json();}
 async function bouchonsReset(code){const r=await fetch(`${APPS_SCRIPT_URL}?action=bouchons_reset&code=${encodeURIComponent(code)}&t=${Date.now()}`,{cache:"no-store"}); return await r.json();}
 const BOUCHONS_MAX_DIFF=250; const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function updateBouchonsGauge(diff){const d=clamp(Number(diff),0,BOUCHONS_MAX_DIFF), pct=Math.round((1-(d/BOUCHONS_MAX_DIFF))*100), hue=Math.round(210*(1-pct/100)); $("bThermoFill").style.width=pct+"%"; $("bThermoFill").style.backgroundColor=`hsl(${hue} 85% 55%)`; let label="🥶 Très loin"; if(pct>=20) label="🧊 Loin"; if(pct>=40) label="🙂 Tiède"; if(pct>=60) label="🌡️ Chaud"; if(pct>=80) label="🔥 Très chaud"; if(pct>=95) label="🚨 Brûlant"; $("bThermoText").textContent=`${label} — ${pct}%`;}
